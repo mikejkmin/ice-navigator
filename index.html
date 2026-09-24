@@ -227,6 +227,7 @@ h2.sec:first-child{margin-top:0}
     <!-- CONDITIONS -->
     <div class="page" id="p-conditions" hidden>
       <p class="lede" id="condlede"></p>
+      <div class="chips" id="cfilter"></div>
       <div id="condlist"></div>
     </div>
 
@@ -328,6 +329,7 @@ h2.sec:first-child{margin-top:0}
     {id:"bccsu",g:"Pain &amp; deprescribing",n:"BC Centre on Substance Use",d:"Opioid use disorder and substance use guidance.",u:"https://www.bccsu.ca",k:"bccsu opioid use disorder oat suboxone methadone substance"},
 
     {id:"macs",g:"Scope &amp; coverage",n:"Minor Ailments &amp; Contraception (MACS)",d:"The BC scope list, criteria and documentation for pharmacist prescribing.",u:"https://www.gov.bc.ca/minorailments",k:"macs minor ailment contraception scope prescribing bc documentation"},
+    {id:"medsask",g:"Scope &amp; coverage",n:"medSask minor ailment guidelines",d:"Treatment algorithms and assessment checklists for each minor ailment. Free for CPBC-registered pharmacy students — sign in with a free BCPhA account (no membership needed).",u:"https://www.bcpharmacy.ca/medsask",k:"medsask minor ailment algorithm checklist self care macs prescribing saskatchewan bcpha"},
     {id:"formulary",g:"Scope &amp; coverage",n:"PharmaCare Formulary Search",d:"Is it covered, and under which plan?",u:"https://pharmacareformularysearch.gov.bc.ca",k:"pharmacare formulary coverage covered benefit plan cost"},
     {id:"sa",g:"Scope &amp; coverage",n:"Special Authority",d:"Criteria and forms when the formulary says no.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/programs/special-authority",k:"special authority criteria form coverage exception"},
     {id:"cpbc",g:"Scope &amp; coverage",n:"College of Pharmacists of BC",d:"Scope, standards, and every 'can a pharmacist…' answer.",u:"https://www.bcpharmacists.org",k:"cpbc college scope standard legal legislation ethics bylaw"},
@@ -357,7 +359,7 @@ h2.sec:first-child{margin-top:0}
     {n:"Urinary tract infection",sys:"ID",ask:["Upper or lower tract?","Pregnant, catheterised, or male?","Prior cultures and local resistance","How long a course?"],go:["bugs","cps","pedmed"]},
     {n:"Clostridioides difficile",sys:"ID",ask:["First episode or recurrence?","Severity criteria your site uses","Which antibiotic triggered it, and can it stop?"],go:["bugs","cps"]},
     {n:"Cellulitis &amp; skin infection",sys:"ID",ask:["Purulent or non-purulent?","Portal of entry, diabetes, immune status","What would make this urgent surgical?"],go:["bugs","cps"]},
-    {n:"Impetigo",sys:"ID",ask:["How many lesions, and where?","Topical or systemic threshold","Household and school contacts"],go:["bugs","cps","macs"]},
+    {n:"Impetigo",sys:"ID",ask:["How many lesions, and where?","Topical or systemic threshold","Household and school contacts"],go:["bugs","cps","macs","medsask"]},
     {n:"Osteomyelitis",sys:"ID",ask:["Contiguous or haematogenous?","Duration, vascular supply, hardware","Criteria for oral step-down"],go:["bugs","cps"]},
     {n:"Immunization &amp; schedules",sys:"ID",ask:["Age, risk conditions, doses already given","Minimum interval since the last dose","Live vaccine cautions for this patient"],go:["bccdc","cps"]},
 
@@ -365,20 +367,20 @@ h2.sec:first-child{margin-top:0}
     {n:"Rheumatoid arthritis",sys:"MSK",ask:["Current DMARD and how long on it","Monitoring parameters and their frequency","Interactions and live vaccine timing"],go:["cps","lexi","rxfiles"]},
     {n:"Gout",sys:"MSK",ask:["Acute flare or urate-lowering?","Renal function, diuretics, interacting drugs","Could this joint be septic?"],go:["rxfiles","cps","bcg"]},
     {n:"Low back &amp; neck pain",sys:"MSK",ask:["Duration and what they've tried","Red flags to screen — check the guideline's list","Function goal, not just pain score"],go:["bcg","rxfiles"]},
-    {n:"Sports injury &amp; sprains",sys:"MSK",ask:["Mechanism and weight-bearing","Is this within minor ailment scope?","Topical vs oral analgesia"],go:["macs","cps","rxfiles"]},
+    {n:"Sports injury &amp; sprains",sys:"MSK",ask:["Mechanism and weight-bearing","Is this within minor ailment scope?","Topical vs oral analgesia"],go:["macs","medsask","cps","rxfiles"]},
 
-    {n:"Acne",sys:"Derm",ask:["Lesion type and severity","Pregnancy status before anything retinoid","What they've used, for how long"],go:["cps","macs","briggs"]},
+    {n:"Acne",sys:"Derm",ask:["Lesion type and severity","Pregnancy status before anything retinoid","What they've used, for how long"],go:["cps","macs","medsask","briggs"]},
     {n:"Psoriasis",sys:"Derm",ask:["Body surface and sites involved","Steroid potency appropriate to the site","Any joint symptoms?"],go:["cps","rxfiles"]},
-    {n:"Rosacea",sys:"Derm",ask:["Which subtype?","Triggers and what's been tried","Ocular involvement?"],go:["cps","macs"]},
+    {n:"Rosacea",sys:"Derm",ask:["Which subtype?","Triggers and what's been tried","Ocular involvement?"],go:["cps","macs","medsask"]},
     {n:"Atopic dermatitis",sys:"Derm",ask:["Distribution and age","Steroid potency and duration already used","Emollient routine — are they actually doing it?"],go:["cps","healthlink","pedmed"]},
     {n:"Tinea &amp; onychomycosis",sys:"Derm",ask:["Site, and how many nails","Confirmed before treating?","Terbinafine interactions and LFT monitoring"],go:["cps","lexi"]},
-    {n:"Head lice &amp; scabies",sys:"Derm",ask:["Which product already used, and when","Re-treatment interval for that product","Household contacts and environment"],go:["cps","macs","healthlink"]},
+    {n:"Head lice &amp; scabies",sys:"Derm",ask:["Which product already used, and when","Re-treatment interval for that product","Household contacts and environment"],go:["cps","macs","medsask","healthlink"]},
 
-    {n:"Pharyngitis",sys:"HEENT",ask:["Score it — which criteria does your site use?","Swab or treat empirically?","Penicillin allergy — what actually happened?"],go:["bugs","cps","macs"]},
-    {n:"Allergic rhinitis",sys:"HEENT",ask:["Seasonal or perennial, ocular symptoms?","Intranasal steroid technique","Prior antihistamine response"],go:["cps","rxfiles","macs"]},
+    {n:"Pharyngitis",sys:"HEENT",ask:["Score it — which criteria does your site use?","Swab or treat empirically?","Penicillin allergy — what actually happened?"],go:["bugs","cps","macs","medsask"]},
+    {n:"Allergic rhinitis",sys:"HEENT",ask:["Seasonal or perennial, ocular symptoms?","Intranasal steroid technique","Prior antihistamine response"],go:["cps","rxfiles","macs","medsask"]},
     {n:"Acute otitis media",sys:"HEENT",ask:["Age, laterality, severity","Watchful waiting criteria","Antibiotic in the last month?"],go:["bugs","pedmed","cps"]},
     {n:"Otitis externa",sys:"HEENT",ask:["Is the tympanic membrane intact?","Water exposure or device use","Diabetes or immunocompromise?"],go:["bugs","cps"]},
-    {n:"Conjunctivitis",sys:"HEENT",ask:["Discharge character, one eye or both","Contact lens wearer?","Is this in minor ailment scope?"],go:["cps","macs","healthlink"]},
+    {n:"Conjunctivitis",sys:"HEENT",ask:["Discharge character, one eye or both","Contact lens wearer?","Is this in minor ailment scope?"],go:["cps","macs","medsask","healthlink"]},
     {n:"Eyelid conditions",sys:"HEENT",ask:["Acute lump or chronic lid margin change?","Lid hygiene routine","Any vision change?"],go:["cps","healthlink"]},
     {n:"Dry eye",sys:"HEENT",ask:["Drying medications on board","Frequency of use — does that need preservative-free?","Screen and environment factors"],go:["cps","lexi"]},
     {n:"Glaucoma",sys:"HEENT",ask:["Which drops, and is technique correct?","Asthma, COPD, bradycardia, heart block?","Adherence — the usual failure point"],go:["cps","lexi","healthlink"]},
@@ -396,9 +398,9 @@ h2.sec:first-child{margin-top:0}
     {n:"COPD",sys:"Resp",ask:["Exacerbation history and symptom burden","Device technique and inhaler count","Vaccination status"],go:["cps","rxfiles","bccdc"]},
     {n:"Smoking cessation",sys:"Resp",ask:["Cigarettes per day and time to first one","Prior attempts — what happened?","What does PharmaCare cover?"],go:["formulary","cps","healthlink"]},
 
-    {n:"Contraception",sys:"Women's",ask:["Is this within MACS scope?","Contraindications to screen","What's covered, and how to bill it"],go:["macs","cps","formulary"]},
-    {n:"Bacterial vaginosis",sys:"Women's",ask:["Pregnant?","Recurrent?","Partner considerations"],go:["bugs","cps","macs"]},
-    {n:"Vulvovaginal candidiasis",sys:"Women's",ask:["Uncomplicated or complicated?","Pregnancy, diabetes, recent antibiotics","In scope, or referral?"],go:["cps","macs","bugs"]},
+    {n:"Contraception",sys:"Women's",ask:["Is this within MACS scope?","Contraindications to screen","What's covered, and how to bill it"],go:["macs","medsask","cps","formulary"]},
+    {n:"Bacterial vaginosis",sys:"Women's",ask:["Pregnant?","Recurrent?","Partner considerations"],go:["bugs","cps","macs","medsask"]},
+    {n:"Vulvovaginal candidiasis",sys:"Women's",ask:["Uncomplicated or complicated?","Pregnancy, diabetes, recent antibiotics","In scope, or referral?"],go:["cps","macs","medsask","bugs"]},
     {n:"Medical abortion",sys:"Women's",ask:["Dispensing requirements and documentation","Counselling points and what to expect","Follow-up arrangements"],go:["sogc","cps","psbc"]},
 
     {n:"Diabetes",sys:"Endo",ask:["A1c, targets, and what's driving the gap","Renal and cardiac status — that picks the agent","Hypoglycaemia risk and sick-day plan"],go:["diabetes","insulin","formulary"]},
@@ -409,7 +411,7 @@ h2.sec:first-child{margin-top:0}
     {n:"Opioid conversion &amp; tapering",sys:"Cross",ask:["Current total daily morphine equivalent","Incomplete cross-tolerance — what reduction?","Breakthrough provision"],go:["equi","palliative","bccsu"]},
     {n:"Deprescribing",sys:"Cross",ask:["Which algorithm covers this class?","Taper schedule and monitoring","What does the patient want?"],go:["deprescribe","rxfiles","healthlink"]},
     {n:"Poisoning &amp; overdose",sys:"Cross",ask:["Agent, amount, time since ingestion","Co-ingestants","Call — do not look this one up"],go:["dpic","cps"]},
-    {n:"Herpes simplex &amp; zoster",sys:"Cross",ask:["Time since rash onset — is the window open?","Dermatome, especially ophthalmic","Immune status"],go:["cps","bugs","macs"]},
+    {n:"Herpes simplex &amp; zoster",sys:"Cross",ask:["Time since rash onset — is the window open?","Dermatome, especially ophthalmic","Immune status"],go:["cps","bugs","macs","medsask"]},
     {n:"QT prolongation",sys:"Cross",ask:["Which drugs on the list are they taking?","Electrolytes and other risk factors","Is there an alternative?"],go:["qt","lexi","cps"]}
   ];
 
@@ -453,6 +455,57 @@ h2.sec:first-child{margin-top:0}
   /* ---- proxy ---- */
   function href(r){return r.p?PROXY+encodeURIComponent(r.u):r.u;}
 
+
+  /* ---- shorthand & plain-language names, matched as whole words ---- */
+  var ALIAS={
+    "Community-acquired pneumonia":["CAP","pneumonia"],
+    "Urinary tract infection":["UTI","cystitis","pyelonephritis","pyelo"],
+    "Clostridioides difficile":["CDI","c diff","c. diff","cdiff","CDAD"],
+    "Cellulitis & skin infection":["SSTI","skin infection","abscess"],
+    "Immunization & schedules":["vaccine","vaccines","vaccination","immunisation","shots"],
+    "Osteoarthritis":["OA"],
+    "Rheumatoid arthritis":["RA","DMARD"],
+    "Low back & neck pain":["LBP","back pain","neck pain"],
+    "Sports injury & sprains":["sprain","strain"],
+    "Atopic dermatitis":["AD","eczema"],
+    "Tinea & onychomycosis":["athlete's foot","ringworm","fungal nail","jock itch","tinea pedis"],
+    "Head lice & scabies":["lice","pediculosis"],
+    "Pharyngitis":["strep throat","GAS","sore throat","strep"],
+    "Allergic rhinitis":["AR","hay fever","allergies"],
+    "Acute otitis media":["AOM","ear infection"],
+    "Otitis externa":["OE","swimmer's ear"],
+    "Conjunctivitis":["pink eye"],
+    "Eyelid conditions":["stye","hordeolum","chalazion","blepharitis"],
+    "Oral candidiasis":["thrush"],
+    "Venous thromboembolism":["VTE","DVT","PE","blood clot","pulmonary embolism"],
+    "VTE prophylaxis":["VTE ppx","ppx","thromboprophylaxis"],
+    "Warfarin & INR":["INR","VKA","coumadin"],
+    "Iron deficiency anaemia":["IDA","iron","anemia","anaemia","iron deficiency anemia"],
+    "B12 & folate deficiency":["B12","folate","anemia","anaemia","pernicious anemia"],
+    "CKD anaemia":["CKD","ESA","anemia","anaemia","anemia of CKD","renal anemia"],
+    "Asthma exacerbation":["asthma attack","asthma flare"],
+    "COPD":["AECOPD","emphysema","chronic bronchitis"],
+    "Smoking cessation":["smoking","NRT","quit smoking","nicotine","varenicline"],
+    "Contraception":["birth control","OCP","EC","plan b","emergency contraception"],
+    "Bacterial vaginosis":["BV"],
+    "Vulvovaginal candidiasis":["VVC","yeast infection","vaginal yeast"],
+    "Medical abortion":["mifegymiso","mifepristone"],
+    "Diabetes":["DM","T2DM","T1DM","insulin","diabetes mellitus"],
+    "Sodium & water disorders":["hyponatremia","hypernatremia","SIADH","sodium"],
+    "Thyroid":["hypothyroidism","hyperthyroidism","TSH","levothyroxine"],
+    "Opioid conversion & tapering":["MME","OME","opioid rotation","equianalgesic"],
+    "Poisoning & overdose":["OD","tox","toxicology","overdose"],
+    "Herpes simplex & zoster":["HSV","VZV","HZ","shingles","cold sore","herpes"],
+    "QT prolongation":["QTc","torsades","long QT"]
+  };
+  var ABBR={"Community-acquired pneumonia":"CAP","Urinary tract infection":"UTI","Clostridioides difficile":"CDI",
+    "Osteoarthritis":"OA","Rheumatoid arthritis":"RA","Low back & neck pain":"LBP","Atopic dermatitis":"AD",
+    "Allergic rhinitis":"AR","Acute otitis media":"AOM","Otitis externa":"OE","Venous thromboembolism":"VTE / DVT / PE",
+    "Iron deficiency anaemia":"IDA","CKD anaemia":"CKD","Bacterial vaginosis":"BV","Vulvovaginal candidiasis":"VVC",
+    "Herpes simplex & zoster":"HSV / VZV","QT prolongation":"QTc"};
+  function aliasesOf(c){return (ALIAS[plain(c.n)]||[]).map(function(a){return a.toLowerCase();});}
+  function aliasHit(c,term){return aliasesOf(c).indexOf(term)>-1;}
+
   /* ---- condition block ---- */
   function condHTML(c){
     var s=slug(c.n),mk=S.get("nav."+year+"."+s+".m","");
@@ -463,7 +516,7 @@ h2.sec:first-child{margin-top:0}
         (r.alt?'<a class="open backup" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer" title="'+esc(plain(r.n))+' via the UBC Library page">Backup</a>':'');
     }).join("");
     return '<div class="cond" data-c="'+s+'">'+
-      '<div class="cond-h"><h3>'+c.n+'</h3><span class="sys">'+c.sys+'</span></div>'+
+      '<div class="cond-h"><h3>'+c.n+'</h3><span class="sys">'+(ABBR[plain(c.n)]?esc(ABBR[plain(c.n)])+' · ':'')+c.sys+'</span></div>'+
       '<p class="lbl">Work out</p><ul><li>'+c.ask.join("</li><li>")+'</li></ul>'+
       '<p class="lbl">Open</p><div class="opens">'+opens+'</div>'+
       '<div class="mark" data-m="'+esc(plain(c.n))+'"><span>For me</span>'+
@@ -479,6 +532,7 @@ h2.sec:first-child{margin-top:0}
       var was=b.getAttribute("aria-pressed")==="true";
       wrap.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed","false");});
       if(was)S.del(key); else {b.setAttribute("aria-pressed","true");S.set(key,b.getAttribute("data-v"));}
+      if(cur==="conditions"){ if(cf) drawConds(); else drawCFilter(); }
     });
   }
 
@@ -498,9 +552,21 @@ h2.sec:first-child{margin-top:0}
     term=(term||"").trim().toLowerCase();
     if(!term){resEl.hidden=true;menuEl.hidden=false;hintEl.hidden=false;return;}
     menuEl.hidden=true;hintEl.hidden=true;resEl.hidden=false;
-    var cs=CONDITIONS.filter(function(c){
-      return (plain(c.n)+" "+c.sys+" "+plain(c.ask.join(" "))+" "+c.go.map(function(i){return REF[i]?plain(REF[i].n):"";}).join(" ")).toLowerCase().indexOf(term)>-1;
+    var wordRe=new RegExp("(^|[^a-z0-9])"+term.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+    var scored=[];
+    CONDITIONS.forEach(function(c){
+      var name=plain(c.n).toLowerCase(), al=aliasesOf(c);
+      var hay=(name+" "+al.join(" ")+" "+c.sys+" "+plain(c.ask.join(" "))+" "+c.go.map(function(i){return REF[i]?plain(REF[i].n):"";}).join(" ")).toLowerCase();
+      var score=0;
+      if(aliasHit(c,term)||name===term)score=3;
+      else if(wordRe.test(name)||al.some(function(a){return wordRe.test(a);}))score=2;
+      else if(term.length>=3&&wordRe.test(hay))score=1;
+      if(score)scored.push({c:c,s:score});
     });
+    scored.sort(function(a,b){return b.s-a.s;});
+    var best=scored.length?scored[0].s:0;
+    var top=best>=2?scored.filter(function(x){return x.s===best;}):scored;
+    var cs=top.map(function(x){return x.c;});
     var rs=REFS.filter(function(r){
       return (plain(r.n)+" "+plain(r.d)+" "+(r.k||"")+" "+plain(r.g)).toLowerCase().indexOf(term)>-1;
     });
@@ -516,16 +582,34 @@ h2.sec:first-child{margin-top:0}
   /* ---- browse conditions ---- */
   var condList=document.getElementById("condlist");
   bindCond(condList);
+  var cf="";
+  function markOf(c){return S.get("nav."+year+"."+slug(c.n)+".m","");}
+  function drawCFilter(){
+    var el=document.getElementById("cfilter");
+    if(year!=="PY1"){el.innerHTML="";return;}
+    var n={solid:0,shaky:0,none:0};
+    CONDITIONS.forEach(function(c){var m=markOf(c);n[m||"none"]++;});
+    var opts=[["","All",CONDITIONS.length],["shaky","Shaky",n.shaky],["solid","Solid",n.solid],["none","Not marked",n.none]];
+    el.innerHTML=opts.map(function(o){return '<button data-cf="'+o[0]+'" aria-pressed="'+(cf===o[0])+'">'+o[1]+' <span style="opacity:.6">'+o[2]+'</span></button>';}).join("");
+  }
+  document.getElementById("cfilter").addEventListener("click",function(e){
+    var b=e.target.closest("[data-cf]");if(!b)return;cf=b.getAttribute("data-cf");drawConds();
+  });
   function drawConds(){
     document.getElementById("condlede").innerHTML = year==="PY1"
       ? "Every condition in scope, as questions rather than answers. The links go to the sources that are accountable for the answers."
       : "<strong>"+year+" has no conditions yet.</strong> PY1 is the only year with content. The references and practice pages still work for every year.";
-    if(year!=="PY1"){condList.innerHTML="";return;}
+    if(year!=="PY1"){condList.innerHTML="";drawCFilter();return;}
     var bySys={},order=[];
-    CONDITIONS.forEach(function(c){if(!bySys[c.sys]){bySys[c.sys]=[];order.push(c.sys);}bySys[c.sys].push(c);});
-    condList.innerHTML=order.map(function(s){
+    drawCFilter();
+    CONDITIONS.forEach(function(c){
+      var m=markOf(c);
+      if(cf&&((cf==="none"&&m)||(cf!=="none"&&m!==cf)))return;
+      if(!bySys[c.sys]){bySys[c.sys]=[];order.push(c.sys);}bySys[c.sys].push(c);
+    });
+    condList.innerHTML=order.length?order.map(function(s){
       return '<h2 class="sec">'+s+'</h2>'+bySys[s].map(condHTML).join("");
-    }).join("");
+    }).join(""):'<p class="empty">'+(cf==="shaky"?"Nothing marked shaky. Tap Shaky on any condition to add it here.":cf==="solid"?"Nothing marked solid yet.":"Everything is marked.")+'</p>';
   }
 
   /* ---- references ---- */
