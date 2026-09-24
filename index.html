@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Student-made link hub for the UBC PharmD open-book ICE. Not affiliated with UBC.">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>ICE Navigator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --ground:#EEF0F3; --ground-2:#E4E7EB; --shell:#FFFFFF; --screen:#FCFCFD; --screen-2:#F5F6F8;
+  --ink:#15181C; --ink-2:#5F6874; --ink-3:#8C95A1; --rule:#E2E5EA; --rule-2:#D3D8DF;
+  --hl-a:#7BBBF5; --hl-b:#1668CC; --hl-edge:#0F55A8; --accent:#1668CC; --accent-soft:#E8F1FC;
+  --warn:#B4531A; --warn-soft:#FBEFE6;
+  --ui:"Hanken Grotesk",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --w:520px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);
+  background-image:radial-gradient(120% 80% at 50% 0%,var(--shell) 0%,var(--ground) 46%,var(--ground-2) 100%);
+  background-attachment:fixed;color:var(--ink);font-family:var(--ui);font-size:1rem;line-height:1.5;
+  -webkit-font-smoothing:antialiased;padding:30px 16px 60px;
+}
+h1,h2,h3{margin:0;text-wrap:balance}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+.shell{
+  width:100%;max-width:var(--w);margin:0 auto;background:var(--shell);
+  border:1px solid var(--rule-2);border-radius:20px;padding:13px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 18px 40px -22px rgba(20,30,45,.45),0 2px 6px -2px rgba(20,30,45,.18);
+  transition:max-width .3s cubic-bezier(.22,.61,.36,1);
+}
+.shell.wide{--w:820px}
+.screen{background:var(--screen);border:1px solid var(--rule-2);border-radius:9px;overflow:hidden}
+.bar{
+  display:grid;grid-template-columns:66px 1fr 66px;align-items:center;height:32px;
+  background:linear-gradient(180deg,var(--screen-2),var(--screen));
+  border-bottom:1px solid var(--rule);padding:0 8px;
+}
+.bar h1{font-size:.75rem;font-weight:600;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back{appearance:none;background:none;border:0;cursor:pointer;font:inherit;font-size:.75rem;font-weight:600;color:var(--accent);padding:4px 2px}
+.back[hidden]{display:none}
+.bar h1{grid-column:2}
+.bar .yr{grid-column:3}
+.bar .back{grid-column:1}
+.yr{
+  appearance:none;border:1px solid var(--rule-2);background:var(--screen);cursor:pointer;
+  font-family:var(--mono);font-size:.625rem;font-weight:500;letter-spacing:.05em;color:var(--ink-2);
+  border-radius:99px;padding:2px 8px;justify-self:end;
+}
+.yr:hover{border-color:var(--accent);color:var(--accent)}
+
+/* search */
+.searchwrap{padding:16px 14px 14px}
+.searchwrap input{
+  width:100%;font:inherit;font-size:1.125rem;padding:12px 14px;color:var(--ink);
+  border:1px solid var(--rule-2);border-radius:8px;background:var(--screen);
+}
+.searchwrap input::placeholder{color:var(--ink-3)}
+.searchwrap input:focus{border-color:var(--accent);outline:none}
+.hintline{font-size:.75rem;color:var(--ink-3);margin:8px 2px 0;line-height:1.5}
+
+.menu{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.menu li+li .row{border-top:1px solid var(--rule)}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;width:100%;
+  padding:11px 14px;background:none;border:0;font:inherit;color:var(--ink);text-align:left;cursor:pointer;
+}
+.row .label{font-weight:500;font-size:1rem}
+.row .sub{display:block;font-size:.75rem;font-weight:400;color:var(--ink-3)}
+.row .chev{color:var(--ink-3);font-size:.9rem}
+.row:hover,.row:focus-visible{background:linear-gradient(180deg,var(--hl-a),var(--hl-b));color:#fff;outline:none}
+.row:hover .sub,.row:focus-visible .sub,.row:hover .chev,.row:focus-visible .chev{color:rgba(255,255,255,.85)}
+
+.page{padding:18px 18px 22px}
+.page[hidden]{display:none}
+.lede{font-size:.875rem;line-height:1.6;color:var(--ink-2);margin:0 0 16px;max-width:64ch}
+h2.sec{
+  font-size:.625rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+  margin:20px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--rule);
+}
+h2.sec:first-child{margin-top:0}
+.empty{padding:20px 4px;color:var(--ink-3);font-size:.875rem}
+
+/* condition block */
+.cond{border:1px solid var(--rule);border-radius:8px;background:var(--screen);padding:12px 14px 13px}
+.cond+.cond{margin-top:9px}
+.cond-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+.cond-h h3{font-size:1rem;font-weight:600;letter-spacing:-.008em}
+.cond-h .sys{font-family:var(--mono);font-size:.5625rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.lbl{font-size:.625rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:0 0 5px}
+.cond ul{margin:0 0 10px;padding-left:16px;font-size:.8125rem;color:var(--ink-2);line-height:1.55}
+.cond ul li+li{margin-top:2px}
+.opens{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.open{
+  display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:.8125rem;font-weight:600;
+  color:var(--accent);background:var(--accent-soft);border:1px solid transparent;
+  border-radius:6px;padding:5px 10px;
+}
+.open:hover{background:var(--hl-b);color:#fff}
+.open .cwl{font-family:var(--mono);font-size:.5rem;letter-spacing:.06em;opacity:.75}
+.mark{display:flex;gap:4px;margin-top:10px;align-items:center}
+.mark span{font-size:.625rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-right:3px}
+.mark button{
+  appearance:none;font:inherit;font-family:var(--mono);font-size:.5625rem;letter-spacing:.06em;
+  text-transform:uppercase;cursor:pointer;padding:2px 8px;border-radius:99px;
+  border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-3);
+}
+.mark button:hover{border-color:var(--accent);color:var(--accent)}
+.mark button[aria-pressed="true"]{background:var(--accent);border-color:var(--hl-edge);color:#fff}
+.note{
+  width:100%;font:inherit;font-size:.8125rem;color:var(--ink);border:1px dashed var(--rule-2);
+  border-radius:6px;background:transparent;padding:6px 9px;resize:vertical;min-height:32px;margin-top:8px;
+}
+.note::placeholder{color:var(--ink-3)}
+.note:focus{border-style:solid;border-color:var(--accent);outline:none;background:var(--screen)}
+
+/* references */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.chips button{
+  appearance:none;font:inherit;font-size:.75rem;cursor:pointer;padding:4px 10px;border-radius:99px;
+  border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-2);
+}
+.chips button:hover{border-color:var(--accent);color:var(--accent)}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--hl-edge);color:#fff;font-weight:600}
+.links{list-style:none;margin:0;padding:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.links li+li{border-top:1px solid var(--rule)}
+.link{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:10px 13px;text-decoration:none;color:var(--ink);background:var(--screen)}
+.link .n{font-weight:600;font-size:.9375rem}
+.link .d{display:block;font-weight:400;font-size:.8125rem;color:var(--ink-2);margin-top:1px}
+.link .go{font-family:var(--mono);font-size:.6875rem;color:var(--ink-3);white-space:nowrap}
+.link:hover,.link:focus-visible{background:linear-gradient(180deg,var(--hl-a),var(--hl-b));color:#fff;outline:none}
+.link:hover .d,.link:focus-visible .d,.link:hover .go,.link:focus-visible .go{color:rgba(255,255,255,.87)}
+.slot{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:10px 13px;background:repeating-linear-gradient(135deg,var(--screen),var(--screen) 7px,var(--screen-2) 7px,var(--screen-2) 14px)}
+.slot .n{font-weight:600;font-size:.9375rem;color:var(--ink-2)}
+.slot .d{display:block;font-weight:400;font-size:.8125rem;color:var(--ink-3);margin-top:1px}
+.slot .go{font-family:var(--mono);font-size:.625rem;text-transform:uppercase;color:var(--warn);white-space:nowrap}
+.links li.duo{display:grid;grid-template-columns:1fr auto}
+.altlink{display:flex;flex-direction:column;justify-content:center;gap:1px;padding:8px 14px;border-left:1px solid var(--rule);text-decoration:none;background:var(--screen-2);min-width:118px}
+.altlink .n{font-size:.8125rem;font-weight:600;color:var(--ink-2)}
+.altlink .d{font-size:.6875rem;color:var(--ink-3)}
+.altlink:hover,.altlink:focus-visible{background:var(--accent-soft);outline:none}
+.altlink:hover .n,.altlink:focus-visible .n{color:var(--accent)}
+.open.backup{background:var(--screen);border-color:var(--rule-2);color:var(--ink-2);font-weight:500}
+.open.backup:hover{background:var(--screen-2);color:var(--accent);border-color:var(--accent)}
+.cwlbadge{display:inline-block;font-family:var(--mono);font-size:.5625rem;font-weight:600;letter-spacing:.07em;color:var(--accent);border:1px solid currentColor;border-radius:2px;padding:0 4px;margin-left:6px;vertical-align:1px}
+.link:hover .cwlbadge,.link:focus-visible .cwlbadge{color:rgba(255,255,255,.9)}
+.toggle{display:flex;align-items:center;gap:9px;font-size:.75rem;color:var(--ink-2);margin-bottom:14px;flex-wrap:wrap}
+.toggle button{appearance:none;font:inherit;font-size:.75rem;cursor:pointer;padding:3px 10px;border-radius:99px;border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-2)}
+.toggle button[aria-pressed="true"]{background:var(--accent);border-color:var(--hl-edge);color:#fff;font-weight:600}
+
+/* practice */
+.notice{border-left:3px solid var(--warn);background:var(--warn-soft);padding:11px 14px;font-size:.8125rem;line-height:1.6;color:var(--ink-2);border-radius:0 6px 6px 0;margin-bottom:18px}
+.notice strong{color:var(--ink)}
+.dial{text-align:center;padding:14px 0 4px}
+.dial .t{font-family:var(--mono);font-size:clamp(3rem,13vw,4.6rem);font-weight:500;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.dial.warn .t{color:var(--warn)}
+.dial.done .t{color:var(--ink-3)}
+.dial .state{font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+.chip{appearance:none;font:inherit;font-family:var(--mono);font-size:.75rem;cursor:pointer;padding:5px 11px;border-radius:99px;border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--hl-edge);color:#fff}
+.btn{appearance:none;font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer;padding:6px 14px;border-radius:6px;border:1px solid var(--rule-2);background:var(--screen);color:var(--ink)}
+.btn.primary{background:linear-gradient(180deg,var(--hl-a),var(--hl-b));border-color:var(--hl-edge);color:#fff}
+.btnrow{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.plan{border:1px solid var(--rule);border-radius:8px;background:var(--screen);padding:11px 14px}
+.plan+.plan{margin-top:9px}
+.plan h3{font-size:.9375rem;font-weight:600;margin-bottom:7px}
+.plan ul{margin:0;padding-left:16px;font-size:.8125rem;color:var(--ink-2);line-height:1.55}
+.plan ul li+li{margin-top:2px}
+.prose{font-size:.875rem;line-height:1.65;color:var(--ink-2);max-width:64ch}
+.prose p{margin:0 0 11px}
+.prose p:last-child{margin-bottom:0}
+.foot{max-width:var(--w);margin:12px auto 0;text-align:center;font-size:.6875rem;color:var(--ink-3);line-height:1.6;transition:max-width .3s}
+
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important}}
+@media (max-width:520px){body{padding:14px 10px 40px}.shell{padding:9px;border-radius:15px}.page{padding:15px 13px 20px}}
+</style>
+
+</head>
+<body>
+<main class="shell" id="shell">
+  <div class="screen">
+    <div class="bar">
+      <button class="back" id="back" hidden>‹ Back</button>
+      <h1 id="title">ICE Navigator</h1>
+      <button class="yr" id="yr">PY1</button>
+    </div>
+
+    <!-- HOME: search is the product -->
+    <div id="p-home">
+      <div class="searchwrap">
+        <input id="q" type="search" placeholder="Search a condition or a resource…" autocomplete="off" aria-label="Search">
+        <p class="hintline" id="hint">Type what the case is about. You get the questions worth asking and the links worth opening — nothing else.</p>
+      </div>
+      <div id="results" hidden style="padding:0 14px 14px"></div>
+      <ul class="menu" id="menu">
+        <li><button class="row" data-go="conditions"><span class="label">Conditions<span class="sub" id="csub"></span></span><span class="chev">›</span></button></li>
+        <li><button class="row" data-go="refs"><span class="label">References<span class="sub" id="rsub"></span></span><span class="chev">›</span></button></li>
+        <li><button class="row" data-go="practice"><span class="label">Practice<span class="sub">Rehearsal timer and station strategy</span></span><span class="chev">›</span></button></li>
+        <li><button class="row" data-go="about"><span class="label">About<span class="sub">Who made it, feedback</span></span><span class="chev">›</span></button></li>
+      </ul>
+    </div>
+
+    <!-- CONDITIONS -->
+    <div class="page" id="p-conditions" hidden>
+      <p class="lede" id="condlede"></p>
+      <div id="condlist"></div>
+    </div>
+
+    <!-- REFERENCES -->
+    <div class="page" id="p-refs" hidden>
+      <p class="lede"><span class="cwlbadge" style="margin-left:0">CWL</span> links sign you in with your UBC login on the way. If one ever fails, use its <strong>Backup</strong> link — the resource's own page on the UBC Library site, with the Access button one click away.</p>
+      <div class="chips" id="chips"></div>
+      <div id="reflist"></div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div class="page" id="p-practice" hidden>
+      <div class="notice"><strong>Practice strategy, not exam format.</strong> These timings and beats are our own rehearsal suggestions, not the structure of any real station. The station count, names and durations for your exam come from your exam instructions — check those, not this.</div>
+
+      <div class="dial" id="dial">
+        <div class="t" id="tdisp">08:00</div>
+        <div class="state" id="tstate">Ready</div>
+        <div class="presets" id="presets">
+          <button class="chip" data-min="5" aria-pressed="false">5</button>
+          <button class="chip" data-min="7" aria-pressed="false">7</button>
+          <button class="chip" data-min="8" aria-pressed="true">8</button>
+          <button class="chip" data-min="10" aria-pressed="false">10</button>
+          <button class="chip" data-min="15" aria-pressed="false">15</button>
+        </div>
+        <div class="btnrow">
+          <button class="btn primary" id="tgo">Start</button>
+          <button class="btn" id="treset">Reset</button>
+        </div>
+      </div>
+
+      <h2 class="sec" style="margin-top:24px">Rehearsal shapes</h2>
+      <div id="planlist"></div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="page" id="p-about" hidden>
+      <div class="notice"><strong>Student-made.</strong> Not affiliated with, endorsed by, or reviewed by UBC or the Faculty of Pharmaceutical Sciences.</div>
+
+      <div class="prose">
+        <p><strong style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;color:var(--accent);border:1px solid currentColor;border-radius:3px;padding:1px 6px;margin-right:6px">BETA</strong>Still being built — more resources are on the way, and things may change.</p>
+        <p>This is a list of links to published resources — nothing more. It does not provide clinical advice or exam answers.</p>
+        <ul style="margin:0 0 14px;padding-left:18px;line-height:1.7">
+          <li>Always confirm information in the original source.</li>
+          <li>Linked sites belong to their publishers; their content, accuracy and access are theirs.</li>
+          <li>Check your exam rules for which resources are permitted.</li>
+          <li>Use at your own discretion.</li>
+        </ul>
+        <p>Made by <strong>Mike Min</strong>.</p>
+        <p>Feedback or a broken link: <a href="mailto:mikemin@student.ubc.ca">mikemin@student.ubc.ca</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+<p class="foot" id="foot">Made by Mike Min</p>
+
+<script>
+(function(){
+  "use strict";
+  var PROXY = "https://go.openathens.net/redirector/ubc.ca?url=";
+
+  var mem = {};
+  var S = {
+    get:function(k,d){ try{ var v=localStorage.getItem(k); return v===null?(k in mem?mem[k]:d):v; }catch(e){ return k in mem?mem[k]:d; } },
+    set:function(k,v){ mem[k]=String(v); try{ localStorage.setItem(k,String(v)); }catch(e){} },
+    del:function(k){ delete mem[k]; try{ localStorage.removeItem(k); }catch(e){} }
+  };
+
+  /* ---- reference registry: one entry, one id, used everywhere ---- */
+  var REFS = [
+    {id:"cps",g:"Start here",n:"CPS (formerly RxTx)",d:"Monographs, Therapeutic Choices, minor ailment chapters.",u:"https://cps2.pharmacists.ca",p:1,alt:"https://guides.library.ubc.ca/az/cps",k:"cps rxtx monograph compendium therapeutic choices minor ailment"},
+    {id:"lexi",g:"Start here",n:"Lexidrug (Lexicomp)",d:"Dosing, renal adjustment, paediatrics, interactions, Trissel's, Martindale.",u:"http://online.lexi.com/lco/action/home?siteid=2",p:1,alt:"https://guides.library.ubc.ca/az/lexicomp",k:"lexidrug lexicomp dosing renal pediatric interaction trissel martindale ahfs"},
+    {id:"search",g:"Start here",n:"UBC Library Search",d:"The catch-all. Anything not listed here, search it and sign in from the record.",u:"https://search.library.ubc.ca/",p:0,k:"ubc library search primo catalogue catch all everything database journal book"},
+    {id:"rxfiles",g:"Start here",n:"RxFiles",d:"Comparison charts — which one, and why.",u:"https://www.rxfiles.ca",k:"rxfiles comparison chart class dose equivalence"},
+    {id:"azdb",g:"Start here",n:"UBC Library A–Z databases",d:"Where everything licensed lives, if a direct link fails.",u:"https://guides.library.ubc.ca/az/databases",k:"ubc library database a-z cwl login fallback lexicomp micromedex"},
+    {id:"ti",g:"Start here",n:"Therapeutics Initiative (UBC)",d:"Independent evidence reviews with a BC lens.",u:"https://www.ti.ubc.ca",k:"therapeutics initiative evidence ubc independent"},
+    {id:"connect",g:"Start here",n:"Connect to Library Resources",d:"How OpenAthens sign-in works, plus the bookmarklet.",u:"https://guides.library.ubc.ca/connect",k:"openathens connect cwl off campus access bookmarklet"},
+
+    {id:"bugs",g:"Infectious diseases",n:"Bugs &amp; Drugs",d:"Empiric antimicrobial therapy with BC susceptibility data.",u:"https://www.bugsanddrugs.org",k:"bugs drugs antibiotic antimicrobial empiric infection uti pneumonia cellulitis otitis pharyngitis resistance"},
+    {id:"bccdc",g:"Infectious diseases",n:"BCCDC Communicable Disease Manual",d:"Provincial guidance including the immunization chapter.",u:"http://www.bccdc.ca/health-professionals/clinical-resources/communicable-disease-control-manual",k:"bccdc communicable disease immunization vaccine sti tb provincial"},
+    {id:"betalactam",g:"Infectious diseases",n:"BCCDC beta-lactam allergy toolkit",d:"Cross-reactivity and delabelling — BC's own guidance.",u:"https://www.bccdc.ca/Documents/PACE%20Beta-lactam%20Allergy%20Delabeling%20Toolkit.pdf",k:"beta lactam penicillin cephalosporin allergy cross reactivity delabel"},
+    {id:"drugsint",g:"Infectious diseases",n:"Drugs.com interaction checker",d:"Quick second opinion on a pair.",u:"https://www.drugs.com/drug_interactions.html",k:"interaction checker drug pair"},
+    {id:"recalls",g:"Infectious diseases",n:"Health Canada recalls &amp; alerts",d:"Advisories, recalls, shortages.",u:"https://recalls-rappels.canada.ca/en",k:"recall shortage advisory safety health canada"},
+    {id:"antibiogram",g:"Infectious diseases",n:"Your local antibiogram",d:"Health-authority specific and revised yearly — link the current one, never a saved copy.",k:"antibiogram susceptibility sensitivity local resistance"},
+
+    {id:"ccs",g:"Cardiovascular",n:"CCS Pocket Guides",d:"AF, heart failure, lipids, antiplatelet — pocket versions.",u:"https://ccs.ca/pocket-guides/",k:"ccs cardiology pocket atrial fibrillation heart failure lipid dyslipidemia antiplatelet"},
+    {id:"ccslib",g:"Cardiovascular",n:"CCS guideline library",d:"Full guidelines, always the current edition.",u:"https://ccs.ca/guidelines/",k:"ccs guideline library cardiology"},
+    {id:"thrombosis",g:"Cardiovascular",n:"Thrombosis Canada",d:"Anticoagulation — starting, switching, holding, reversal.",u:"https://thrombosiscanada.ca",k:"thrombosis anticoagulant doac warfarin inr vte dvt pe switching bridging reversal hit"},
+    {id:"qt",g:"Cardiovascular",n:"CredibleMeds QT list",d:"Which drugs prolong QT. Free account required.",u:"https://crediblemeds.org/healthcare-providers",k:"qt qtc torsades prolongation arrhythmia"},
+
+    {id:"diabetes",g:"Endocrine",n:"Diabetes Canada provider tools",d:"Insulin prescription, SMBG, CV risk, sick day — the live hub.",u:"https://guidelines.diabetes.ca/health-care-provider-tools",k:"diabetes insulin smbg a1c glucose sick day tools"},
+    {id:"insulin",g:"Endocrine",n:"Insulin Prescription Tool",d:"Starting and titrating insulin, with the form.",u:"https://guidelines.diabetes.ca/reduce-complications/insulin-prescription-tool",k:"insulin basal bolus titration prescription"},
+    {id:"loewen",g:"Endocrine",n:"Loewen one-pagers",d:"Sodium &amp; water, thyroid and more — published by the UBC faculty member who wrote them.",u:"https://www.peterloewen.com/1-pagers",k:"loewen sodium water hyponatremia thyroid electrolyte one pager ubc"},
+
+    {id:"bcrenal",g:"Kidney",n:"BC Renal — pharmacy &amp; formulary",d:"Provincial renal protocols, formulary, CKD anemia management.",u:"https://www.bcrenal.ca/health-professionals/clinical-resources/pharmacy-formulary",k:"bc renal ckd dialysis anemia esa iron formulary kidney egfr"},
+
+    {id:"equi",g:"Pain &amp; deprescribing",n:"BC equianalgesic table",d:"The provincial morphine equivalence table.",u:"https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/palliative2_-_pain_equianalgesic.pdf",k:"equianalgesic opioid conversion morphine equivalent fentanyl rotation palliative"},
+    {id:"palliative",g:"Pain &amp; deprescribing",n:"BC palliative symptom management",d:"Pain and symptom management guidance.",u:"https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/palliative2.pdf",k:"palliative pain symptom cancer opioid"},
+    {id:"deprescribe",g:"Pain &amp; deprescribing",n:"Deprescribing.org algorithms",d:"PPI, benzodiazepine, antipsychotic, antihyperglycaemic, cholinesterase.",u:"https://deprescribing.org/resources/deprescribing-guidelines-algorithms/",k:"deprescribing ppi benzodiazepine bzra antipsychotic taper elderly dementia"},
+    {id:"bccsu",g:"Pain &amp; deprescribing",n:"BC Centre on Substance Use",d:"Opioid use disorder and substance use guidance.",u:"https://www.bccsu.ca",k:"bccsu opioid use disorder oat suboxone methadone substance"},
+
+    {id:"macs",g:"Scope &amp; coverage",n:"Minor Ailments &amp; Contraception (MACS)",d:"The BC scope list, criteria and documentation for pharmacist prescribing.",u:"https://www.gov.bc.ca/minorailments",k:"macs minor ailment contraception scope prescribing bc documentation"},
+    {id:"formulary",g:"Scope &amp; coverage",n:"PharmaCare Formulary Search",d:"Is it covered, and under which plan?",u:"https://pharmacareformularysearch.gov.bc.ca",k:"pharmacare formulary coverage covered benefit plan cost"},
+    {id:"sa",g:"Scope &amp; coverage",n:"Special Authority",d:"Criteria and forms when the formulary says no.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/programs/special-authority",k:"special authority criteria form coverage exception"},
+    {id:"cpbc",g:"Scope &amp; coverage",n:"College of Pharmacists of BC",d:"Scope, standards, and every 'can a pharmacist…' answer.",u:"https://www.bcpharmacists.org",k:"cpbc college scope standard legal legislation ethics bylaw"},
+    {id:"bcg",g:"Scope &amp; coverage",n:"BC Guidelines",d:"Every provincial clinical practice guideline, by topic.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines",k:"bc guidelines provincial gpac back pain ckd diabetes hypertension"},
+
+    {id:"pedmed",g:"Special populations",n:"PedMed — BC Children's dosing",d:"Paediatric and neonatal dosing reference.",u:"https://pedmed.org",k:"pediatric paediatric neonatal children dosing bc childrens"},
+    {id:"briggs",g:"Special populations",n:"Briggs — Drugs in Pregnancy &amp; Lactation",d:"Fetal and neonatal risk, drug by drug. The standard pregnancy reference.",u:"https://resolve.library.ubc.ca/cgi-bin/catsearch?bid=12353480",cwl:1,k:"briggs pregnancy lactation breastfeeding fetal neonatal risk teratogen"},
+    {id:"lactmed",g:"Special populations",n:"LactMed",d:"Drugs and lactation, with the data behind each entry.",u:"https://www.ncbi.nlm.nih.gov/books/NBK501922/",k:"lactmed breastfeeding lactation milk infant"},
+    {id:"m2b",g:"Special populations",n:"MotherToBaby",d:"Exposure fact sheets for pregnancy.",u:"https://mothertobaby.org",k:"pregnancy exposure teratogen fact sheet"},
+    {id:"psbc",g:"Special populations",n:"Perinatal Services BC",d:"Provincial perinatal guidelines.",u:"https://www.perinatalservicesbc.ca",k:"perinatal pregnancy obstetric postpartum bc"},
+    {id:"sogc",g:"Special populations",n:"Medical abortion toolkits (SOGC)",d:"Guidelines, checklists, pharmacist dispensing guide.",u:"https://caps.sogc.org/wdk-listing/resources-3/",k:"medical abortion mifepristone mifegymiso dispensing sogc"},
+    {id:"dpic",g:"Special populations",n:"BC Drug and Poison Information Centre",d:"Poisoning and overdose — the number you call.",u:"https://www.dpic.org",k:"poison overdose toxicology dpic ingestion"},
+
+    {id:"healthlink",g:"Counselling",n:"HealthLink BC",d:"Plain-language patient handouts.",u:"https://www.healthlinkbc.ca",k:"healthlink patient handout counselling plain language education"},
+    {id:"inhaler",g:"Counselling",n:"Lung Saskatchewan — inhaler technique",d:"Step-by-step pages and videos for every device: MDI, spacer, Diskus, Turbuhaler, Ellipta, Respimat, Breezhaler, Handihaler.",u:"https://lungsask.ca/inhaler-videos",k:"inhaler device technique spacer mdi diskus turbuhaler ellipta respimat breezhaler handihaler twisthaler video counselling asthma copd lung saskatchewan saskhaler"},
+
+    {id:"appliedtx",g:"Study &amp; practice",n:"Applied Therapeutics",d:"Koda-Kimble &amp; Young's, current edition — the core therapeutics textbook, chapter by condition. For studying, not lookups.",u:"https://integratedpharmacy.lwwhealthlibrary.com/book.aspx?bookid=3249",p:1,alt:"https://guides.library.ubc.ca/az/lww-health-library",k:"applied therapeutics koda kimble young zeind textbook study chapter therapeutics lww health library"},
+    {id:"rxnotes",g:"Study &amp; practice",n:"RxNotes",d:"Free pharmacy notes and station practice, published openly by its authors.",u:"https://rxnotes.ca/",k:"rxnotes station practice notes calculation osce"},
+    {id:"studyguide",g:"Study &amp; practice",n:"UBC PharmD Study Guide",d:"The librarians' map of what's licensed and where.",u:"https://guides.library.ubc.ca/pharmdstudyguide",k:"ubc library pharmd study guide"},
+    {id:"canvas",g:"Study &amp; practice",n:"Canvas — course page",d:"Direct link to the ICE module, if it's shareable.",k:"canvas course module lms"}
+  ];
+  var REF = {}; REFS.forEach(function(r){ REF[r.id] = r; });
+
+  /* ---- conditions: prompts and pointers only, no clinical claims ---- */
+  var CONDITIONS = [
+    {n:"Community-acquired pneumonia",sys:"ID",ask:["Setting of care — outpatient, ward, ICU?","Comorbidities and antibiotics in the last 3 months","Severity score your site uses","What would make this an admission?"],go:["bugs","bccdc","cps"]},
+    {n:"Urinary tract infection",sys:"ID",ask:["Upper or lower tract?","Pregnant, catheterised, or male?","Prior cultures and local resistance","How long a course?"],go:["bugs","cps","pedmed"]},
+    {n:"Clostridioides difficile",sys:"ID",ask:["First episode or recurrence?","Severity criteria your site uses","Which antibiotic triggered it, and can it stop?"],go:["bugs","cps"]},
+    {n:"Cellulitis &amp; skin infection",sys:"ID",ask:["Purulent or non-purulent?","Portal of entry, diabetes, immune status","What would make this urgent surgical?"],go:["bugs","cps"]},
+    {n:"Impetigo",sys:"ID",ask:["How many lesions, and where?","Topical or systemic threshold","Household and school contacts"],go:["bugs","cps","macs"]},
+    {n:"Osteomyelitis",sys:"ID",ask:["Contiguous or haematogenous?","Duration, vascular supply, hardware","Criteria for oral step-down"],go:["bugs","cps"]},
+    {n:"Immunization &amp; schedules",sys:"ID",ask:["Age, risk conditions, doses already given","Minimum interval since the last dose","Live vaccine cautions for this patient"],go:["bccdc","cps"]},
+
+    {n:"Osteoarthritis",sys:"MSK",ask:["Which joints, and what function is lost?","Topical vs oral — GI, renal, cardiac risk","What have they already tried, at what dose?"],go:["rxfiles","cps","bcg"]},
+    {n:"Rheumatoid arthritis",sys:"MSK",ask:["Current DMARD and how long on it","Monitoring parameters and their frequency","Interactions and live vaccine timing"],go:["cps","lexi","rxfiles"]},
+    {n:"Gout",sys:"MSK",ask:["Acute flare or urate-lowering?","Renal function, diuretics, interacting drugs","Could this joint be septic?"],go:["rxfiles","cps","bcg"]},
+    {n:"Low back &amp; neck pain",sys:"MSK",ask:["Duration and what they've tried","Red flags to screen — check the guideline's list","Function goal, not just pain score"],go:["bcg","rxfiles"]},
+    {n:"Sports injury &amp; sprains",sys:"MSK",ask:["Mechanism and weight-bearing","Is this within minor ailment scope?","Topical vs oral analgesia"],go:["macs","cps","rxfiles"]},
+
+    {n:"Acne",sys:"Derm",ask:["Lesion type and severity","Pregnancy status before anything retinoid","What they've used, for how long"],go:["cps","macs","briggs"]},
+    {n:"Psoriasis",sys:"Derm",ask:["Body surface and sites involved","Steroid potency appropriate to the site","Any joint symptoms?"],go:["cps","rxfiles"]},
+    {n:"Rosacea",sys:"Derm",ask:["Which subtype?","Triggers and what's been tried","Ocular involvement?"],go:["cps","macs"]},
+    {n:"Atopic dermatitis",sys:"Derm",ask:["Distribution and age","Steroid potency and duration already used","Emollient routine — are they actually doing it?"],go:["cps","healthlink","pedmed"]},
+    {n:"Tinea &amp; onychomycosis",sys:"Derm",ask:["Site, and how many nails","Confirmed before treating?","Terbinafine interactions and LFT monitoring"],go:["cps","lexi"]},
+    {n:"Head lice &amp; scabies",sys:"Derm",ask:["Which product already used, and when","Re-treatment interval for that product","Household contacts and environment"],go:["cps","macs","healthlink"]},
+
+    {n:"Pharyngitis",sys:"HEENT",ask:["Score it — which criteria does your site use?","Swab or treat empirically?","Penicillin allergy — what actually happened?"],go:["bugs","cps","macs"]},
+    {n:"Allergic rhinitis",sys:"HEENT",ask:["Seasonal or perennial, ocular symptoms?","Intranasal steroid technique","Prior antihistamine response"],go:["cps","rxfiles","macs"]},
+    {n:"Acute otitis media",sys:"HEENT",ask:["Age, laterality, severity","Watchful waiting criteria","Antibiotic in the last month?"],go:["bugs","pedmed","cps"]},
+    {n:"Otitis externa",sys:"HEENT",ask:["Is the tympanic membrane intact?","Water exposure or device use","Diabetes or immunocompromise?"],go:["bugs","cps"]},
+    {n:"Conjunctivitis",sys:"HEENT",ask:["Discharge character, one eye or both","Contact lens wearer?","Is this in minor ailment scope?"],go:["cps","macs","healthlink"]},
+    {n:"Eyelid conditions",sys:"HEENT",ask:["Acute lump or chronic lid margin change?","Lid hygiene routine","Any vision change?"],go:["cps","healthlink"]},
+    {n:"Dry eye",sys:"HEENT",ask:["Drying medications on board","Frequency of use — does that need preservative-free?","Screen and environment factors"],go:["cps","lexi"]},
+    {n:"Glaucoma",sys:"HEENT",ask:["Which drops, and is technique correct?","Asthma, COPD, bradycardia, heart block?","Adherence — the usual failure point"],go:["cps","lexi","healthlink"]},
+    {n:"Oral candidiasis",sys:"HEENT",ask:["Inhaled steroid — are they rinsing?","Dentures, immune status","Topical or systemic?"],go:["cps","bugs"]},
+
+    {n:"Venous thromboembolism",sys:"Heme",ask:["Provoked or unprovoked — what duration does that imply?","Renal function for DOAC dosing","Cancer, pregnancy, or extremes of weight?"],go:["thrombosis","cps","lexi"]},
+    {n:"VTE prophylaxis",sys:"Heme",ask:["Surgical or medical, and what's the bleeding risk?","Timing around surgery","Renal function"],go:["thrombosis","cps"]},
+    {n:"Warfarin &amp; INR",sys:"Heme",ask:["Indication and target range","What changed — diet, drug, illness?","Which nomogram does your site use?"],go:["thrombosis","lexi","cps"]},
+    {n:"Iron deficiency anaemia",sys:"Heme",ask:["Source of loss — has it been investigated?","Elemental iron per salt, and dosing interval","What else are they taking at the same time?"],go:["cps","bcrenal","rxfiles"]},
+    {n:"B12 &amp; folate deficiency",sys:"Heme",ask:["Absorption cause — metformin, PPI, surgery?","Any neurological symptoms?","Oral or parenteral?"],go:["cps","rxfiles"]},
+    {n:"CKD anaemia",sys:"Heme",ask:["Dialysis, non-dialysis, or PD?","Iron status before ESA","Which provincial protocol applies?"],go:["bcrenal","cps"]},
+
+    {n:"Asthma",sys:"Resp",ask:["Control criteria — which are they failing?","Device technique before any drug change","Reliever frequency and night waking"],go:["healthlink","inhaler","cps"]},
+    {n:"Asthma exacerbation",sys:"Resp",ask:["Severity markers your site uses","What's already been given","Follow-up and written action plan"],go:["healthlink","cps"]},
+    {n:"COPD",sys:"Resp",ask:["Exacerbation history and symptom burden","Device technique and inhaler count","Vaccination status"],go:["cps","rxfiles","bccdc"]},
+    {n:"Smoking cessation",sys:"Resp",ask:["Cigarettes per day and time to first one","Prior attempts — what happened?","What does PharmaCare cover?"],go:["formulary","cps","healthlink"]},
+
+    {n:"Contraception",sys:"Women's",ask:["Is this within MACS scope?","Contraindications to screen","What's covered, and how to bill it"],go:["macs","cps","formulary"]},
+    {n:"Bacterial vaginosis",sys:"Women's",ask:["Pregnant?","Recurrent?","Partner considerations"],go:["bugs","cps","macs"]},
+    {n:"Vulvovaginal candidiasis",sys:"Women's",ask:["Uncomplicated or complicated?","Pregnancy, diabetes, recent antibiotics","In scope, or referral?"],go:["cps","macs","bugs"]},
+    {n:"Medical abortion",sys:"Women's",ask:["Dispensing requirements and documentation","Counselling points and what to expect","Follow-up arrangements"],go:["sogc","cps","psbc"]},
+
+    {n:"Diabetes",sys:"Endo",ask:["A1c, targets, and what's driving the gap","Renal and cardiac status — that picks the agent","Hypoglycaemia risk and sick-day plan"],go:["diabetes","insulin","formulary"]},
+    {n:"Sodium &amp; water disorders",sys:"Endo",ask:["Volume status first","Rate of change and symptoms","Which drug is causing it?"],go:["loewen","lexi","cps"]},
+    {n:"Thyroid",sys:"Endo",ask:["Which direction, and how long?","Timing relative to food and other drugs","When to recheck TSH"],go:["loewen","cps","lexi"]},
+
+    {n:"Chronic pain",sys:"Cross",ask:["Pain type and function goal","Prior trials, doses and durations","Opioid history — and is deprescribing the answer?"],go:["rxfiles","deprescribe","bcg"]},
+    {n:"Opioid conversion &amp; tapering",sys:"Cross",ask:["Current total daily morphine equivalent","Incomplete cross-tolerance — what reduction?","Breakthrough provision"],go:["equi","palliative","bccsu"]},
+    {n:"Deprescribing",sys:"Cross",ask:["Which algorithm covers this class?","Taper schedule and monitoring","What does the patient want?"],go:["deprescribe","rxfiles","healthlink"]},
+    {n:"Poisoning &amp; overdose",sys:"Cross",ask:["Agent, amount, time since ingestion","Co-ingestants","Call — do not look this one up"],go:["dpic","cps"]},
+    {n:"Herpes simplex &amp; zoster",sys:"Cross",ask:["Time since rash onset — is the window open?","Dermatome, especially ophthalmic","Immune status"],go:["cps","bugs","macs"]},
+    {n:"QT prolongation",sys:"Cross",ask:["Which drugs on the list are they taking?","Electrolytes and other risk factors","Is there an alternative?"],go:["qt","lexi","cps"]}
+  ];
+
+  var PLANS = [
+    {n:"Patient interview",li:["Introduce, confirm, state the plan and the time","Open question first — do not interrupt the story","Work a structured history; say the mnemonic silently","Screen red flags explicitly — the marks are for asking","Summarize back and state the next step"]},
+    {n:"Minor ailment assessment",li:["Focused history on the complaint","Red-flag screen out loud","Check scope and coverage before naming a product","Recommend with dose, duration and expected benefit","Safety net: what brings them back, and when"]},
+    {n:"Prescription assessment",li:["Read the whole order before judging one line","Indication, dose, route, frequency, duration","Renal and hepatic adjustment; weight and age extremes","Check interactions — do not recall them","State each problem with a proposed fix"]},
+    {n:"Counselling",li:["Find out what they were already told","What it's for, how to take it, how long","Two or three effects that matter, and what to do","Storage, missed dose, refills","Teach-back in their words"]},
+    {n:"Drug information question",li:["Restate the question and the real need behind it","One tertiary source first — do not tab-hop","Second source only to confirm or resolve conflict","Answer, caveat, source and its date","Say plainly what you could not find"]},
+    {n:"Documentation",li:["Subjective in their words","Objective: meds, labs, vitals, allergies","Assessment: the problem plus your reasoning","Plan: action, owner, monitoring parameter, follow-up date"]}
+  ];
+
+  /* ---- plumbing ---- */
+  var PAGES=["home","conditions","refs","practice","about"];
+  var TITLES={home:"Navigator",conditions:"Conditions",refs:"References",practice:"Practice",about:"About"};
+  var shell=document.getElementById("shell"),back=document.getElementById("back"),
+      title=document.getElementById("title"),foot=document.getElementById("foot"),
+      yrBtn=document.getElementById("yr");
+  var cur="home";
+  var year=S.get("nav.year","PY1");
+  yrBtn.textContent=year;
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function plain(s){var d=document.createElement("div");d.innerHTML=s;return d.textContent||"";}
+  function slug(s){return plain(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
+
+  function go(name,push){
+    if(PAGES.indexOf(name)<0)name="home";
+    PAGES.forEach(function(p){var el=document.getElementById("p-"+p);if(el)el.hidden=(p!==name);});
+    cur=name;
+    title.textContent=TITLES[name];
+    back.hidden=(name==="home");
+    var wide=(name!=="home");
+    shell.classList.toggle("wide",wide);
+    foot.style.maxWidth=wide?"820px":"520px";
+    yrBtn.hidden=(name!=="home"&&name!=="conditions");
+    if(push!==false){var h="#"+name;if(location.hash!==h){try{history.pushState({},"",h);}catch(e){location.hash=name;}}}
+    window.scrollTo(0,0);
+  }
+
+  /* ---- proxy ---- */
+  function href(r){return r.p?PROXY+encodeURIComponent(r.u):r.u;}
+
+  /* ---- condition block ---- */
+  function condHTML(c){
+    var s=slug(c.n),mk=S.get("nav."+year+"."+s+".m",""),nt=S.get("nav."+year+"."+s+".n","");
+    var opens=c.go.map(function(id){
+      var r=REF[id];if(!r)return"";
+      if(!r.u)return '<span class="open" style="background:var(--screen-2);color:var(--ink-3)">'+r.n+' — not linked yet</span>';
+      return '<a class="open" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer">'+r.n+((r.p||r.cwl)?' <span class="cwl">CWL</span>':'')+'</a>'+
+        (r.alt?'<a class="open backup" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer" title="'+esc(plain(r.n))+' via the UBC Library page">Backup</a>':'');
+    }).join("");
+    return '<div class="cond" data-c="'+s+'">'+
+      '<div class="cond-h"><h3>'+c.n+'</h3><span class="sys">'+c.sys+'</span></div>'+
+      '<p class="lbl">Work out</p><ul><li>'+c.ask.join("</li><li>")+'</li></ul>'+
+      '<p class="lbl">Open</p><div class="opens">'+opens+'</div>'+
+      '<div class="mark" data-m="'+esc(plain(c.n))+'"><span>Me</span>'+
+        '<button data-v="solid" aria-pressed="'+(mk==="solid")+'">Solid</button>'+
+        '<button data-v="shaky" aria-pressed="'+(mk==="shaky")+'">Shaky</button></div>'+
+      '<textarea class="note" rows="1" placeholder="Your note…" data-n="'+esc(plain(c.n))+'">'+esc(nt)+'</textarea>'+
+      '</div>';
+  }
+
+  function bindCond(root){
+    root.addEventListener("click",function(e){
+      var b=e.target.closest(".mark button");if(!b)return;
+      var wrap=b.parentNode,key="nav."+year+"."+slug(wrap.getAttribute("data-m"))+".m";
+      var was=b.getAttribute("aria-pressed")==="true";
+      wrap.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed","false");});
+      if(was)S.del(key); else {b.setAttribute("aria-pressed","true");S.set(key,b.getAttribute("data-v"));}
+    });
+    root.addEventListener("input",function(e){
+      var t=e.target;if(!t.classList||!t.classList.contains("note"))return;
+      var key="nav."+year+"."+slug(t.getAttribute("data-n"))+".n";
+      if(t.value.trim())S.set(key,t.value); else S.del(key);
+    });
+  }
+
+  /* ---- search: one box, everything ---- */
+  var qEl=document.getElementById("q"),resEl=document.getElementById("results"),
+      menuEl=document.getElementById("menu"),hintEl=document.getElementById("hint");
+
+  function refRow(r){
+    if(!r.u)return '<li><div class="slot"><span><span class="n">'+r.n+'</span><span class="d">'+r.d+'</span></span><span class="go">Add link</span></div></li>';
+    var host=r.u.replace(/^https?:\/\//,"").replace(/^www\./,"").split("/")[0];
+    var main='<a class="link" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer"><span><span class="n">'+r.n+((r.p||r.cwl)?'<span class="cwlbadge">CWL</span>':'')+'</span><span class="d">'+r.d+'</span></span><span class="go">'+esc(host)+' ↗</span></a>';
+    if(!r.alt)return '<li>'+main+'</li>';
+    return '<li class="duo">'+main+'<a class="altlink" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer"><span class="n">Backup</span><span class="d">UBC Library page</span></a></li>';
+  }
+
+  function drawResults(term){
+    term=(term||"").trim().toLowerCase();
+    if(!term){resEl.hidden=true;menuEl.hidden=false;hintEl.hidden=false;return;}
+    menuEl.hidden=true;hintEl.hidden=true;resEl.hidden=false;
+    var cs=CONDITIONS.filter(function(c){
+      return (plain(c.n)+" "+c.sys+" "+plain(c.ask.join(" "))+" "+c.go.map(function(i){return REF[i]?plain(REF[i].n):"";}).join(" ")).toLowerCase().indexOf(term)>-1;
+    });
+    var rs=REFS.filter(function(r){
+      return (plain(r.n)+" "+plain(r.d)+" "+(r.k||"")+" "+plain(r.g)).toLowerCase().indexOf(term)>-1;
+    });
+    var h="";
+    if(cs.length)h+='<h2 class="sec">Conditions</h2>'+cs.slice(0,6).map(condHTML).join("");
+    if(rs.length)h+='<h2 class="sec">References</h2><ul class="links">'+rs.slice(0,10).map(refRow).join("")+'</ul>';
+    if(/timer|station|practice|rehears/.test(term))h+='<h2 class="sec">Elsewhere</h2><ul class="links"><li><a class="link" href="#practice"><span><span class="n">Practice</span><span class="d">Rehearsal timer and station shapes.</span></span><span class="go">open ›</span></a></li></ul>';
+    resEl.innerHTML=h||'<p class="empty">Nothing matches that. Try a condition name, a drug class, or a resource.</p>';
+  }
+  qEl.addEventListener("input",function(){drawResults(qEl.value);});
+  bindCond(resEl);
+
+  /* ---- browse conditions ---- */
+  var condList=document.getElementById("condlist");
+  bindCond(condList);
+  function drawConds(){
+    document.getElementById("condlede").innerHTML = year==="PY1"
+      ? "Every condition in scope, as questions rather than answers. The links go to the sources that are accountable for the answers."
+      : "<strong>"+year+" has no conditions yet.</strong> PY1 is the only year with content. The references and practice pages still work for every year.";
+    if(year!=="PY1"){condList.innerHTML="";return;}
+    var bySys={},order=[];
+    CONDITIONS.forEach(function(c){if(!bySys[c.sys]){bySys[c.sys]=[];order.push(c.sys);}bySys[c.sys].push(c);});
+    condList.innerHTML=order.map(function(s){
+      return '<h2 class="sec">'+s+'</h2>'+bySys[s].map(condHTML).join("");
+    }).join("");
+  }
+
+  /* ---- references ---- */
+  var refList=document.getElementById("reflist"),chipsEl=document.getElementById("chips"),grp="";
+  function drawRefs(){
+    var groups=[];REFS.forEach(function(r){if(groups.indexOf(r.g)<0)groups.push(r.g);});
+    chipsEl.innerHTML='<button data-g="" aria-pressed="'+(grp==="")+'">All</button>'+
+      groups.map(function(g){return '<button data-g="'+esc(plain(g))+'" aria-pressed="'+(grp===plain(g))+'">'+g+'</button>';}).join("");
+    refList.innerHTML=groups.filter(function(g){return !grp||plain(g)===grp;}).map(function(g){
+      return '<h2 class="sec">'+g+'</h2><ul class="links">'+REFS.filter(function(r){return r.g===g;}).map(refRow).join("")+'</ul>';
+    }).join("");
+  }
+  chipsEl.addEventListener("click",function(e){var b=e.target.closest("[data-g]");if(!b)return;grp=b.getAttribute("data-g");drawRefs();});
+
+  /* ---- practice ---- */
+  document.getElementById("planlist").innerHTML=PLANS.map(function(p){
+    return '<div class="plan"><h3>'+p.n+'</h3><ul><li>'+p.li.join("</li><li>")+'</li></ul></div>';
+  }).join("");
+
+  var dial=document.getElementById("dial"),tdisp=document.getElementById("tdisp"),
+      tstate=document.getElementById("tstate"),tgo=document.getElementById("tgo"),treset=document.getElementById("treset");
+  var total=parseInt(S.get("nav.min","8"),10)*60,left=total,run=false,tick=null;
+  function mmss(s){var m=Math.floor(s/60),r=s%60;return (m<10?"0":"")+m+":"+(r<10?"0":"")+r;}
+  function paint(){
+    tdisp.textContent=mmss(left);
+    dial.classList.toggle("warn",left<=120&&left>0);
+    dial.classList.toggle("done",left===0);
+    tstate.textContent=left===0?"Time":(run?(left<=120?"Wrap up":"Running"):(left===total?"Ready":"Paused"));
+    tgo.textContent=run?"Pause":(left===total?"Start":(left===0?"Start":"Resume"));
+  }
+  function stop(){run=false;if(tick)clearInterval(tick);tick=null;paint();}
+  function start(){
+    if(run)return;
+    if(left===0){left=total;}
+    run=true;
+    tick=setInterval(function(){left--;if(left<=0){left=0;stop();}paint();},1000);
+    paint();
+  }
+  tgo.addEventListener("click",function(){run?stop():start();});
+  treset.addEventListener("click",function(){stop();left=total;paint();});
+  document.getElementById("presets").addEventListener("click",function(e){
+    var b=e.target.closest("[data-min]");if(!b)return;
+    document.querySelectorAll("#presets .chip").forEach(function(c){c.setAttribute("aria-pressed",String(c===b));});
+    stop();total=parseInt(b.getAttribute("data-min"),10)*60;left=total;S.set("nav.min",b.getAttribute("data-min"));paint();
+  });
+  (function(){var sv=S.get("nav.min","8");document.querySelectorAll("#presets .chip").forEach(function(c){c.setAttribute("aria-pressed",String(c.getAttribute("data-min")===sv));});})();
+
+  /* ---- year ---- */
+  yrBtn.addEventListener("click",function(){
+    var o=["PY1","PY2","PY3"];year=o[(o.indexOf(year)+1)%3];
+    S.set("nav.year",year);yrBtn.textContent=year;drawConds();
+  });
+
+  /* ---- wire ---- */
+  document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-go"));});});
+  back.addEventListener("click",function(){go("home");});
+  window.addEventListener("popstate",function(){go((location.hash||"#home").slice(1),false);});
+  document.addEventListener("keydown",function(e){
+    var t=e.target,typing=t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA");
+    if(e.key==="Escape"){if(typing)t.blur();else go("home");return;}
+    if(typing)return;
+    if(e.key==="/"){e.preventDefault();go("home");qEl.focus();qEl.select();}
+  });
+
+  document.getElementById("csub").textContent=CONDITIONS.length+" conditions, as questions";
+  document.getElementById("rsub").textContent=REFS.filter(function(r){return r.u;}).length+" links, grouped by topic";
+  drawConds();drawRefs();paint();drawResults("");
+  go((location.hash||"#home").slice(1),false);
+})();
+</script>
+
+</body>
+</html>
