@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Student-made study map for the UBC PharmD open-book ICE. Not affiliated with UBC.">
+<meta name="description" content="ICEberg — student-made study map for the UBC PharmD open-book ICE. Not affiliated with UBC.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>ICE Navigator</title>
+<title>ICEberg</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -231,7 +231,7 @@ h2.sec:first-child{margin-top:0}
   <div class="screen">
     <div class="bar">
       <button class="back" id="back" hidden>‹ Back</button>
-      <h1 id="title">ICE Navigator</h1>
+      <h1 id="title">ICEberg</h1>
       <div class="right"><button class="yr" id="yr">PY1</button><button class="theme" id="theme" aria-label="Switch to dark mode" title="Dark mode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></button></div>
     </div>
 
@@ -334,6 +334,9 @@ h2.sec:first-child{margin-top:0}
   var REFS = [
     {id:"cps",g:"Start here",n:"CPS (formerly RxTx)",d:"Monographs, Therapeutic Choices, minor ailment chapters.",u:"https://cps2.pharmacists.ca",p:1,alt:"https://guides.library.ubc.ca/az/cps",k:"cps rxtx monograph compendium therapeutic choices minor ailment"},
     {id:"lexi",g:"Start here",n:"Lexidrug (Lexicomp)",d:"Dosing, renal adjustment, paediatrics, interactions, Trissel's, Martindale.",u:"http://online.lexi.com/lco/action/home?siteid=2",p:1,alt:"https://guides.library.ubc.ca/az/lexicomp",k:"lexidrug lexicomp dosing renal pediatric interaction trissel martindale ahfs"},
+    {id:"medsask",g:"Start here",n:"medSask minor ailment guidelines",d:"Assessment checklists and treatment algorithms for every minor ailment. Sign in with your free BCPhA account (CPBC-registered students).",u:"https://member.bcpharmacy.ca/BCP/Contact_Management/Sign_In.aspx?WebsiteKey=5d0b6fee-4ff7-4dca-8a6a-10484c27f6fc&LoginRedirect=true&returnurl=%2fbcp%2fSSO%2fMedSSO.aspx%3fSAMLRequest%3dfVNdb9owFH3vr0B5JwkZTYoFkTLYBxIliLBq2stk7JthLbEzX6ej%252F36OQ9toavGDJV%252Bfc%252B69x9dzpHXVkKw1J7mHPy2guRnZda4ricRdLrxWS6IoCiSS1oDEMFJk9xsS%252BSFptDKKqcr7j3adRRFBG6FkT1uvFl6%252B%252FbTJv6y3P%252BNkVsZlPJ3ehdNyErHjrGRRlISUl5zTaZnwKGHsNumpD6DR6iw8K9tHdlo9Cg56a7MuvHvgBcXflzyILawlGiqNZYRRPA5n4yg5RB%252FIJCbh3Y8et7I2CEmNEz4Z0yAJghrqI2j%252FyJoT1TVlTz6jgT0FRZEHXZoi9yk255cqnC8fheRC%252Frpux7EHIfl6OOzGu7w49CLZs01LJbGtQRegHwWDb%252FvNsC6OtkO%252FdbutqbM%252FYD3DS53QvIsR175O3yW2Nts8GEJfyQ3p%252FFyvdqoS7MnFu%252FVZWSvM%252B91N%252FImLCD4uHZRATUWVca4B0XvRyapK%252FV1qoMa%252BmdEteKMgHSS%252FzCZwN6nWDgNnM1qquqFaYPdMcKbMXNp9bXkIX1Z27PZQplcnkxHW4Wz4%252B204u9jxpkxvTnClwPTm%252BXr4wdJ%252F%26RelayState%3d%252F%26SigAlg%3dhttp%253A%252F%252Fwww.w3.org%252F2001%252F04%252Fxmldsig-more%2523rsa-sha256%26Signature%3dCzvThwCDIiT%252B%252FTbHTcPt%252FnFfmcc0%252BhvJFIPTYdgzoujn8iXzCUh9xdGy7OUPw2J9xT1D%252BnjyGfJVzIeFywlGgQ57zXqZzxDUmy4RiQnXEFcFMIuYqNVzPDxhzgchwUyfpJmio41JjalffBEepX6YEcvDBtEJ01NtwiVWSgjCX3rDueR9vINxNQcV6i2j4INZOq0ZMHpbgckFccECcpQX4yGq86xefAKyTmItkjMJcZJ5%252Fa%252B0jcmS8kPJWz8uCmCmrnajkQHXQmmTa81ctunTsNs6qhX2xFTgVq4PeP3JEmx8iSTKSyYWkL34qGVBVo0fx2jpVYwckchQ5ROYQLMCwQ%253D%253D",lg:"BCPhA",alt:"https://www.bcpharmacy.ca/medsask",altd:"BCPhA medSask page",k:"medsask med sask minor ailment algorithm checklist self care macs prescribing saskatchewan bcpha"},
+    {id:"natmed",g:"Start here",n:"NatMed Pro (Natural Medicines)",d:"Natural health products and supplements — evidence, safety, dosing, interactions.",u:"https://naturalmedicines.therapeuticresearch.com/",p:1,alt:"https://guides.library.ubc.ca/az/databases?q=natmed",k:"natmed natural medicines natmed pro natural health product nhp supplement herbal vitamin interaction therapeutic research"},
+    {id:"pedmed",g:"Start here",n:"PedMed — BC Children's dosing",d:"Paediatric and neonatal dosing reference. No login needed.",u:"https://pedmed.org/",k:"pedmed pediatric paediatric neonatal children dosing bc childrens"},
     {id:"search",g:"Start here",n:"UBC Library Search",d:"The catch-all. Anything not listed here, search it and sign in from the record.",u:"https://search.library.ubc.ca/",p:0,k:"ubc library search primo catalogue catch all everything database journal book"},
     {id:"rxfiles",g:"Start here",n:"RxFiles",d:"Comparison charts — which one, and why.",u:"https://www.rxfiles.ca",k:"rxfiles comparison chart class dose equivalence"},
     {id:"azdb",g:"Start here",n:"UBC Library A–Z databases",d:"Where everything licensed lives, if a direct link fails.",u:"https://guides.library.ubc.ca/az/databases",k:"ubc library database a-z cwl login fallback lexicomp micromedex"},
@@ -364,7 +367,6 @@ h2.sec:first-child{margin-top:0}
     {id:"bccsu",g:"Pain &amp; deprescribing",n:"BC Centre on Substance Use",d:"Opioid use disorder and substance use guidance.",u:"https://www.bccsu.ca",k:"bccsu opioid use disorder oat suboxone methadone substance"},
 
     {id:"macs",g:"Scope &amp; coverage",n:"Minor Ailments &amp; Contraception (MACS)",d:"The BC scope list, criteria and documentation for pharmacist prescribing.",u:"https://www.gov.bc.ca/minorailments",k:"macs minor ailment contraception scope prescribing bc documentation"},
-    {id:"medsask",g:"Scope &amp; coverage",n:"medSask minor ailment guidelines",d:"Treatment algorithms and assessment checklists for each minor ailment. Free for CPBC-registered pharmacy students — sign in with a free BCPhA account (no membership needed).",u:"https://www.bcpharmacy.ca/medsask",k:"medsask minor ailment algorithm checklist self care macs prescribing saskatchewan bcpha"},
     {id:"formulary",g:"Scope &amp; coverage",n:"PharmaCare Formulary Search",d:"Is it covered, and under which plan?",u:"https://pharmacareformularysearch.gov.bc.ca",k:"pharmacare formulary coverage covered benefit plan cost"},
     {id:"sa",g:"Scope &amp; coverage",n:"Special Authority",d:"Criteria and forms when the formulary says no.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/programs/special-authority",k:"special authority criteria form coverage exception"},
     {id:"lcardp",g:"Scope &amp; coverage",n:"LCA &amp; RDP spreadsheets",d:"PharmaCare's low-cost-alternative and reference-drug price files.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/pharmacies/low-cost-alternative-lca-and-reference-drug-program-rdp-data-files",k:"lca rdp spreadsheet reference drug low cost alternative price pharmacare"},
@@ -374,7 +376,6 @@ h2.sec:first-child{margin-top:0}
     {id:"cpbc",g:"Scope &amp; coverage",n:"College of Pharmacists of BC",d:"Scope, standards, and every 'can a pharmacist…' answer.",u:"https://www.bcpharmacists.org",k:"cpbc college scope standard legal legislation ethics bylaw"},
     {id:"bcg",g:"Scope &amp; coverage",n:"BC Guidelines",d:"Every provincial clinical practice guideline, by topic.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines",k:"bc guidelines provincial gpac back pain ckd diabetes hypertension"},
 
-    {id:"pedmed",g:"Special populations",n:"PedMed — BC Children's dosing",d:"Paediatric and neonatal dosing reference.",u:"https://pedmed.org",k:"pediatric paediatric neonatal children dosing bc childrens"},
     {id:"briggs",g:"Special populations",n:"Briggs — Drugs in Pregnancy &amp; Lactation",d:"Fetal and neonatal risk, drug by drug. The standard pregnancy reference.",u:"https://resolve.library.ubc.ca/cgi-bin/catsearch?bid=12353480",cwl:1,k:"briggs pregnancy lactation breastfeeding fetal neonatal risk teratogen"},
     {id:"lactmed",g:"Special populations",n:"LactMed",d:"Drugs and lactation, with the data behind each entry.",u:"https://www.ncbi.nlm.nih.gov/books/NBK501922/",k:"lactmed breastfeeding lactation milk infant"},
     {id:"m2b",g:"Special populations",n:"MotherToBaby",d:"Exposure fact sheets for pregnancy.",u:"https://mothertobaby.org",k:"pregnancy exposure teratogen fact sheet"},
@@ -976,7 +977,7 @@ h2.sec:first-child{margin-top:0}
 
   /* ---- plumbing ---- */
   var PAGES=["home","conditions","toolkit","refs","practice","about"];
-  var TITLES={home:"Navigator",conditions:"Conditions",toolkit:"Toolkit",refs:"References",practice:"Practice",about:"About"};
+  var TITLES={home:"ICEberg",conditions:"Conditions",toolkit:"Toolkit",refs:"References",practice:"Practice",about:"About"};
   var shell=document.getElementById("shell"),back=document.getElementById("back"),
       title=document.getElementById("title"),foot=document.getElementById("foot"),
       yrBtn=document.getElementById("yr");
@@ -1066,8 +1067,8 @@ h2.sec:first-child{margin-top:0}
     var opens=c.go.map(function(id){
       var r=REF[id];if(!r)return"";
       if(!r.u)return '<span class="open" style="background:var(--screen-2);color:var(--ink-3)">'+r.n+' — not linked yet</span>';
-      return '<a class="open" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer">'+r.n+((r.p||r.cwl)?' <span class="cwl">CWL</span>':'')+'</a>'+
-        (r.alt?'<a class="open backup" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer" title="'+esc(plain(r.n))+' via the UBC Library page">Backup</a>':'');
+      return '<a class="open" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer">'+r.n+((r.p||r.cwl||r.lg)?' <span class="cwl">'+(r.lg||"CWL")+'</span>':'')+'</a>'+
+        (r.alt?'<a class="open backup" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer" title="'+esc(plain(r.n))+' via the '+esc(r.altd||"UBC Library page")+'">Backup</a>':'');
     }).join("");
     return '<div class="cond" data-c="'+s+'">'+
       '<div class="cond-h"><h3>'+c.n+'</h3><span class="sys">'+(ABBR[plain(c.n)]?esc(ABBR[plain(c.n)])+' · ':'')+c.sys+'</span></div>'+
@@ -1098,9 +1099,9 @@ h2.sec:first-child{margin-top:0}
   function refRow(r){
     if(!r.u)return '<li><div class="slot"><span><span class="n">'+r.n+'</span><span class="d">'+r.d+'</span></span><span class="go">Add link</span></div></li>';
     var host=r.u.replace(/^https?:\/\//,"").replace(/^www\./,"").split("/")[0];
-    var main='<a class="link" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer"><span><span class="n">'+r.n+((r.p||r.cwl)?'<span class="cwlbadge">CWL</span>':'')+'</span><span class="d">'+r.d+'</span></span><span class="go">'+esc(host)+' ↗</span></a>';
+    var main='<a class="link" href="'+esc(href(r))+'" target="_blank" rel="noopener noreferrer"><span><span class="n">'+r.n+((r.p||r.cwl||r.lg)?'<span class="cwlbadge">'+(r.lg||"CWL")+'</span>':'')+'</span><span class="d">'+r.d+'</span></span><span class="go">'+esc(host)+' ↗</span></a>';
     if(!r.alt)return '<li>'+main+'</li>';
-    return '<li class="duo">'+main+'<a class="altlink" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer"><span class="n">Backup</span><span class="d">UBC Library page</span></a></li>';
+    return '<li class="duo">'+main+'<a class="altlink" href="'+esc(r.alt)+'" target="_blank" rel="noopener noreferrer"><span class="n">Backup</span><span class="d">'+(r.altd||"UBC Library page")+'</span></a></li>';
   }
 
   function drawResults(term){
@@ -1126,8 +1127,11 @@ h2.sec:first-child{margin-top:0}
     var top=best>=2?scored.filter(function(x){return x.s===best;}):scored;
     var cs=top.map(function(x){return x.c;});
     var rs=REFS.filter(function(r){
-      return (plain(r.n)+" "+plain(r.d)+" "+(r.k||"")+" "+plain(r.g)).toLowerCase().indexOf(term)>-1;
+      var t=(plain(r.n)+" "+plain(r.d)+" "+(r.k||"")+" "+plain(r.g)).toLowerCase();return wordRe.test(t)||wordRe2.test(t);
     });
+    function refNameHit(r){var nm=(plain(r.n)+" "+r.id).toLowerCase();return wordRe.test(nm)||(r.k||"").toLowerCase().split(" ").slice(0,3).indexOf(term)>-1;}
+    rs.sort(function(a,b){return (refNameHit(b)?1:0)-(refNameHit(a)?1:0);});
+    var refFirst=rs.some(refNameHit)&&best<3;
     var ts=TOOLKIT.filter(function(t){
       var nm=(plain(t.n)+" "+plain(t.d)+" "+t.k).toLowerCase();
       if(wordRe.test(nm)||wordRe2.test(nm))return true;
@@ -1135,10 +1139,11 @@ h2.sec:first-child{margin-top:0}
       if(t._bt===undefined)t._bt=plain(t.b).toLowerCase();
       return wordRe.test(t._bt)||wordRe2.test(t._bt);
     });
-    var h="";
+    var h="",refH=rs.length?'<h2 class="sec">References</h2><ul class="links">'+rs.slice(0,10).map(refRow).join("")+'</ul>':"";
+    if(refFirst)h+=refH;
     if(cs.length)h+='<h2 class="sec">Conditions</h2>'+cs.slice(0,6).map(condHTML).join("");
     if(ts.length)h+='<h2 class="sec">Toolkit</h2><div class="nts">'+ts.slice(0,8).map(tkHTML).join("")+'</div>';
-    if(rs.length)h+='<h2 class="sec">References</h2><ul class="links">'+rs.slice(0,10).map(refRow).join("")+'</ul>';
+    if(!refFirst)h+=refH;
     if(/timer|station|practice|rehears/.test(term))h+='<h2 class="sec">Elsewhere</h2><ul class="links"><li><a class="link" href="#practice"><span><span class="n">Practice</span><span class="d">Rehearsal timer and station shapes.</span></span><span class="go">open ›</span></a></li></ul>';
     resEl.innerHTML=h||'<p class="empty">Nothing matches that. Try a condition name, a drug class, or a resource.</p>';
   }
