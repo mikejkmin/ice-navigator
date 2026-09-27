@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Student-made link hub for the UBC PharmD open-book ICE. Not affiliated with UBC.">
+<meta name="description" content="Student-made study map for the UBC PharmD open-book ICE. Not affiliated with UBC.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>ICE Navigator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -191,6 +191,32 @@ h2.sec:first-child{margin-top:0}
 .prose p:last-child{margin-bottom:0}
 .foot{max-width:var(--w);margin:12px auto 0;text-align:center;font-size:.75rem;color:var(--ink-3);line-height:1.6;transition:max-width .3s}
 
+/* notes (conditions + toolkit) */
+.nts{border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:0 0 10px;background:var(--screen)}
+.nts>details+details{border-top:1px solid var(--rule)}
+.nts summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:8px 12px;font-size:.8125rem;font-weight:600;color:var(--ink)}
+.nts summary::-webkit-details-marker{display:none}
+.nts summary::after{content:"\203A";color:var(--ink-3);font-weight:400;font-size:.95rem;transition:transform .15s}
+.nts details[open]>summary::after{transform:rotate(90deg)}
+.nts summary:hover,.nts summary:focus-visible{background:linear-gradient(180deg,var(--hl-a),var(--hl-b));color:#fff;outline:none}
+.nts summary:hover::after,.nts summary:focus-visible::after,.nts summary:hover .d,.nts summary:focus-visible .d{color:rgba(255,255,255,.87)}
+.nts summary .n{font-weight:600;font-size:.9375rem}
+.nts summary .d{display:block;font-weight:400;font-size:.8125rem;color:var(--ink-2);margin-top:1px}
+.ntb{padding:6px 12px 12px;font-size:.8125rem;color:var(--ink-2);line-height:1.55;border-top:1px dashed var(--rule)}
+.ntb p{margin:7px 0}
+.cond .ntb ul,.ntb ul{margin:4px 0 8px;padding-left:16px;font-size:.8125rem}
+.ntb b{color:var(--ink);font-weight:600}
+.ntb a{font-weight:500}
+.tw{overflow-x:auto;margin:7px 0 10px;-webkit-overflow-scrolling:touch}
+.tbl{border-collapse:collapse;width:100%;font-size:.78rem;line-height:1.45}
+.tbl th,.tbl td{border:1px solid var(--rule);padding:5px 7px;text-align:left;vertical-align:top}
+.tbl th{background:var(--screen-2);color:var(--ink);font-weight:600}
+.tbl td:first-child{color:var(--ink)}
+.fix{display:block;border-left:3px solid var(--warn);background:var(--warn-soft);padding:6px 9px;margin:8px 0;border-radius:0 5px 5px 0;font-size:.78rem;color:var(--ink-2)}
+.fix.tipnote{border-left-color:var(--accent);background:var(--accent-soft)}
+.tpl{display:block;font-size:.78rem;background:var(--screen-2);border:1px solid var(--rule);padding:6px 9px;border-radius:5px;margin:5px 0;color:var(--ink-2)}
+@media (max-width:520px){.tbl{min-width:30rem}}
+
 @media (min-width:1024px){.shell{--w:36rem}.shell.wide{--w:56rem}}
 @media (min-width:1440px){html{font-size:17px}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms !important}}
@@ -212,12 +238,13 @@ h2.sec:first-child{margin-top:0}
     <!-- HOME: search is the product -->
     <div id="p-home">
       <div class="searchwrap">
-        <input id="q" type="search" placeholder="Search a condition or a resource…" autocomplete="off" aria-label="Search">
-        <p class="hintline" id="hint">Type what the case is about. You get the questions worth asking and the links worth opening — nothing else.</p>
+        <input id="q" type="search" placeholder="Search a condition, topic or resource…" autocomplete="off" aria-label="Search">
+        <p class="hintline" id="hint">Type a condition, a drug or a topic — e.g. UTI, anemia, Centor, RDP, PQRS.</p>
       </div>
       <div id="results" hidden style="padding:0 14px 14px"></div>
       <ul class="menu" id="menu">
         <li><button class="row" data-go="conditions"><span class="label">Conditions<span class="sub" id="csub"></span></span><span class="chev">›</span></button></li>
+        <li><button class="row" data-go="toolkit"><span class="label">Toolkit<span class="sub" id="tsub"></span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="refs"><span class="label">References<span class="sub" id="rsub"></span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="practice"><span class="label">Practice<span class="sub">Rehearsal timer and station strategy</span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="about"><span class="label">About<span class="sub">Who made it, feedback</span></span><span class="chev">›</span></button></li>
@@ -229,6 +256,13 @@ h2.sec:first-child{margin-top:0}
       <p class="lede" id="condlede"></p>
       <div class="chips" id="cfilter"></div>
       <div id="condlist"></div>
+    </div>
+
+    <!-- TOOLKIT -->
+    <div class="page" id="p-toolkit" hidden>
+      <p class="lede">The non-condition essentials — sigs, math units, PharmaCare, law and scope, Rx checking, DTPs. Tap a topic to open it. Always confirm against the source.</p>
+      <div class="chips" id="tchips"></div>
+      <div id="tklist"></div>
     </div>
 
     <!-- REFERENCES -->
@@ -267,16 +301,17 @@ h2.sec:first-child{margin-top:0}
       <div class="notice"><strong>Student-made.</strong> Not affiliated with, endorsed by, or reviewed by UBC or the Faculty of Pharmaceutical Sciences.</div>
 
       <div class="prose">
-        <p><strong style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;color:var(--accent);border:1px solid currentColor;border-radius:3px;padding:1px 6px;margin-right:6px">BETA</strong>Still being built — more resources are on the way, and things may change.</p>
-        <p>This is a list of links to published resources — nothing more. It does not provide clinical advice or exam answers.</p>
+        <p><strong style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;color:var(--accent);border:1px solid currentColor;border-radius:3px;padding:1px 6px;margin-right:6px">BETA</strong>Still being built — more on the way, and things may change.</p>
+        <p>A student-made map for the open-book ICE: links to published resources, plus short study notes on the tested conditions and the first-year essentials (Toolkit).</p>
         <ul style="margin:0 0 14px;padding-left:18px;line-height:1.7">
-          <li>Always confirm information in the original source.</li>
-          <li>Linked sites belong to their publishers; their content, accuracy and access are theirs.</li>
+          <li>The notes are student summaries, not clinical advice. They can contain errors — confirm every dose and rule in CPS, Lexidrug or the official source.</li>
+          <li>Notes were drafted with the help of AI tools and are being checked by students.</li>
           <li>Check your exam rules for which resources are permitted.</li>
-          <li>Use at your own discretion.</li>
+          <li>Rules, fees and coverage change — notes follow the current BC rules as of September 2026.</li>
+          <li>Linked sites belong to their publishers; their content, accuracy and access are theirs. Use at your own discretion.</li>
         </ul>
         <p>Made by <strong>Mike Min</strong>.</p>
-        <p>Feedback or a broken link: <a href="mailto:mikemin@student.ubc.ca">mikemin@student.ubc.ca</a></p>
+        <p>Feedback, an error, or a broken link: <a href="mailto:mikemin@student.ubc.ca">mikemin@student.ubc.ca</a></p>
       </div>
     </div>
   </div>
@@ -332,6 +367,10 @@ h2.sec:first-child{margin-top:0}
     {id:"medsask",g:"Scope &amp; coverage",n:"medSask minor ailment guidelines",d:"Treatment algorithms and assessment checklists for each minor ailment. Free for CPBC-registered pharmacy students — sign in with a free BCPhA account (no membership needed).",u:"https://www.bcpharmacy.ca/medsask",k:"medsask minor ailment algorithm checklist self care macs prescribing saskatchewan bcpha"},
     {id:"formulary",g:"Scope &amp; coverage",n:"PharmaCare Formulary Search",d:"Is it covered, and under which plan?",u:"https://pharmacareformularysearch.gov.bc.ca",k:"pharmacare formulary coverage covered benefit plan cost"},
     {id:"sa",g:"Scope &amp; coverage",n:"Special Authority",d:"Criteria and forms when the formulary says no.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/programs/special-authority",k:"special authority criteria form coverage exception"},
+    {id:"lcardp",g:"Scope &amp; coverage",n:"LCA &amp; RDP spreadsheets",d:"PharmaCare's low-cost-alternative and reference-drug price files.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/pharmacies/low-cost-alternative-lca-and-reference-drug-program-rdp-data-files",k:"lca rdp spreadsheet reference drug low cost alternative price pharmacare"},
+    {id:"dsr",g:"Scope &amp; coverage",n:"BC Drug Schedules Regulation",d:"Look up any drug's schedule (I, IA, II, III, IV).",u:"https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/9_98",k:"schedule drug schedules regulation dsr bylaws law"},
+    {id:"rxreg",g:"Scope &amp; coverage",n:"CPBC Prescription Regulation Table",d:"Narcotic/controlled categories, Rx requirements, refills, records.",u:"https://library.bcpharmacists.org/6_Resources/6-4_Drug_Distribution/5014-Prescription_Regulation_Table.pdf",k:"narcotic controlled targeted prescription regulation table n/c category cpp"},
+    {id:"adapt",g:"Scope &amp; coverage",n:"CPBC — Adapting a prescription (PPP-58)",d:"Renew, change, substitute: the current rules.",u:"https://www.bcpharmacists.org/adapting-prescription",k:"adapt adaptation renew change substitute ppp-58 ppp58"},
     {id:"cpbc",g:"Scope &amp; coverage",n:"College of Pharmacists of BC",d:"Scope, standards, and every 'can a pharmacist…' answer.",u:"https://www.bcpharmacists.org",k:"cpbc college scope standard legal legislation ethics bylaw"},
     {id:"bcg",g:"Scope &amp; coverage",n:"BC Guidelines",d:"Every provincial clinical practice guideline, by topic.",u:"https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/bc-guidelines",k:"bc guidelines provincial gpac back pain ckd diabetes hypertension"},
 
@@ -353,10 +392,16 @@ h2.sec:first-child{margin-top:0}
   ];
   var REF = {}; REFS.forEach(function(r){ REF[r.id] = r; });
 
-  /* ---- conditions: prompts and pointers only, no clinical claims ---- */
+  /* ---- conditions: questions, links, and (where written) study notes ---- */
   var CONDITIONS = [
+    {n:"Iron deficiency anemia",sys:"Tested",ask:["Source of loss — has it been investigated?","Elemental iron per salt, and dosing interval","What else are they taking at the same time?"],go:["cps","rxfiles"]},
+    {n:"Herpesvirus infections",sys:"Tested",ask:["Which virus and site — cold sore, genital, chickenpox, shingles?","Time since onset — is the window open?","Immune status; eye involvement?"],go:["cps","bugs","macs","medsask","bccdc"]},
+    {n:"Low back pain",sys:"Tested",ask:["Acute, subacute or chronic?","Red flags to screen — check the guideline's list","Function goal, not just pain score"],go:["bcg","rxfiles","cps"]},
+    {n:"Acne",sys:"Tested",ask:["Lesion type and severity","Pregnancy status before anything retinoid","What they've used, for how long"],go:["cps","macs","medsask","briggs"]},
+    {n:"Urinary tract infection",sys:"Tested",ask:["Upper or lower tract?","Pregnant, catheterised, or male?","Prior cultures and local resistance","How long a course?"],go:["bugs","cps","macs","medsask"]},
+    {n:"Group A strep pharyngitis",sys:"Tested",ask:["Score it — modified Centor","Test or treat? Adult vs child after a negative RADT","Penicillin allergy — what actually happened?"],go:["bugs","cps","pedmed"]},
+
     {n:"Community-acquired pneumonia",sys:"ID",ask:["Setting of care — outpatient, ward, ICU?","Comorbidities and antibiotics in the last 3 months","Severity score your site uses","What would make this an admission?"],go:["bugs","bccdc","cps"]},
-    {n:"Urinary tract infection",sys:"ID",ask:["Upper or lower tract?","Pregnant, catheterised, or male?","Prior cultures and local resistance","How long a course?"],go:["bugs","cps","pedmed"]},
     {n:"Clostridioides difficile",sys:"ID",ask:["First episode or recurrence?","Severity criteria your site uses","Which antibiotic triggered it, and can it stop?"],go:["bugs","cps"]},
     {n:"Cellulitis &amp; skin infection",sys:"ID",ask:["Purulent or non-purulent?","Portal of entry, diabetes, immune status","What would make this urgent surgical?"],go:["bugs","cps"]},
     {n:"Impetigo",sys:"ID",ask:["How many lesions, and where?","Topical or systemic threshold","Household and school contacts"],go:["bugs","cps","macs","medsask"]},
@@ -366,17 +411,14 @@ h2.sec:first-child{margin-top:0}
     {n:"Osteoarthritis",sys:"MSK",ask:["Which joints, and what function is lost?","Topical vs oral — GI, renal, cardiac risk","What have they already tried, at what dose?"],go:["rxfiles","cps","bcg"]},
     {n:"Rheumatoid arthritis",sys:"MSK",ask:["Current DMARD and how long on it","Monitoring parameters and their frequency","Interactions and live vaccine timing"],go:["cps","lexi","rxfiles"]},
     {n:"Gout",sys:"MSK",ask:["Acute flare or urate-lowering?","Renal function, diuretics, interacting drugs","Could this joint be septic?"],go:["rxfiles","cps","bcg"]},
-    {n:"Low back &amp; neck pain",sys:"MSK",ask:["Duration and what they've tried","Red flags to screen — check the guideline's list","Function goal, not just pain score"],go:["bcg","rxfiles"]},
     {n:"Sports injury &amp; sprains",sys:"MSK",ask:["Mechanism and weight-bearing","Is this within minor ailment scope?","Topical vs oral analgesia"],go:["macs","medsask","cps","rxfiles"]},
 
-    {n:"Acne",sys:"Derm",ask:["Lesion type and severity","Pregnancy status before anything retinoid","What they've used, for how long"],go:["cps","macs","medsask","briggs"]},
     {n:"Psoriasis",sys:"Derm",ask:["Body surface and sites involved","Steroid potency appropriate to the site","Any joint symptoms?"],go:["cps","rxfiles"]},
     {n:"Rosacea",sys:"Derm",ask:["Which subtype?","Triggers and what's been tried","Ocular involvement?"],go:["cps","macs","medsask"]},
     {n:"Atopic dermatitis",sys:"Derm",ask:["Distribution and age","Steroid potency and duration already used","Emollient routine — are they actually doing it?"],go:["cps","healthlink","pedmed"]},
     {n:"Tinea &amp; onychomycosis",sys:"Derm",ask:["Site, and how many nails","Confirmed before treating?","Terbinafine interactions and LFT monitoring"],go:["cps","lexi"]},
     {n:"Head lice &amp; scabies",sys:"Derm",ask:["Which product already used, and when","Re-treatment interval for that product","Household contacts and environment"],go:["cps","macs","medsask","healthlink"]},
 
-    {n:"Pharyngitis",sys:"HEENT",ask:["Score it — which criteria does your site use?","Swab or treat empirically?","Penicillin allergy — what actually happened?"],go:["bugs","cps","macs","medsask"]},
     {n:"Allergic rhinitis",sys:"HEENT",ask:["Seasonal or perennial, ocular symptoms?","Intranasal steroid technique","Prior antihistamine response"],go:["cps","rxfiles","macs","medsask"]},
     {n:"Acute otitis media",sys:"HEENT",ask:["Age, laterality, severity","Watchful waiting criteria","Antibiotic in the last month?"],go:["bugs","pedmed","cps"]},
     {n:"Otitis externa",sys:"HEENT",ask:["Is the tympanic membrane intact?","Water exposure or device use","Diabetes or immunocompromise?"],go:["bugs","cps"]},
@@ -384,14 +426,15 @@ h2.sec:first-child{margin-top:0}
     {n:"Eyelid conditions",sys:"HEENT",ask:["Acute lump or chronic lid margin change?","Lid hygiene routine","Any vision change?"],go:["cps","healthlink"]},
     {n:"Dry eye",sys:"HEENT",ask:["Drying medications on board","Frequency of use — does that need preservative-free?","Screen and environment factors"],go:["cps","lexi"]},
     {n:"Glaucoma",sys:"HEENT",ask:["Which drops, and is technique correct?","Asthma, COPD, bradycardia, heart block?","Adherence — the usual failure point"],go:["cps","lexi","healthlink"]},
+    {n:"Acute sinusitis",sys:"HEENT",ask:["How many days, and better-then-worse?","Severe features or red flags?","Tried an intranasal steroid for 72 h?"],go:["bugs","cps"]},
+    {n:"Impacted cerumen",sys:"HEENT",ask:["Eardrum intact? Pain, discharge, dizziness?","What have they put in the ear?","Hearing aids or earbuds?"],go:["cps","healthlink"]},
     {n:"Oral candidiasis",sys:"HEENT",ask:["Inhaled steroid — are they rinsing?","Dentures, immune status","Topical or systemic?"],go:["cps","bugs"]},
 
     {n:"Venous thromboembolism",sys:"Heme",ask:["Provoked or unprovoked — what duration does that imply?","Renal function for DOAC dosing","Cancer, pregnancy, or extremes of weight?"],go:["thrombosis","cps","lexi"]},
     {n:"VTE prophylaxis",sys:"Heme",ask:["Surgical or medical, and what's the bleeding risk?","Timing around surgery","Renal function"],go:["thrombosis","cps"]},
     {n:"Warfarin &amp; INR",sys:"Heme",ask:["Indication and target range","What changed — diet, drug, illness?","Which nomogram does your site use?"],go:["thrombosis","lexi","cps"]},
-    {n:"Iron deficiency anaemia",sys:"Heme",ask:["Source of loss — has it been investigated?","Elemental iron per salt, and dosing interval","What else are they taking at the same time?"],go:["cps","bcrenal","rxfiles"]},
     {n:"B12 &amp; folate deficiency",sys:"Heme",ask:["Absorption cause — metformin, PPI, surgery?","Any neurological symptoms?","Oral or parenteral?"],go:["cps","rxfiles"]},
-    {n:"CKD anaemia",sys:"Heme",ask:["Dialysis, non-dialysis, or PD?","Iron status before ESA","Which provincial protocol applies?"],go:["bcrenal","cps"]},
+    {n:"CKD anemia",sys:"Heme",ask:["Dialysis, non-dialysis, or PD?","Iron status before ESA","Which provincial protocol applies?"],go:["bcrenal","cps"]},
 
     {n:"Asthma",sys:"Resp",ask:["Control criteria — which are they failing?","Device technique before any drug change","Reliever frequency and night waking"],go:["healthlink","inhaler","cps"]},
     {n:"Asthma exacerbation",sys:"Resp",ask:["Severity markers your site uses","What's already been given","Follow-up and written action plan"],go:["healthlink","cps"]},
@@ -411,9 +454,516 @@ h2.sec:first-child{margin-top:0}
     {n:"Opioid conversion &amp; tapering",sys:"Cross",ask:["Current total daily morphine equivalent","Incomplete cross-tolerance — what reduction?","Breakthrough provision"],go:["equi","palliative","bccsu"]},
     {n:"Deprescribing",sys:"Cross",ask:["Which algorithm covers this class?","Taper schedule and monitoring","What does the patient want?"],go:["deprescribe","rxfiles","healthlink"]},
     {n:"Poisoning &amp; overdose",sys:"Cross",ask:["Agent, amount, time since ingestion","Co-ingestants","Call — do not look this one up"],go:["dpic","cps"]},
-    {n:"Herpes simplex &amp; zoster",sys:"Cross",ask:["Time since rash onset — is the window open?","Dermatome, especially ophthalmic","Immune status"],go:["cps","bugs","macs","medsask"]},
     {n:"QT prolongation",sys:"Cross",ask:["Which drugs on the list are they taking?","Electrolytes and other risk factors","Is there an alternative?"],go:["qt","lexi","cps"]}
   ];
+
+  /* ---- helpers for notes ---- */
+  function T(rows){var h=rows[0],b=rows.slice(1);return '<div class="tw"><table class="tbl"><thead><tr><th>'+h.join('</th><th>')+'</th></tr></thead><tbody>'+b.map(function(r){return '<tr><td>'+r.join('</td><td>')+'</td></tr>';}).join('')+'</tbody></table></div>';}
+  function L(a){return '<ul><li>'+a.join('</li><li>')+'</li></ul>';}
+  function FIX(s){return '<span class="fix"><b>Corrected:</b> '+s+'</span>';}
+  function TIP(s){return '<span class="fix tipnote">'+s+'</span>';}
+  function MON(eff,saf){return T([["Check","Expect","When"]].concat(eff.map(function(r){return ["<b>Effect</b> · "+r[0],r[1],r[2]||""];})).concat(saf.map(function(r){return ["<b>Safety</b> · "+r[0],r[1],r[2]||"Any time"];})));}
+  function DTPX(s){return '<p>Fill the generic DTP sentences (Toolkit → DTPs) with these:</p>'+L(s);}
+
+  var NOTES = {};
+
+  /* ============ IRON DEFICIENCY ANEMIA (+ the anemias to tell apart) ============ */
+  NOTES["Iron deficiency anemia"] = [
+    {h:"Spot it", b:
+      '<p><b>Anemia</b> = too little hemoglobin to carry the oxygen the body needs. A CBC is always needed to diagnose it.</p>'+
+      L(["Hb roughly <b>&lt;130 g/L (men)</b> or <b>&lt;120 g/L (women, not pregnant)</b> — ranges differ between labs and sources; altitude and smoking shift them.",
+         "General symptoms: fatigue, weakness, shortness of breath on exertion, dizziness, palpitations, fast HR, chest pain, pale/cool skin.",
+         "Clues to iron deficiency: <b>glossitis</b> (sore swollen tongue), <b>koilonychia</b> (spoon nails), pica.",
+         "Clue to B12 deficiency: <b>numbness/tingling</b>, memory or balance problems."])+
+      T([["Lab","What it tells you"],["MCV","Red cell size: &lt;80 small (microcytic) · 80–100 normal · &gt;100 large (macrocytic)"],["Ferritin","Iron <b>stores</b> (long-term)"],["Transferrin / TSAT","Iron <b>transport</b>; TSAT = % of transferrin carrying iron"],["CRP","Inflammation (helps separate ACD from IDA)"]])},
+    {h:"Tell the anemias apart", b:
+      T([["","Iron deficiency (IDA)","B12 / folate (megaloblastic)","Anemia of chronic disease (ACD)"],
+         ["MCV","&lt;80 (small)","&gt;100 (large)","Normal or low"],
+         ["Ferritin","<b>Low</b> (&lt;30 mcg/L)","Normal","Normal or <b>high</b> (F &gt;250, M &gt;450 in some refs)"],
+         ["TSAT","Low (&lt;20%)","Normal","Low–normal"],
+         ["Transferrin/TIBC","High","Normal","Low–normal"],
+         ["Other","CRP normal","Low B12 or low folate; RDW high","CRP high (e.g. &gt;8.8 mg/L)"],
+         ["Fix","Iron","B12 and/or folate","Treat the underlying inflammatory disease"]])+
+      TIP("Megaloblastic anemia has <b>normal</b> ferritin and TSAT — low values point to iron deficiency (or both at once).")+
+      '<p>ACD and IDA often overlap (both at once). ESAs for CKD anemia are on the <b>CKD anemia</b> card; B12/folate detail is on the <b>B12 &amp; folate</b> card.</p>'},
+    {h:"Causes & risk factors", b:
+      L(["<b>Not enough in</b>: poor diet, vegetarian/vegan diets without planning.",
+         "<b>Not absorbed</b>: celiac, Crohn’s/IBD, gastric surgery; drugs that block absorption.",
+         "<b>Lost</b>: bleeding — heavy periods, GI blood loss (think NSAIDs), frequent blood donation. Unexplained IDA needs the source investigated.",
+         "<b>Needed more</b>: infancy, adolescence, pregnancy.",
+         "Higher risk: women, preschool children, teens, pregnancy, blood donors, poor diet."])},
+    {h:"Goals", b:L(["Relieve symptoms","Bring Hb back to normal and <b>refill iron stores</b>","Improve quality of life (make it patient-specific: e.g. back to running)","Find and fix the cause"])},
+    {h:"Treatment — iron", b:
+      '<p><b>Oral iron salts are first line.</b> No salt is more effective than another — compare by <b>elemental iron</b>, cost and tolerability.</p>'+
+      T([["Product","Elemental iron","Cost"],["Ferrous fumarate 300 mg","≈100 mg","$"],["Ferrous sulfate 300 mg","≈60 mg","$"],["Ferrous gluconate 300 mg","≈35 mg","$$"],["Polysaccharide-iron complex","150 mg / cap (1 daily)","$$$"],["Heme iron polypeptide","≈11–12 mg / tab (check product)","$$$"]])+
+      L(["<b>Dose</b>: 105–200 mg elemental iron/day, divided (WHO: 120 mg/day). Newer data favour <b>once daily or alternate-day</b> dosing for absorption and GI tolerance — confirm current CTC/CPS wording.",
+         "Keep going <b>~3 months after Hb normalizes</b> to refill stores.",
+         "Empty stomach = better absorbed but more nausea/epigastric pain. With food is OK if GI upset stops adherence.",
+         "GI trouble? Start low and increase every 3–7 days, split the dose, lower it, or dose 1–3×/week.",
+         "Avoid enteric-coated/slow-release (poor absorption).",
+         "<b>Vitamin C</b> helps non-heme iron absorption.",
+         "<b>Separate by ~2 h</b> from: antacids, calcium, Na bicarbonate, tetracyclines, quinolones, levodopa, methyldopa, penicillamine, cholestyramine. Tea/coffee (polyphenols), phytates, calcium and soy also reduce absorption.",
+         "ADRs: nausea, dyspepsia, constipation or diarrhea, <b>dark stools</b> (harmless — warn them).",
+         "<b>IV iron</b>: malabsorption, intolerance/failure of oral iron, ongoing losses. Low anaphylaxis risk.",
+         "<b>Transfusion</b>: generally only if Hb &lt;70 g/L or unstable."])},
+    {h:"Non-drug", b:L(["Heme iron (best absorbed): liver, lean red meat, seafood.","Non-heme iron (plants): lower absorption — pair with vitamin C.","Diet alone is slow and usually not enough if anemia is significant."])},
+    {h:"Pregnancy & lactation", b:L(["Screen all pregnant patients for anemia; needs rise with the growing fetus.","Iron supplements recommended in pregnancy/postpartum; same treatment as non-pregnant adults (take with meals if GI upset).","Iron is compatible with breastfeeding."])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Symptoms (fatigue, dizziness, SOB)","Better within a few weeks","Patient"],["Reticulocytes","Rise within ~1 week","Lab"],["Hb","Rising at 1–2 weeks; recheck monthly until normal","Lab"],["Ferritin (stores)","Normal after ~3 more months of iron","Lab"],["Back to usual activities / adherence","Present","Patient"]],
+          [["GI upset, constipation, dark stools","Absent / tolerable"],["Allergic reaction (rash, hives, anaphylaxis — IV iron)","Absent"]])+
+      DTPX(["Symptoms to name: fatigue, dizziness, SOB on exertion, pallor.","Common DTPs: needs additional therapy (anemia untreated); dose too low (count <b>elemental</b> iron); drug interaction (iron + calcium/antacid/PPI/quinolone/tetracycline); ADR (GI upset); non-adherence (GI effects, forgetting TID doses)."])}
+  ];
+
+  NOTES["B12 & folate deficiency"] = [
+    {h:"Spot it", b:L(["Macrocytic anemia: <b>MCV &gt;100</b>, low B12 or low folate, normal iron studies.","Cause: impaired DNA synthesis in red cells (B12 or folate lack), or drugs/conditions that disturb DNA/RNA metabolism.","<b>B12 deficiency</b> can cause nerve damage: paresthesia, sensory neuropathy, weakness, memory change/dementia — may take ≥6 months to recover and can become permanent.","B12 risk: metformin, long-term PPI, gastric surgery, pernicious anemia, vegan diet, alcohol."])},
+    {h:"Treatment", b:
+      T([["","Vitamin B12 (cyanocobalamin / hydroxocobalamin)","Folic acid"],
+         ["No neuro symptoms","High-dose <b>oral</b> works (even with malabsorption) — e.g. 1000–2000 mcg daily. Needs adherence and monitoring.","1–5 mg PO daily; oral is enough even with malabsorption"],
+         ["Neuro symptoms","<b>Parenteral</b> (IM/SC) until neuro + blood picture recover, then maintenance. A common regimen: 1000 mcg daily ×1 wk → weekly ×4 → monthly.","—"],
+         ["Other listed doses","Initial 30 mcg SC/IM daily ×5–10 days; maintenance 250 mcg PO daily","5 mg daily if pregnant and higher risk (check CTC)"],
+         ["ADRs","Rash, itch, headache, GI upset; rare peripheral vascular thrombosis","Occasional allergy: rash, itch, flushing, bronchospasm"],
+         ["Interactions","Metformin, colchicine (↓ B12); chloramphenicol; heavy alcohol (&gt;2 wk) ↓ absorption","Phenytoin/fosphenytoin (↓ effect — monitor), pyrimethamine, raltitrexed"]])+
+      L(["<b>Never treat B12 deficiency with folic acid alone</b> — the blood count improves but nerve damage continues.","Before folate, confirm B12 isn’t also low.",">100 mcg/day B12 exceeds binding capacity, but excess is harmless and excreted — so we give more, not less.","Stop alcohol if it’s contributing."])+
+      TIP("B12 regimens vary between references — confirm the one in CPS/CTC.")},
+    {h:"Pregnancy & lactation", b:L(["Folic acid for everyone planning/in pregnancy (neural tube defects) — multivitamin or folic acid.","B12 usually adequate; supplement if vegan/vegetarian or malabsorption."])},
+    {h:"Monitoring", b:MON([["Reticulocytes","Rise in 3–4 days"],["Hb","Up by ~day 10; normal by ~2 months; monthly until plateau, then every ~2 months after stopping"],["Symptoms (fatigue, dizziness)","Improving"],["Neuro symptoms (B12)","Slow — may take ≥6 months"],["Adherence (esp. oral)","Present"]],[["Side effects of B12/folate","Absent"]])}
+  ];
+
+  NOTES["CKD anemia"] = [
+    {h:"ESAs — when and how", b:
+      L(["ESAs stimulate red cell production. Used for anemia in: chronic kidney disease, HIV on antiretrovirals, hepatitis C on ribavirin, chemotherapy for non-blood cancers, surgery, low-risk myelodysplastic syndrome.",
+         "Generally only if the patient would otherwise need transfusions — real toxicity risk.",
+         "Hb should be <b>&lt;100 g/L</b> to qualify; check Hb at least monthly.",
+         "<b>Iron must be adequate</b> — often needs iron supplements (check ferritin/TSAT first).",
+         "Given IV or SC, dose titrated.",
+         "<b>Epoetin alfa</b> (recombinant EPO): 3×/week, or daily pre-surgery. <b>Darbepoetin alfa</b> (long-acting analogue): weekly, every 2 weeks, or monthly.",
+         "↑ risk of serious CV events, thrombosis and hypertension — weigh risk vs benefit; don’t push Hb to normal."])},
+    {h:"Pregnancy & lactation", b:L(["May worsen hypertension or thrombosis — weigh against the risk of uncontrolled anemia to the fetus.","Iron supply is extra important.","Unknown whether ESAs enter breast milk."])}
+  ];
+
+  /* ============ HERPESVIRUS ============ */
+  NOTES["Herpesvirus infections"] = [
+    {h:"The big picture", b:
+      L(["Spread usually happens when the person <b>doesn’t know</b> they’re infected or has no symptoms. The viruses don’t survive long on surfaces.",
+         "Antivirals (acyclovir, valacyclovir, famciclovir) stop viral replication → <b>start as early as possible</b>.",
+         "All three work equally well for HSV; valacyclovir/famciclovir = fewer doses (better adherence). Compare cost on the drug table.",
+         "Topical antivirals: little benefit, expensive, more self-inoculation — oral preferred."])+
+      T([["Drug","How it works (short)"],["Acyclovir","Nucleoside analogue; viral thymidine kinase activates it → blocks viral DNA polymerase"],["Valacyclovir","Prodrug → converted to acyclovir (better absorbed)"],["Famciclovir","Prodrug → penciclovir; blocks viral DNA polymerase"],["Trifluridine (eye drops)","Thymidine analogue built into viral DNA; inhibits thymidylate synthetase"]])},
+    {h:"Cold sores (orolabial HSV)", b:
+      L(["Usually <b>HSV-1</b> via saliva; can be HSV-2 via oral–genital contact.","Primary infection may be silent or more severe than recurrences — <b>gingivostomatitis</b> (children): high fever, painful mouth lesions.","Recurrence (20–40%): triggered by sun, stress, illness. Tingling/burning/itch 2–24 h before blisters.","Goals: ease symptoms, shorten episode, fewer recurrences, prevent secondary infection. Drugs don’t stop future outbreaks."])+
+      T([["Situation","Regimen"],
+         ["Episode","Acyclovir 400 mg 5×/day ×5 d · Famciclovir 1500 mg ×1 dose (or 750 mg BID ×1 d) · Valacyclovir 2 g BID ×1 d (≥12 y)"],
+         ["Before sun exposure","Acyclovir 400 mg BID, start 12 h before, for duration of exposure"],
+         ["Suppression (&gt;4/yr, immunocompetent)","Acyclovir 400 mg BID or 200 mg QID · Valacyclovir 500 mg daily — ~4 months"],
+         ["Gingivostomatitis (child)","Acyclovir suspension 15 mg/kg 5×/day ×7 d (usual max 200 mg/dose) — or 600 mg/m² QID ×10 d. Pain control + fluids."]])+
+      '<p><b>Non-drug:</b> wash gently with mild soap and water; cool compresses; don’t touch, wash hands; sun protection (lip SPF).</p>'},
+    {h:"Genital (anogenital) HSV", b:
+      L(["Usually <b>HSV-2</b> (STI) — can be HSV-1 from oral contact. Can be silent.","Papules/vesicles on genitals, groin, anus, buttocks → painful ulcers. Then dormant with periodic reactivation.","Confirm with culture/PCR before long-term therapy. ~70% of neonatal infections come from mother.","Goals: ease symptoms; prevent transmission."])+
+      T([["","Acyclovir","Famciclovir","Valacyclovir"],
+         ["First episode (7–10 d)","400 mg TID or 200 mg 5×/day","250 mg TID","1 g BID"],
+         ["Recurrence","800 mg TID ×2 d or 800 mg BID ×5 d","1 g BID ×1 d or 125 mg BID ×5 d","500 mg BID ×3 d or 1 g daily ×3–5 d"],
+         ["Suppression (≥4/yr; 3–6 mo, reassess)","400 mg BID or 800 mg daily","250 mg BID","500 mg daily (≤9/yr) · 1 g daily (&gt;9/yr)"],
+         ["HIV + HSV (5–7 d)","200–400 mg 5×/day","500 mg BID","1 g BID"]])+
+      L(["Severe cases → IV acyclovir. Topicals don’t help.","Suppression lowers but doesn’t stop shedding — still possible to transmit. After 3–6 months, stop and watch 2 recurrences; restart if they’re ≤2 months apart.","<b>Non-drug:</b> keep lesions clean (mild soap + water), warm sitz bath for pain, safer sex even on suppression; partners only treated if infected."])},
+    {h:"Serious HSV (refer)", b:
+      T([["Type","What it is","Treatment"],
+         ["Eczema herpeticum","HSV on eczematous skin; fever, malaise, nodes. Risk: eye involvement, viremia, meningitis, encephalitis","Mild: oral acyclovir 200 mg 5×/day ×5 d. Severe IV ×7 d: &gt;12 y 5–10 mg/kg q8h; &lt;12 y 250 mg/m² q8h"],
+         ["HSV encephalitis","HSV-1 reaching the brain. Sudden headache + fever + neuro signs (behaviour change, speech problems, seizures). Lasting damage likely","Acyclovir <b>10 mg/kg IV q8h ×14–21 d</b>. Goals: prevent death and permanent deficits"],
+         ["Aseptic meningitis","~20% caused by HSV-2 (recurrent lymphocytic meningitis). Headache, fever, stiff neck","Usually only treated if immunocompromised: valacyclovir 1 g TID ×7 d"],
+         ["HSV keratoconjunctivitis","Hard to tell from bacterial; can scar the cornea. <b>See ophthalmology</b>","Trifluridine 1 gtt q2h while awake (max 9/day) until cornea heals, then q4h while awake (max 5/day) ×7 d. Oral acyclovir 400 mg BID up to 12 mo only to prevent stromal keratitis recurrence. Adding oral to topical doesn’t add benefit"]])+
+      TIP("Pediatric IV acyclovir is 250 mg/m² <b>per dose</b> every 8 h. Confirm in PedMed/Lexidrug.")},
+    {h:"Chickenpox (varicella)", b:
+      L(["Itchy rash → blisters → crust. Incubation 10–21 days.","<b>Very contagious</b> (air + contact) from 1–2 days before rash until lesions crust (~5–7 days after).","Virus then sleeps in dorsal root ganglia → can return as shingles.","Goals: faster healing; prevent complications (pneumonia, encephalitis)."])+
+      T([["Who","Treatment"],["Healthy child","Routine antivirals not recommended"],["Child (if treating)","Acyclovir <b>20 mg/kg QID ×5 d</b> (max 800 mg/dose)"],["Adult","Acyclovir 800 mg 5×/day ×5 d"],["Severe / immunocompromised","Always treat — acyclovir 10 mg/kg IV q8h"]])+
+      '<p><b>Non-drug:</b> avoid contact with others; don’t scratch; trim nails (prevents bacterial infection).</p>'},
+    {h:"Shingles (herpes zoster)", b:
+      L(["Reactivated varicella: painful rash in a dermatome → vesicles → crust; 2–4 weeks to heal.","Complication: <b>postherpetic neuralgia (PHN)</b> — nerve pain lasting weeks to years; risk ↑ with age, severe pain, extensive rash.","Start antivirals ideally <b>within 72 h</b> of rash.","Goals: stop replication, heal skin faster, relieve acute pain, lower PHN risk, prevent spread/death in immunocompromised."])+
+      T([["Drug","Dose ×7 d"],["Acyclovir","800 mg 5×/day"],["Famciclovir","500 mg TID"],["Valacyclovir","1 g TID"],["Severe immunosuppression","Acyclovir 10–15 mg/kg IV q8h until controlled, then oral until healed (≥10–14 d total)"],["HIV suppression","Acyclovir 400 mg TID"]])+
+      L(["Topicals not recommended.","Acyclovir hasn’t been shown to reduce PHN (unclear for the others). Famciclovir/valacyclovir easier to adhere to.","Pain: analgesics/opioids; corticosteroids only for healthy patients with moderate–severe pain (no effect on healing or PHN; avoid in elderly, diabetes, HTN, GI ulcer).","<b>Non-drug:</b> keep rash clean, dry and <b>covered</b>; wash hands; don’t scratch; no topical antibiotics or adhesive dressings; cool sterile wet dressings for comfort."])},
+    {h:"Vaccines", b:
+      T([["Vaccine","Key points"],
+         ["Varicella (live)","All susceptible people ≥12 months; 2 doses SC. <b>Not</b> in pregnancy or immunocompromised. ADR: sore arm, redness, rash"],
+         ["Shingles — recombinant (RZV, Shingrix)","<b>Preferred.</b> Adults ≥50 y (and immunocompromised adults per NACI): 2 doses IM, 2–6 months apart, even after past shingles or live vaccine. ADR: sore arm, myalgia, fatigue, headache, fever, GI upset. Limited pregnancy data"],
+         ["Shingles — live (ZVL)","Older single SC dose for ≥50–60 y; <b>not</b> in pregnancy/immunocompromised/children. No longer the preferred option — check current availability"]])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Lesions, pain, itch","Better within ~5 days (2–3 d on a 1-day or short course)"],["Complications (e.g. eye involvement, secondary infection, PHN)","Absent"],["Back to usual activities / adherence","Present"]],[["Headache, nausea (similar to placebo); stay hydrated","Absent"],["Allergy (rash, hives, anaphylaxis)","Absent"]])+
+      DTPX(["Unnecessary therapy (e.g. antivirals for routine chickenpox in a healthy child; topical + oral duplication).","Needs additional therapy (e.g. no analgesic for shingles pain; eligible for suppression).","Ineffective drug (topical instead of oral; started too late).","Dose too low / duration too long (compare with the tables above).","ADR/allergy statement if cross-reactivity applies."])}
+  ];
+
+  /* ============ LOW BACK PAIN ============ */
+  NOTES["Low back pain"] = [
+    {h:"Spot it", b:
+      L(["Pain/stiffness in the lower back that can spread to buttocks, hips, legs; may be constant or come and go; relieved by bending one way or the other.","Most improve fast in the first 6 weeks, then more slowly.","Types: (1) non-specific (most), (2) with <b>radiculopathy</b> or spinal stenosis, (3) other specific spinal causes.","<b>Radiculopathy</b> = nerve-root problem: pain, numbness, weakness, reduced reflexes. <b>Sciatica</b> (most common) = shooting pain from low back down the buttock and leg.","Risk: age 45–64, taller, stress, frequent stair climbing (maybe obesity, smoking). Worse outlook: disability, sciatica, older, poor health, stress, poor relationships.","Assess type with the <b>CORE</b> back tool (CTC). <b>Red flags</b> (≥2 = more likely serious) → investigate/refer. <b>Yellow flags</b> predict chronic pain — screen at 3–6 months.","No imaging unless red flags."])+
+      T([["","Acute","Subacute / recurrent","Chronic"],["Duration","&lt;4 weeks","4–12 weeks (recurrent = returns within 6 months)","&gt;12 weeks"],["Extra goals","Faster recovery, less distress","Prevent it becoming chronic; limit work absence","Restore fitness, roles and healthy behaviours; address psychological factors"]])+
+      '<p>All stages: relieve symptoms, keep/improve quality of life, prevent re-injury.</p>'},
+    {h:"Treatment by stage", b:
+      '<p><b>Non-drug first — always continue it.</b> Drugs relieve symptoms so the patient can stay active; they don’t cure.</p>'+
+      T([["Stage","Drugs","Non-drug"],
+         ["Acute / subacute","<b>NSAID</b> (none better than another; naproxen alone = combos, with fewer ADRs) or acetaminophen (fewer ADRs but less effective — a trial is reasonable). Muscle relaxants: mixed evidence, more ADRs — only if nothing else works. Opioids: no clear advantage — only if severe and everything else failed. Tylenol #3: no benefit","Reassure it’s self-limiting and rarely serious; stay active/return to work early; <b>avoid bed rest</b>; exercise; acupuncture, massage, spinal manipulation; breaks from sitting/standing; posture; physio; coping skills; planned return to work"],
+         ["Chronic","Limited evidence: NSAIDs, tramadol ± acetaminophen, <b>duloxetine</b>; muscle relaxants only if no alternative; opioids short-term, poorly tolerated, only if non-opioids fail. Tylenol #3: no benefit","Active exercise, back school, conditioning, multidisciplinary rehab, CBT, relaxation, mindfulness, yoga, tai chi, stretching"]])},
+    {h:"Doses", b:
+      T([["Drug","Dose","Watch for"],
+         ["Acetaminophen","325–650 mg q4h PRN (max 4 g/day from <b>all</b> sources)","Liver toxicity in overdose/alcohol; avoid in severe liver disease"],
+         ["Ibuprofen","600–1200 mg q6–8h PRN (max 2400 mg/day Rx)","All NSAIDs: GI upset/bleed, renal, CV; avoid 3rd trimester, severe renal impairment, active ulcer/IBD; warfarin, other NSAIDs ↑ bleeding. Take with food"],
+         ["Naproxen","500–1000 mg/day divided q8–12h",""],
+         ["Naproxen sodium","Aleve 220–440 mg/day div q8–12h · Anaprox 825–1375 mg/day div q6–12h",""],
+         ["Celecoxib","100 mg BID or 200 mg daily","Less GI, more CV risk; avoid in sulfonamide allergy"],
+         ["Meloxicam","7.5–15 mg daily",""],
+         ["Tylenol #3","1–2 tabs QID (count the acetaminophen)","Opioid ADRs: N/V, constipation, sedation, dry mouth; CNS depressants/alcohol/MAOIs; avoid with SUD history, significant depression/anxiety/PTSD"],
+         ["Buprenorphine patch","5 mcg/h weekly; rotate sites (not same site for 3 weeks)","As above"],
+         ["Baclofen","5 mg TID → max 20 mg TID; titrate and taper slowly","Muscle relaxants: drowsiness, dizziness, weakness; CNS depressants/alcohol; avoid &gt;65 y"],
+         ["Cyclobenzaprine","5–10 mg TID","Anticholinergic; as above"]])+
+      '<p>Muscle relaxants only if analgesics are contraindicated, everything else failed, or there is a spastic component.</p>'},
+    {h:"Pregnancy & lactation", b:
+      T([["","Use","Avoid"],["Pregnancy","Acetaminophen; NSAIDs short-term in 1st/2nd trimester only (<b>not 3rd</b>); walking, modified exercise, water exercise, education","Opioids/tramadol (neonatal effects); antidepressants and muscle relaxants (not enough data)"],["Lactation","Acetaminophen or NSAIDs; keep walking/exercising; diet and weight loss","Opioids, TCAs, muscle relaxants"]])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Pain (use the patient’s own goal)","NSAID/acetaminophen: relief within ~1 h"],["Back to activities","Within ~10 days"],["Worsening pain / recurrence","Absent"],["Adherence","Present"]],[["GI upset, dizziness, drowsiness (per drug)","Absent"],["Allergy","Absent"]])+
+      DTPX(["Symptoms to name: back pain, stiffness, reduced movement, pain radiating to leg.","Common DTPs: ineffective drug (Tylenol #3, muscle relaxant first-line); dose too high (acetaminophen from several products); unsafe drug (NSAID in 3rd trimester, ulcer, CKD; muscle relaxant in elderly); needs additional therapy (no analgesic); duration too long."])}
+  ];
+
+  /* ============ ACNE ============ */
+  NOTES["Acne"] = [
+    {h:"Spot it", b:
+      '<p>Inflammatory disease of the pilosebaceous unit. Four drivers: (1) follicle over-growth and plugging, (2) excess sebum, (3) <i>Cutibacterium acnes</i> (formerly <i>P. acnes</i>), (4) inflammation. Hormones, diet, genetics and skin barrier also contribute.</p>'+
+      T([["Severity","What you see","Start with"],["Mild","Comedones, a few papules/pustules","Topical: BPO, <b>or</b> topical retinoid, <b>or</b> a topical combination"],["Moderate","Several papules/pustules, a few nodules","Topical therapy <b>+</b> oral antibiotic, <b>or</b> topical <b>+</b> COC or spironolactone"],["Severe","Many papules/pustules, multiple nodules, cysts, scarring","Oral isotretinoin (or topical + oral antibiotic / COC / spironolactone)"]])+
+      '<p><b>Goals:</b> clear lesions, prevent new ones, minimize scarring and dark marks, reduce psychological impact.</p>'},
+    {h:"Topicals", b:
+      T([["Drug","Use","Know"],
+         ["Benzoyl peroxide 2.5–10% (Benzagel, Proactiv)","Cream/lotion/gel up to BID","Kills bacteria + peels comedones. <b>No resistance.</b> Dries skin; bleaches fabric/towels. Interaction: dapsone"],
+         ["Adapalene 0.1%, 0.3% (Differin)","Once daily at bedtime","Retinoid of first choice — least irritation and photosensitivity. Interacts with salicylic acid, resorcinol"],
+         ["Tretinoin 0.01–0.1%","Bedtime","Most cost-effective retinoid; normalizes follicle shedding"],
+         ["Tazarotene 0.045–0.1% (Arazlo, Tazorac)","Bedtime","Most potent; most irritating and photosensitizing. <b>Contraindicated in pregnancy</b>"],
+         ["Clindamycin 1% (Dalacin T)","BID","For papules/pustules. <b>Never alone</b> — pair with BPO to prevent resistance"]])+
+      L(["Retinoids take months. Classic split: BPO in the morning, retinoid at bedtime.","Retinoids are first-line but underused because of early irritation: start every 2nd day or short-contact (2 h then wash off) and build up; use a moisturizer.","Combos: BPO + retinoid, BPO + clindamycin, or retinoid + clindamycin."])+
+      T([["Vehicle","Good","Not so good"],["Cream","Cosmetically nice","Less absorbed; additives can irritate"],["Gel","Oily skin, hairy areas","Alcohol stings open skin"],["Lotion","Large or hairy areas; evaporates","Stings if alcohol-based"],["Ointment","Best penetration, soothing","Greasy — least acceptable on the face"]])},
+    {h:"Oral options", b:
+      T([["Drug","Dose","Know"],
+         ["Doxycycline","100 mg/day, then 100–200 mg/day","Tetracyclines: GI upset, photosensitivity, yeast overgrowth, intracranial hypertension. Avoid &lt;8 y and in pregnancy (from ~15 weeks; most avoid throughout). $25–50"],
+         ["Minocycline","100 mg/day, then 50–200 mg/day","Also dizziness/vertigo, skin pigmentation; drug-induced lupus/hepatitis; not more effective. $50–75"],
+         ["Tetracycline","500 mg BID, then 250–1000 mg/day divided","Cheapest (&lt;$25); separate from dairy/minerals"],
+         ["COC (e.g. EE 35 mcg / cyproterone 2 mg)","Daily","Blocks ovulation; ↑ SHBG → less free androgen. Other estrogen-containing COCs also used"],
+         ["Spironolactone","Commonly 50–100 mg/day (range 25–200)","Anti-androgen (aldosterone antagonist). Menstrual irregularity, breast tenderness, dizziness; hyperkalemia rare in healthy young women. <b>Avoid in pregnancy</b>"],
+         ["Isotretinoin (Accutane, Clarus, Epuris)","0.5–1 mg/kg/day until 1–2 months after clear; 0.25–0.4 mg/kg/day for resistant or quickly relapsing acne","Shrinks sebum glands. <b>Teratogen</b> — pregnancy prevention program. ADRs: dry skin/lips, ↑ triglycerides, pancreatitis, mood change (possible suicidal thoughts), intracranial hypertension. <b>Don’t combine with tetracyclines</b>"]])+
+      TIP("Limit oral antibiotics to the shortest effective course (often ~3–4 months) and always pair with BPO — check current CTC wording.")},
+    {h:"Non-drug", b:L(["Lower glycemic-load diet; less dairy.","Gentle cleansing; no astringents or scrubs.","Stop picking/squeezing.","Procedures: laser, intense pulsed light, microdermabrasion, peels, photodynamic therapy."])},
+    {h:"Pregnancy & lactation", b:
+      T([["Before pregnancy","Pregnancy — OK","Pregnancy — avoid","Lactation"],
+         ["Stop isotretinoin ≥1 month before trying; stop COC and wait for one natural cycle; spironolactone clears ~5 days after stopping; tetracyclines ~1 week","Benzoyl peroxide, clindamycin, erythromycin, azelaic acid, glycolic acid","Tetracycline, doxycycline, minocycline (fetal bone/teeth); spironolactone; COCs; isotretinoin; tazarotene/other retinoids","OK: topical antibiotics, BPO, topical retinoids, azelaic and glycolic acid; spironolactone (minimal in milk). Avoid: sulfamethoxazole"]])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Number of lesions","Improvement by ~6 weeks (antibiotics); retinoids can take months"],["Worsening / new lesions","Absent"],["Back to activities, self-image","Present"],["Adherence","Present"]],[["Dryness, irritation, photosensitivity; drug-specific ADRs","Absent / tolerable"],["Allergy","Absent"]])+
+      DTPX(["Ineffective drug (clindamycin alone; wrong vehicle for skin type).","Needs additional therapy (no BPO with an antibiotic; no retinoid).","Duration too long (oral antibiotic for many months).","Unsafe drug (tetracycline/retinoid/spironolactone in pregnancy; isotretinoin + tetracycline).","Non-adherence (irritation, cost, slow results)."])}
+  ];
+
+  /* ============ UTI ============ */
+  NOTES["Urinary tract infection"] = [
+    {h:"Types at a glance", b:
+      T([["Type","Picture","Usual bugs","Culture?"],
+         ["Acute uncomplicated cystitis","Burning, frequency, urgency, low abdominal/suprapubic pain. Sex, diaphragm, spermicide ↑ risk","<i>E. coli</i> 80–90%, <i>S. saprophyticus</i> 5–10%, <i>Klebsiella</i>, <i>Proteus</i>","No — unless treatment fails, early recurrence (&lt;1 month), unclear diagnosis, or pregnant"],
+         ["Acute pyelonephritis","Bacteria have climbed to the kidney: <b>fever, flank pain</b> ± bladder symptoms, N/V","<i>E. coli</i> 80–90%, <i>Klebsiella</i>, <i>Proteus</i>","<b>Always</b>, before starting antibiotics (± bloodwork)"],
+         ["Complicated UTI","Abnormal urinary tract (structural/functional); <b>all UTIs in males</b>","<i>E. coli</i> ~50%, <i>Proteus</i>, <i>Enterococcus</i>, <i>Pseudomonas</i>, others","<b>Always</b>, before antibiotics"],
+         ["Bacterial prostatitis","Acute: sudden chills, fever, low back pain, tender swollen prostate. Chronic: cause of recurrent UTI in older men","<i>E. coli</i>, <i>Enterobacteriaceae</i>, <i>Pseudomonas</i>, <i>S. aureus</i>, <i>Klebsiella</i>","Acute symptoms"],
+         ["Asymptomatic bacteriuria","Bacteria in urine, no symptoms; more common in older women","<i>E. coli</i>, <i>Proteus</i>, Group B strep","Only in pregnancy (screen at 12–16 wk). <b>Don’t treat unless pregnant</b>"]])+
+      L(["<b>Relapse</b> = same organism back within ~4 weeks (it never left — kidney/prostate). <b>Reinfection</b> = new organism, usually &gt;2 weeks after finishing.","Goals: relieve symptoms, prevent complications (pyelonephritis), prevent recurrence, prevent pyelonephritis in pregnancy."])},
+    {h:"First- and second-line", b:
+      T([["Condition","First line","Second line"],
+         ["Uncomplicated cystitis","SMX/TMP ×3 d · TMP ×3 d · <b>Nitrofurantoin ×5 d</b> · Fosfomycin 3 g ×1","Cipro/levo(/norfloxacin) ×3 d · Cephalexin ×7 d"],
+         ["Mild–moderate pyelo (no vomiting)","Cipro or levo PO ×7–14 d","Amox/clav, SMX/TMP or TMP ×10–14 d (culture-guided)"],
+         ["Severe pyelo (high fever, sepsis, vomiting)","IV aminoglycoside ± ampicillin, then oral step-down (10–14 d total)","IV cipro/levo · IV 3rd-gen cephalosporin ± aminoglycoside · pip/tazo ×7–10 d"],
+         ["Mild–moderate complicated","Nitrofurantoin, SMX/TMP, TMP or cipro/levo ×7–10 d","Amox/clav, cephalexin, cefixime ×7–10 d"],
+         ["Severe complicated","As severe pyelo","As severe pyelo"],
+         ["Acute bacterial prostatitis","Aminoglycoside ± cloxacillin (<i>S. aureus</i>) ± ampicillin IV","Cipro/levo or SMX/TMP ×4 wk"],
+         ["Chronic bacterial prostatitis","Cipro/levo ×4–6 wk","SMX/TMP ×4–6 wk"],
+         ["Asymptomatic bacteriuria in pregnancy","Amoxicillin, amox/clav, cephalexin, fosfomycin, nitrofurantoin (by susceptibility)",""]])+
+      L(["Antibiotics are offered to all symptomatic women (cystitis often clears in ~7 days without them, but symptoms are worse).","NSAIDs alone: less effective, more pyelonephritis — not used.","Cranberry: conflicting evidence — not treatment."])},
+    {h:"Drug table", b:
+      T([["Drug","Dose","Pros / cons","Avoid / watch"],
+         ["SMX/TMP","800/160 mg q12h (1 DS or 2 regular tabs)","As effective as nitrofurantoin; resistance rising — avoid if recent use/failure","Sulfa allergy, folate deficiency, infants &lt;2 mo. Rash, N/V/D. Alcohol ↑ nausea. Many interactions (warfarin etc.)"],
+         ["Trimethoprim","100 mg q12h","Option in sulfa allergy","Folate deficiency; rash, N/V"],
+         ["Nitrofurantoin","Macrocrystals 50–100 mg q6h · Mono/macro (Macrobid) 100 mg q12h","As effective as SMX/TMP; Macrobid better tolerated and BID","Renal impairment; pregnancy at term; infants &lt;1 mo (or nursing one). Long term: lung/liver toxicity. Antacids (2 h apart)"],
+         ["Fosfomycin","3 g ×1","Single dose; slightly less effective","Diarrhea, headache, vaginitis"],
+         ["Ciprofloxacin","250–500 mg q12h IR · 500–1000 mg q24h XL · 200–400 mg IV q12h","Effective but <b>save for no alternatives</b> (resistance, serious ADRs)","Tendon rupture, aortic aneurysm, CNS effects; myasthenia gravis; tizanidine (cipro). Separate from Ca/Fe/Mg/Al/Zn/dairy (cipro: 2 h before or 6 h after)"],
+         ["Levofloxacin","250–750 mg q24h (500 mg IV)","","As cipro; adjust in renal impairment"],
+         ["Cephalexin","500 mg q6h","Fewer ADRs than FQs","Less studied, less effective for cystitis; vaginal yeast"],
+         ["Cefixime / cefuroxime / cefazolin","400 mg q24h / 250 mg PO q12h (750 mg IV q12h) / 1 g IV q8h","",""],
+         ["Amoxicillin / amox-clav","500 mg q8h / 500 mg q8h or 875 mg q12h","High <i>E. coli</i> resistance; not empiric for cystitis; amox/clav = GI upset",""],
+         ["Aminoglycosides","Gentamicin or tobramycin 3–5 mg/kg/day IV · amikacin 15–20 mg/kg/day","Initial IV only (72–96 h) then oral","Nephro- and ototoxic; avoid other nephro/ototoxins"],
+         ["Ampicillin / pip-tazo","1 g IV q6h / 3.375 g IV q6h","",""]])},
+    {h:"Recurrent UTI", b:
+      '<p>≥2 episodes in 6 months or ≥3 in 12 months (usually uncomplicated).</p>'+
+      T([["Strategy","How"],["Self-start therapy","Patient holds a first-line (or second-line) course to start when symptoms begin"],["Post-coital prophylaxis","Single dose of a first-line antibiotic after sex"],["Continuous low-dose","Daily ×6–12 months: SMX/TMP 200/40 mg or nitrofurantoin 50–100 mg (avoid FQs)"]])},
+    {h:"Pregnancy & lactation", b:
+      L(["Screen for asymptomatic bacteriuria at 12–16 weeks; treat if 2 consecutive positive cultures — lowers risk of pyelonephritis, preterm birth, low birth weight.","Options: amoxicillin, amox/clav, cephalexin 500 mg q6h, fosfomycin, nitrofurantoin — by susceptibility. <b>Nitrofurantoin: avoid near term</b> (newborn hemolysis, rare).","Culture 1–2 weeks after, then monthly until delivery.","Pyelonephritis in pregnancy: ceftriaxone 1 g IV/IM q24h, then oral once stable.","<b>Avoid:</b> fluoroquinolones (cartilage), trimethoprim in 1st trimester (anti-folate), sulfamethoxazole in last 6 weeks (neonatal jaundice).","Recurrent prevention in pregnancy: nitrofurantoin or cephalexin preferred; cranberry unproven.","<b>Lactation:</b> FQs, nitrofurantoin, SMX/TMP, amoxicillin, cephalosporins all compatible."])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Dysuria, frequency, urgency","Better within 2–3 days"],["Pyelonephritis signs (fever, flank pain)","Absent"],["Back to activities / adherence","Present"]],[["Diarrhea, GI upset, rash (per drug)","Absent"],["Allergy","Absent"]])+
+      DTPX(["Symptoms to name: dysuria, frequency, urgency, suprapubic pain.","Common DTPs: ineffective drug (amoxicillin empirically; FQ first line when others fit); duration too long (7 d SMX/TMP for simple cystitis); unsafe drug (nitrofurantoin in poor renal function/near term; FQ in pregnancy; sulfa allergy); drug interaction (cipro + calcium/iron)."])}
+  ];
+
+  /* ============ GAS PHARYNGITIS ============ */
+  NOTES["Group A strep pharyngitis"] = [
+    {h:"Spot it", b:
+      L(["Most sore throats are <b>viral</b> (~70–90%) and settle in 7–10 days. Bacterial = mainly Group A <i>Streptococcus pyogenes</i> (GAS).","Spread by droplets/person-to-person, often from carriers without symptoms.","Suggests GAS: sudden sore throat, fever, tender neck nodes, red swollen tonsils ± exudate, scarlet-fever rash, and <b>no</b> viral features (cough, runny nose, hoarseness, conjunctivitis, diarrhea).","Complications: <b>suppurative</b> (otitis media, sinusitis, abscess, meningitis) and <b>non-suppurative</b> (acute rheumatic fever)."])+
+      '<p><b>Low risk of rheumatic fever</b> if: no prior ARF, non-Indigenous, living in a developed country/area with &lt;2 ARF cases per 100 000 children/year. High risk → treat with antibiotics.</p>'},
+    {h:"Score it & test it", b:
+      T([["Modified Centor (McIsaac)","Points"],["Temp &gt;38 °C","+1"],["No cough","+1"],["Tender/swollen anterior neck nodes","+1"],["Tonsil swelling or exudate","+1"],["Age 3–14","+1"],["Age 15–44","0"],["Age ≥45","−1"]])+
+      T([["Score","Chance of GAS","Action"],["0–1","Low","No test, no antibiotic"],["2","Low","Usually no test"],["3","~28–35%","Rapid antigen test (RADT)"],["≥4","~51–52%","RADT"]])+
+      L(["<b>RADT</b>: minutes; specificity ~95% (a <b>positive</b> is trustworthy); sensitivity ~80% (misses ~1 in 5).","Negative RADT: adults — stop there; <b>children — confirm with throat culture</b> (24 h, ~90–95% sensitive; also gives susceptibilities if you need a non-beta-lactam).","Don’t test children &lt;3 y, don’t retest after treatment."])+
+      TIP("High specificity = few false positives, so a <b>positive</b> RADT is reliable. Lower sensitivity = some GAS is missed, so confirm a <b>negative</b> RADT with a throat culture in children.")},
+    {h:"Timeline & goals", b:
+      T([["Day","What happens"],["~5 days","Incubation"],["1–3","Symptoms"],["3–5","Fever settles"],["7–10","Other symptoms settle"],["≤6 weeks","Tonsils and nodes shrink"]])+
+      L(["Goals: relieve symptoms, shorten illness, prevent ARF and suppurative complications, limit spread.","Plan: <b>analgesic for pain/fever ± antibiotic</b>. Antibiotics only if GAS confirmed (or high score where your guideline says so). Adults with severe symptoms awaiting results: antibiotics can be held 48–72 h and started if worsening or not improving.","Prevention: hand hygiene, cough etiquette. Carriers have low risk of complications and spread."])},
+    {h:"Antibiotics & doses", b:
+      T([["Situation","Drug","Adult","Child"],
+         ["Choice","<b>Penicillin V</b>","300 mg TID or 600 mg BID ×10 d (also children &gt;27 kg)","≤27 kg: 40 mg/kg/day div BID–TID ×10 d (max 750 mg/day)"],
+         ["Choice (kids like the taste)","Amoxicillin","—","50 mg/kg once daily (max 1 g) or 25 mg/kg BID (max 1 g/day) ×10 d"],
+         ["Non-severe beta-lactam allergy","Cephalexin","1 g daily or 500 mg BID ×10 d","40 mg/kg/day div BID ×10 d (max 1 g/day)"],
+         ["","Cefadroxil","1 g/day once or div BID ×10 d","≥6 wk: 30 mg/kg once daily ×10 d (max 1 g/day)"],
+         ["Severe beta-lactam allergy","Clarithromycin","250 mg BID ×10 d","15 mg/kg/day div BID ×10 d (max 500 mg/day)"],
+         ["","Azithromycin (5 days)","500 mg day 1, then 250 mg daily ×4 d","12 mg/kg once daily ×5 d (max 500 mg/day)"],
+         ["","Clindamycin","300 mg TID ×10 d","21 mg/kg/day div TID ×10 d (max 900 mg/day)"]])+
+      T([["Drug","Why","ADRs"],["Penicillin V","Drug of choice: narrow, cheap, safe; GAS resistance never documented","GI upset, rash, rare allergy"],["Amoxicillin","Chewables/suspension — easier for kids","As penicillin"],["Cephalexin","Suspension available; option if penicillin fails","GI upset, rare allergy"],["Macrolides","Penicillin-allergic; rising resistance; azithro = 5 days","GI upset, <b>QT prolongation</b>"],["Clindamycin","Penicillin-allergic; rising resistance","Diarrhea, <i>C. difficile</i>"]])+
+      L(["<b>Don’t use:</b> tetracyclines (resistance), sulfonamides and ciprofloxacin (ineffective), levofloxacin (broad, $$$$).","Dexamethasone: small extra relief, not first line — discuss if pain is severe."])},
+    {h:"Pain & fever", b:
+      T([["Drug","Adult","Child","Notes"],["Acetaminophen","325–1000 mg q4–6h (max 4 g/day)","10–15 mg/kg q4–6h (max 75 mg/kg/day, ≤4 g)","Rash (rare); avoid heavy alcohol"],["Ibuprofen","200–400 mg q4–6h PRN (OTC max 1200 mg/day)","5–10 mg/kg q6–8h (max 40 mg/kg/day; self-care ≤3 d fever, ≤5 d pain)","GI upset, dizziness; avoid 3rd trimester, other NSAIDs"]])+
+      '<p><b>Non-drug:</b> fluids, rest, soft diet, lozenges and gargles, avoid smoke/irritants.</p>'},
+    {h:"Pregnancy & lactation", b:L(["<b>Pregnancy:</b> penicillin V, amoxicillin, cephalosporins are safe. Penicillin allergy → azithromycin or clindamycin.","<b>Lactation:</b> penicillin V, amoxicillin, cephalosporins, macrolides OK; clindamycin OK but watch infant for diarrhea/thrush."])},
+    {h:"Monitoring & DTP fill-ins", b:
+      MON([["Sore throat, painful swallowing, fever","Better within 2–3 d (5-day course) or ~5 d (10-day course)"],["Pain/headache after analgesic","Within ~1 h; fever down within 1–2 d"],["Complications (ARF, otitis media, sinusitis)","Absent"],["Back to activities / completes course","Present"]],[["GI upset, diarrhea, rash (per drug)","Absent"],["Allergy","Absent"]])+
+      DTPX(["Symptoms to name: sore throat, pain on swallowing, fever, headache, nausea/vomiting.","Common DTPs: unnecessary drug (antibiotic for viral/low score); needs additional therapy (no analgesic/antipyretic; untreated confirmed GAS); ineffective drug (SMX/TMP, cipro, tetracycline); duration too short/long (should be 10 d, 5 d for azithro); dose too low in a child (weight-based); ADR (macrolide + QT drug)."])}
+  ];
+
+  /* ============ HEENT ============ */
+  NOTES["Eyelid conditions"] = [
+    {h:"Tell them apart", b:
+      T([["","Stye (hordeolum)","Chalazion","Blepharitis"],
+         ["What","Acute <b>infection</b> of eyelid gland(s), usually <i>S. aureus</i>. External (Zeis/Moll glands): smaller, drains in ~2 d. Internal (meibomian): larger, 1–2 wk","<b>Sterile</b>, chronic blocked meibomian gland","Chronic lid-margin inflammation, both eyes, flares"],
+         ["Feels like","<b>Painful</b>, sudden, red, warm, tender lump; gritty feeling, tearing, light sensitivity","<b>Painless</b>, slow, points inward; can irritate conjunctiva or distort vision if large","Burning, itch, watery or dry eyes, light sensitivity, red swollen lids, foamy tears"],
+         ["Risk","Unwashed hands, contacts, old/overnight makeup; rosacea, seborrheic dermatitis","Blepharitis, rosacea, seborrheic dermatitis, smoking","Rosacea, dandruff/seborrheic dermatitis, oily skin, dry eye, contacts, smoking, <i>Demodex</i>"]])+
+      L(["<b>Blepharitis types:</b> anterior (outer lid edge; staphylococcal = hard crusts, possible lash loss; seborrheic = oily scales) and posterior (most common; meibomian gland dysfunction — oily/frothy tears; meibomianitis = inflamed glands with waxy secretions).","Complications of chronic lid disease: corneal damage/scarring, loss of vision sharpness, rarely perforation. Recurrent chalazion → rule out gland carcinoma."])},
+    {h:"Treat", b:
+      T([["","First line","If that fails"],
+         ["Stye","Warm compress 5–15 min 3–4×/day + gentle massage; clean discharge. Not better in 48 h → see a doctor","Incision/drainage + topical antibiotic (erythromycin). Oral antibiotic only if cellulitis. Topical antibiotics otherwise not needed — polymyxin B/gramicidin gives no benefit"],
+         ["Chalazion","Warm compress (softens the plug); not healing in a few days → ophthalmology","Large: excision and/or steroid injection; post-op antibiotic/steroid drops. Antibiotics don’t help (not infectious)"],
+         ["Blepharitis","Lid hygiene: warm compress + firm lid massage, lid scrubs (diluted baby shampoo or lid cleanser), artificial tears. Mild–moderate = non-drug only","<b>Anterior:</b> erythromycin 0.5% ointment to lid margin at bedtime ×1 wk (ointment &gt; drops; fusidic acid 1% viscous drop q12h ×1 wk is an option). <b>Posterior:</b> doxycycline or minocycline 100 mg daily ×2–4 wk (tetracycline also used)"]])+
+      L(["Prevent spread: hands off, wash hands, fresh towels/pillowcases, don’t share makeup, no makeup/contacts until healed, replace makeup and lens case afterwards; don’t touch dropper tips to the eye.","Monitoring: symptoms improving within ~1 week; ADRs absent (ointment blur, tetracycline GI/photosensitivity)."])}
+  ];
+
+  NOTES["Conjunctivitis"] = [
+    {h:"Tell them apart", b:
+      T([["","Bacterial","Viral","Allergic"],
+         ["Discharge","<b>Purulent</b>, lids stuck in the morning","<b>Watery</b>","Watery or stringy"],
+         ["Other","Diffuse redness; more common in kids","Burning, little itch, node in front of ear; often after a cold; very contagious","<b>Very itchy</b>, both eyes, with sneezing/runny nose"],
+         ["Causes","<i>S. aureus</i>, <i>Streptococcus pneumoniae</i>, <i>H. influenzae</i>, <i>M. catarrhalis</i>; less often <i>N. gonorrhoeae</i>, <i>Chlamydia</i>, <i>Pseudomonas</i>","Adenovirus (most); HSV, VZV, enterovirus, EBV, influenza","Pollen/hay fever; vernal, atopic, giant papillary (contact lens)"],
+         ["Course","1–2 wk untreated; 2–3 d with treatment","1–2 wk regardless","Hours–days once allergen removed"]])+
+      '<p><b>Refer (red flags):</b> reduced vision, moderate–severe pain, light sensitivity, ciliary flush, corneal haze, irregular/fixed pupil, severe headache with nausea, trauma/foreign body, <b>contact lens wearer</b>, hyperacute purulent discharge (gonorrhea — emergency), symptoms &gt;4 weeks, herpes zoster near the eye.</p>'},
+    {h:"Treat", b:
+      T([["Type","Options"],
+         ["Bacterial — adult (drops preferred)","Mild: polymyxin B/gramicidin (Polysporin) 1–2 gtt, frequently at first then 4–6×/day · Moderate–severe: fusidic acid 1 gtt q12h ×7 d · Others: trimethoprim/polymyxin B, tobramycin (≥1 y)"],
+         ["Bacterial — child or pregnant (ointment preferred)","Erythromycin 0.5% ointment 1–1.25 cm 2–6×/day (safest in pregnancy)"],
+         ["Severe / contact lenses","Ciprofloxacin 1–2 gtt q2h while awake ×2 d, then q4h while awake ×5 d (covers <i>Pseudomonas</i>). Avoid in pregnancy"],
+         ["Viral","Supportive: lubricating drops (e.g. carboxymethylcellulose 1–2 gtt TID–QID), cold compresses. Decongestant (naphazoline) ≤3–4 days if needed"],
+         ["Allergic","Remove allergen; lubricants and cold compresses first. Antihistamine/mast-cell stabilizer: olopatadine 0.1% BID or 0.2% daily, ketotifen 0.025% BID. Naphazoline ± antazoline short-term only"]])+
+      L(["Topical antibiotics are all similar; keep fluoroquinolones for serious infection (keratitis) or lens wearers.","Naphazoline: rebound redness with long use; dilates pupil → can trigger <b>angle-closure glaucoma</b> in predisposed people.","Preservative BAK can irritate — choose preservative-free if using &gt;4×/day.","<b>Non-drug:</b> remove contacts until healed; avoid makeup/smoke/wind; warm compress (bacterial), cold (viral/allergic); saline rinse, lid wipes; hand hygiene; stay home until discharge stops (bacterial: after 24 h of antibiotics)."])}
+  ];
+
+  NOTES["Dry eye"] = [
+    {h:"Spot it", b:L(["Gritty, burning, foreign-body feeling; redness; blurred vision that clears with blinking; paradoxical watery eyes; worse with screens, wind, air conditioning, end of day.","Risk: older age, female, menopause, contact lenses, screen use, low humidity, blepharitis/rosacea, autoimmune disease (Sjögren), eye surgery.","Drugs that dry eyes: antihistamines, anticholinergics, TCAs, SSRIs, diuretics, beta-blockers, isotretinoin, decongestants, hormone therapy.","<b>Refer:</b> eye pain, reduced vision, light sensitivity, one very red eye, contact lens wearer with pain, no better after ~2 weeks of self-care."])},
+    {h:"Treat", b:
+      T([["Step","What"],["Non-drug","Blink breaks (20-20-20 rule), humidifier, avoid drafts/smoke, wraparound glasses, warm compresses + lid hygiene if lid disease, review drying drugs"],["Artificial tears","1–2 drops PRN (often QID+): carboxymethylcellulose, hypromellose, PEG/propylene glycol, hyaluronate. <b>Preservative-free if &gt;4×/day or contact lenses</b>"],["Night","Gels or ointments (blur vision — use at bedtime)"],["Prescription","Cyclosporine 0.05–0.1% or lifitegrast 5% BID for inflammatory/moderate–severe disease (takes weeks–months); usually specialist-guided"]])+
+      L(["Monitoring: comfort better within days of tears; cyclosporine may take 3–6 months. Safety: blur, stinging, preservative irritation absent.","Dry eye also raises risk of conjunctivitis — don’t miss it."])+
+      TIP("Confirm product choice in CPS Minor Ailments.")}
+  ];
+
+  NOTES["Glaucoma"] = [
+    {h:"Spot it", b:
+      '<p>Raised eye pressure (too much aqueous humor or blocked outflow) damages the optic nerve → visual-field loss → <b>irreversible blindness</b> if untreated. Normal IOP ~10–21 mmHg (but damage can occur at normal pressure).</p>'+
+      T([["","Open-angle (~80%)","Angle-closure (~20%)"],
+         ["Course","Chronic, painless","Acute or chronic — <b>acute is an emergency</b>"],
+         ["Picture","Slow peripheral field loss (central vision kept until late); both eyes, one worse; eye looks normal; optic disc changes","Painful red eye, hazy cornea, mid-dilated fixed pupil, halos, blurred vision, headache, N/V; eye feels hard"],
+         ["Risk","High IOP, older age, family history, myopia, migraine, HTN, nocturnal hypotension, diabetes, long-term corticosteroids, certain ancestries","Female, older, East Asian ancestry, family history, <b>hyperopia</b>"]])+
+      L(["Secondary: trauma, surgery, infection, congenital, <b>corticosteroids</b>.","Can trigger acute angle closure: pupil dilation and anticholinergic drugs — TCAs, first-generation antihistamines, antispasmodics, cyclobenzaprine, decongestants (and naphazoline drops).","Goals: prevent/slow vision loss by lowering IOP; protect the optic nerve; relieve pain and restore vision in acute forms; keep quality of life."])},
+    {h:"Open-angle drops", b:
+      T([["Class","Drops","How","ADRs / avoid"],
+         ["<b>Prostaglandin analogues</b> (first line)","Latanoprost 0.005%, travoprost, bimatoprost, latanoprostene bunod — 1 gtt at bedtime","↑ uveoscleral (± trabecular) outflow","Iris darkening, red eye, longer lashes. Avoid: pregnancy, macular edema, active uveitis, past herpetic keratitis"],
+         ["Beta-blockers","Timolol 0.25/0.5% daily–BID; betaxolol 0.25% BID (β1-selective)","↓ aqueous production","Bronchospasm, bradycardia, hypotension. Avoid: asthma/COPD, bradycardia/heart block, uncompensated HF, myasthenia gravis. Caution in diabetes (masks hypoglycemia). Timolol OK in lactation"],
+         ["Alpha-2 agonists","Brimonidine 0.15/0.2%, apraclonidine — BID–TID","↓ production (± ↑ outflow)","Allergic conjunctivitis, dry mouth, fatigue, hypotension. <b>No MAOIs</b>"],
+         ["Carbonic anhydrase inhibitors","Dorzolamide 2%, brinzolamide 1% — BID–TID","↓ production","Stinging, bitter/metallic taste, allergy. Avoid sulfa allergy; not in pregnancy"],
+         ["Cholinergic","Pilocarpine 1–4% TID–QID","↑ trabecular outflow","Small pupil (poor night vision), brow ache, myopia, rare retinal detachment; poorly tolerated in young people"],
+         ["Fixed combinations","PGA+BB once daily; BB+alpha agonist BID; BB+CAI BID; CAI+alpha agonist (no BB)","Fewer drops and preservatives","CAI+alpha agonist is useful when a beta-blocker isn’t safe"]])+
+      L(["If drugs fail or aren’t tolerated: laser trabeculoplasty or surgery (trabeculectomy).","Aerobic exercise may lower IOP a little; lifestyle doesn’t change outcomes.","Drop technique: one drop, close eye and press inner corner (nasolacrimal occlusion) 1–2 min; wait 5 min between different drops."])},
+    {h:"Angle-closure", b:
+      L(["<b>Acute angle closure = refer to emergency now</b> (eye pain, blurred vision, halos, headache, N/V).","Hospital lowers IOP fast (e.g. topical beta-blocker, alpha agonist, pilocarpine, oral/IV acetazolamide, osmotic agents), then definitive <b>laser peripheral iridotomy</b> (usually both eyes)."])+
+      TIP("Definitive treatment for angle-closure is <b>laser peripheral iridotomy</b>; trabeculoplasty/trabeculectomy are open-angle procedures. For timolol, the main contraindications are asthma/COPD and bradycardia/heart block — hypertension and diabetes are not.")},
+    {h:"Monitoring", b:MON([["IOP, visual field, optic nerve","Early disease q12 mo · moderate q6 mo · severe q4 mo","Eye doctor"],["Adherence and drop technique (the usual failure point)","Present","Pharmacist"]],[["Drug-specific ADRs (above)","Absent"],["Allergy","Absent"]])}
+  ];
+
+  NOTES["Allergic rhinitis"] = [
+    {h:"Spot it", b:
+      L(["IgE-mediated (type 1) reaction of sensitized nasal lining to allergens.","<b>Early phase:</b> sneezing, clear runny nose, itchy nose/eyes/throat. <b>Late phase:</b> congestion. Also: allergic shiners, nasal crease, mouth breathing, throat clearing, chronic cough.","Allergens: seasonal (tree, grass, weed pollen, outdoor mold) · perennial (dust mite, indoor mold, pets, occupational).","Not allergic? Drug-induced (e.g. beta-blockers, ASA/NSAIDs, ACEIs, hormones, cocaine, overuse of decongestant sprays), hormonal, viral, vasomotor/irritants, spicy food, alcohol."])+
+      T([["Classify","",""],["Intermittent","≤4 days/week <b>or</b> &lt;4 consecutive weeks",""],["Persistent","&gt;4 days/week <b>and</b> &gt;4 consecutive weeks",""],["Mild","Doesn’t disturb daily life or sleep",""],["Moderate–severe","Bothersome; affects daily activities or sleep",""]])+
+      '<p><b>Refer:</b> age &lt;2, pregnancy (for prescribing), wheeze/SOB, one-sided symptoms, facial pain/persistent headache, purulent discharge, nosebleeds, loss of smell, worsening or no improvement, new drug as cause, eye pain/vision change.</p>'},
+    {h:"Treat", b:
+      L(["<b>Mild intermittent:</b> oral 2nd-gen antihistamine (or INCS).","<b>Mild persistent or moderate–severe:</b> <b>intranasal corticosteroid (INCS)</b> first line.","Step up: INCS + intranasal antihistamine combination.","Non-drug: avoid allergens, keep pets out of bedroom, mite-proof covers, windows closed in season, don’t dry laundry outside, avoid smoke; saline irrigation (distilled or boiled-cooled water); immunotherapy if coexisting asthma or maximal therapy."])+
+      T([["Oral antihistamine","Adult dose","Notes"],["Cetirizine","10 mg daily","Most sedating of the group; fastest; renal adjust"],["Loratadine","10 mg daily","Dry mouth; renal adjust"],["Desloratadine","5 mg daily","Renal adjust"],["Fexofenadine","60 mg BID or 120 mg daily","Renal adjust; avoid fruit juice at dose time"],["Bilastine","20 mg daily","Empty stomach"],["Rupatadine","10 mg daily","Somewhat sedating"]])+
+      T([["INCS","Adult dose","Notes"],["Mometasone","2 sprays each nostril daily (1–2)","Very low bioavailability"],["Fluticasone furoate / propionate","2 sprays each nostril daily","Very low"],["Ciclesonide","2 sprays each nostril daily","Very low"],["Budesonide","1–2 sprays each nostril daily","Moderate"],["Triamcinolone","1–2 sprays each nostril daily","Moderate. In pregnancy prefer budesonide, fluticasone or beclomethasone"],["Beclomethasone","1–2 sprays each nostril BID","High"]])+
+      L(["INCS: best for nasal symptoms; full effect 3–14 days; must be used <b>regularly</b>. ADRs: nosebleeds, irritation, headache; rarely septal perforation, thrush. Technique: aim away from the septum, shake first.","Combos: fluticasone/azelastine (Dymista) 1 spray each nostril BID; mometasone/olopatadine (Ryaltris) 2 sprays each nostril BID — bitter taste, nosebleeds.","Decongestant sprays ≤3–5 days (rebound). Avoid in children, uncontrolled HTN, CAD, with MAOIs.","Ipratropium nasal: runny nose only. Montelukast: modest add-on. Eye symptoms: ophthalmic antihistamine/mast-cell stabilizer."])},
+    {h:"Monitoring", b:MON([["Sneezing, rhinorrhea, congestion, itch (VAS score)","Starting to improve in 1–2 days; assess at 3–7 days (INCS up to 2 weeks); little/no change → step up or refer"]],[["Drowsiness (antihistamine), nosebleeds (INCS), rebound congestion (decongestant)","Absent"]])}
+  ];
+
+  NOTES["Acute sinusitis"] = [
+    {h:"Spot it", b:
+      L(["Almost always <b>viral</b> — part of a cold. Most get better in 7–10 days without antibiotics.","Think <b>bacterial</b> if: symptoms &gt;7–10 days without improvement, or getting worse after first improving (\"double sickening\"), or severe (high fever, marked facial pain).","Key symptoms (PODS): facial <b>P</b>ain/pressure, nasal <b>O</b>bstruction, purulent <b>D</b>ischarge, <b>S</b>mell change — need ≥2, including O or D.","<b>Refer urgently:</b> swelling/redness around the eye, vision change, severe headache, stiff neck, confusion, very high fever, immunocompromise."])},
+    {h:"Treat", b:
+      T([["Step","What"],["Everyone","Saline irrigation, analgesic/antipyretic (acetaminophen, ibuprofen), fluids, rest. Oral or topical decongestant short-term (topical ≤3–5 d)"],["Mild–moderate","<b>Intranasal corticosteroid</b> (e.g. mometasone) and watchful waiting ~72 h"],["Severe, or no better after 72 h of INCS","Antibiotic: <b>amoxicillin</b> first line (5–10 days)"],["Penicillin allergy","Doxycycline or SMX/TMP (macrolides not preferred — resistance)"],["Treatment failure / risk","Amox/clav or a respiratory fluoroquinolone (levofloxacin, moxifloxacin)"]])+
+      TIP("Confirm doses and durations in Bugs &amp; Drugs or CPS.")},
+    {h:"Monitoring", b:MON([["Facial pain, congestion, discharge","Better within 72 h of antibiotic/INCS"],["Complications (eye, neuro signs)","Absent"]],[["Antibiotic GI upset, rash; INCS nosebleeds","Absent"]])}
+  ];
+
+  NOTES["Impacted cerumen"] = [
+    {h:"Spot it", b:
+      L(["Earwax build-up: ear fullness, muffled hearing, itch, tinnitus, sometimes mild dizziness or ear pain.","Risk: cotton swabs, earbuds/hearing aids, narrow or hairy canals, older age, skin conditions.","Earwax is normal and protective — the canal cleans itself."])+
+      '<p><b>Don’t self-treat — refer:</b> ear pain, discharge, bleeding, fever, sudden hearing loss, vertigo, known/possible perforated eardrum or ear tubes, recent ear surgery, diabetes or immunocompromise (for irrigation), child &lt;12 y (for carbamide peroxide).</p>'},
+    {h:"Treat", b:
+      L(["<b>Softeners:</b> carbamide peroxide 6.5% (e.g. Debrox) 5–10 drops BID up to 4 days (≥12 y); or olive/mineral oil, glycerin, or warm water/saline.","Then gentle irrigation with body-temperature water using a bulb syringe (only if eardrum intact).","Tilt head, keep drops in for several minutes, then drain.","<b>No</b> cotton swabs, no ear candles.","Not better after ~4 days → see a clinician for irrigation/removal."])+
+      TIP("Confirm products in CPS Minor Ailments.")}
+  ];
+
+  NOTES["Otitis externa"] = [
+    {h:"Spot it", b:
+      '<p>Inflammation of the outer ear canal (± pinna, eardrum). A warm, dark, moist canal lets bacteria and fungi grow.</p>'+
+      T([["","Bacterial (most)","Fungal (~10%)","Viral (rare)"],["Cause","<i>Pseudomonas aeruginosa</i> 20–60%, <i>S. aureus</i> 10–70%, gram-negatives","<i>Aspergillus niger</i>, <i>Candida</i>","HSV, zoster, measles"],["Picture","<b>Ear pain</b> (worse pulling the earlobe/pressing the tragus), sudden (&lt;48 h), one ear (90%); itch, fullness, discharge, swollen canal, reduced hearing","Itch, mild pain; black specks (<i>Aspergillus</i>) or white-brown film (<i>Candida</i>)","Pain, blisters, swelling — treat the cause (antivirals)"]])+
+      L(["Risk (bacterial): swimming/bathing (softened skin, ↑ pH), heat and humidity, <b>no earwax</b>, trauma, earbuds/hearing aids, skin disease; peak age 7–12 y. Fungal: warm moist climate, overuse of antibiotic drops.","<b>Malignant otitis externa</b>: spreads to cartilage/bone; elderly with poorly controlled diabetes, immunocompromised; <i>Pseudomonas</i> — urgent referral, systemic antibiotics.","<b>Refer:</b> fever, malaise, bleeding, discharge with possible perforation, severe or spreading pain, hearing loss.","Goals: clear the infection and debris, control pain/discharge, restore the canal’s acidic pH and earwax."])},
+    {h:"Treat", b:
+      T([["Option","Dose","Know"],
+         ["Acetic acid 2% (acidifier)","3 drops 4–6×/day; also prevention (50:50 vinegar:water)","Can sting inflamed canal; possibly ototoxic — <b>not with perforated eardrum</b>; safe in pregnancy"],
+         ["Polymyxin B + gramicidin (Polysporin Ear/Eye, OTC)","1–2 drops QID up to 10 d","Gram-neg + gram-pos cover; possibly ototoxic; not if perforated"],
+         ["Polymyxin B + lidocaine (Polysporin Plus Pain Relief)","Adults 3–4 drops QID · children 2–3 drops QID, up to 7 d","As above + numbing"],
+         ["Ciprofloxacin / ofloxacin drops (Rx)","3–4 drops BID ×7–10 d","<b>Not ototoxic</b> (choice if eardrum may be perforated); resistance with chronic use"],
+         ["Tobramycin drops (Rx)","3–4 drops TID–QID ×7–10 d","<b>Ototoxic</b>, especially with perforation"],
+         ["Cipro/dexamethasone (Ciprodex)","3–4 drops BID ×7–10 d","Steroid reduces swelling/pain faster"],
+         ["Tobramycin/dexamethasone (TobraDex)","3–4 drops TID–QID ×7–10 d",""],
+         ["Fungal","Clean canal + acidifier, clotrimazole 1% solution (compounded), or clioquinol/flumethasone (Locacorten-Vioform) ×7–10 d",""]])+
+      L(["Keep the ear dry; no swimming/water sports for 7–10 days; limit earbuds/hearing aids until better; canal cleaning may help drops reach.","Analgesics for pain.","Prevention: dry ears after swimming (hair dryer on low), acidifying drops, no cotton swabs, don’t over-clean."])},
+    {h:"Monitoring", b:MON([["Pain, itch, discharge","Better within 24 h; much less in 2–3 d; gone in 1–2 wk"],["Complications (spreading infection)","Absent"],["Adherence (drop technique)","Present"]],[["Stinging, local irritation, allergy (redness, swelling)","Absent"]])}
+  ];
+
+  /* ---- toolkit: non-condition essentials ---- */
+  var TOOLKIT = [
+    /* ===== Must know ===== */
+    {g:"Must know",n:"Latin &amp; sig abbreviations",d:"Read any sig in one pass.",k:"latin abbreviation sig bid tid qid prn hs ac pc od os ou ad as au mitte qs ss stat gtt",b:
+      T([["When / how often","",""],["ac · pc · cc","before meals · after meals · with meals",""],["hs (hor. som.)","at bedtime",""],["od · qd","once daily · every day","od also = right eye → read context"],["bid (bd, bds) · tid (td, tds) · qid (qds)","2× · 3× · 4× a day",""],["q4h, q6h…","every 4 h, every 6 h…",""],["prn · stat · atc","as needed · immediately · around the clock",""],["wa · uf","while awake · until finished",""]])+
+      T([["Where / route","",""],["po · SL · pr · pv","by mouth · under the tongue · rectally · vaginally",""],["IM · IV · SC","into muscle · into vein · under skin",""],["od · os · ou","right eye · left eye · both eyes","(oculus)"],["ad · as (al) · au","right ear · left ear · both ears","(auris)"]])+
+      T([["Dosage forms","",""],["tab · caps","tablet · capsule",""],["liq · supp · garg","solution · suppository · gargle",""],["lot · lin · ung","lotion · liniment · ointment",""],["tr · nebul · gtt","tincture · spray · drop(s)",""]])+
+      T([["Instructions","",""],["sig","\"mark thou\" — directions for the patient",""],["mitte (m)","send — quantity to dispense",""],["rept · non rep.","repeat · do not repeat",""],["mdu · ut dict (ud)","use as directed · as directed","Not enough on its own for most Rx"],["dns","do not substitute",""],["aa · ad · qs","of each · up to · as much as needed",""],["ex aqua · ss","with water · one-half","iss = 1½"],["lb","pound",""]])+
+      TIP("Several of these (od, qd, cc, u, ad/as) are on ISMP Canada’s \"do not use\" list because they get misread. Know them for sigs, but write them out in full when you write.")+
+      '<p>Practice quizlets: <a href="https://quizlet.com/_8eda3b?x=1jqt&amp;i=2vaklk" target="_blank" rel="noopener">common list</a> · <a href="https://quizlet.com/_8e01fm?x=1jqt&amp;i=2vaklk" target="_blank" rel="noopener">full list</a></p>'},
+    {g:"Must know",n:"Drams, ounces &amp; Roman numerals",d:"Apothecary symbols in sigs and mittes.",k:"apothecary dram ounce roman numeral ss i v x l c d m",b:
+      T([["Unit","Use in practice","Exact (not used)"],["ʒi — 1 dram (volume)","<b>5 mL</b>","≈3.55 mL (imperial)"],["℥i — 1 ounce (volume)","<b>30 mL</b>","≈28.4 mL (imperial)"],["ʒi — 1 dram (weight)","—","3.89 g"],["℥i — 1 ounce (weight)","<b>25 g</b> (sometimes 30 g) for creams/ointments","31.1 g"]])+
+      '<p><b>1 ounce = 8 drams</b> (exact).</p>'+
+      L(["Liquid with a symbol in <b>either</b> the sig or the mitte → use the practice values (5 mL, 30 mL).","Liquid with symbols in <b>both</b> → sig: 1 dram = 5 mL. Mitte: first convert ounces to drams (×8), <b>then</b> drams to mL (×5). So ℥ii = 16 drams = 80 mL (not 60 mL).","Cream/ointment ordered in ounces (by weight) → 1 oz ≈ 25 g."])+
+      T([["Roman","Value"],["ss","½"],["i","1"],["v","5"],["x","10"],["l","50"],["c","100"],["d","500"],["m","1000"]])+
+      L(["Bigger (or equal) first → <b>add</b>: xi = 10 + 1 = 11; xv = 15.","Smaller first → <b>subtract</b>: iv = 4; cm = 1000 − 100 = 900.","In sigs: \"i tab\" = 1 tablet; \"iss\" = 1½."])},
+    {g:"Must know",n:"Concentrations",d:"%, parts, ppm and moles.",k:"concentration percent w/v w/w v/v ratio ppm molarity molality mole fraction mg%",b:
+      T([["Expression","Means"],["% w/w","g of drug in <b>100 g</b> of product"],["% w/v","g of drug in <b>100 mL</b> of product"],["% v/v","mL of drug in <b>100 mL</b> of product"],["mg%","mg in 100 mL (or 100 g if solid)"],["1:y (ratio)","1 part (g or mL) in y parts total — e.g. 1:1000 = 1 g/1000 mL = 0.1%"],["ppm","parts in 1 000 000 parts total"],["M (molarity)","moles per <b>1 L of solution</b>"],["m (molality)","moles per <b>1 kg of solvent</b>"],["Mole fraction","moles of x ÷ total moles (x + everything else)"],["Mole %","mole fraction × 100"]])+
+      '<p>Solid = grams; liquid = mL. <a href="https://quizlet.com/_8f9iyv?x=1jqt&amp;i=2vaklk" target="_blank" rel="noopener">Concentrations quizlet</a></p>'},
+    {g:"Must know",n:"Conversions &amp; formulas",d:"Weight, height, temperature, BMI, CrCl, BSA.",k:"conversion formula kg lb inch cm celsius fahrenheit bmi cockcroft gault crcl creatinine clearance bsa mosteller",b:
+      T([["Convert","Use"],["kg ↔ lb","1 kg = 2.2 lb · 1 lb = 454 g"],["cm ↔ inch","1 in = 2.54 cm · 1 cm = 0.39 in"],["°F → °C","°C = (°F − 32) × 5/9"],["°C → °F","°F = (°C × 9/5) + 32"]])+
+      '<p>Memory aid: <i>"I’d rather fly an F-32 fighter jet than work a 9-to-5"</i> → °C = (F − 32) ÷ 9/5.</p>'+
+      T([["Formula",""],["BMI (kg/m²)","weight (kg) ÷ height (m)²"],["CrCl, normalized (mL/min/72 kg)","(140 − age) ÷ SCr (µmol/L) × 90 · ×0.85 if female"],["CrCl, actual weight (mL/min)","(140 − age) × weight (kg) × 1.2 ÷ SCr (µmol/L) · ×0.85 if female"],["BSA (Mosteller, m²)","√(height cm × weight kg ÷ 3600)"]])+
+      TIP("Check which weight your course wants for CrCl (actual, ideal or adjusted).")},
+    {g:"Must know",n:"Vital signs",d:"Normal ranges for HR, BP, temperature, RR.",k:"vital signs heart rate pulse blood pressure temperature fever respiratory rate hypothermia hyperpyrexia",b:
+      T([["Age","Resting HR (bpm)","Resp. rate (/min)"],["Newborn","70–170",""],["1–6 y","75–160","2–6 y: 21–30"],["6–12 y","80–120","6–10 y: 20–26 · 12–14 y: 18–22"],["Adult / elderly","60–100","12–20"],["Conditioned athlete","50–100",""]])+
+      T([["Pulse force",""],["0","Absent"],["1+","Weak, thready"],["2+","Normal"],["3+","Full, bounding"]])+
+      T([["Blood pressure",""],["Normal","~120/80 mmHg"],["High (office)","≥140/90 mmHg"],["Low","Only a problem if there are symptoms (dizziness, fainting)"]])+
+      T([["Temperature","Normal","Fever"],["Oral (reference)","36.5–37.5 °C","&gt;37.5 °C"],["Rectal","≈0.5 °C higher than oral","&gt;38.0 °C"],["Axillary","≈0.5–1 °C lower than oral","&gt;37.3 °C (check your course’s cut-off)"],["Tympanic","","&gt;38.0 °C"]])+
+      '<p><b>Hyperpyrexia</b> &gt;41 °C · <b>Hypothermia</b> &lt;35 °C (oral).</p>'+
+      TIP("Cut-offs follow Caring for Kids (Canadian Paediatric Society). They vary slightly between references.")},
+    {g:"Must know",n:"Acetaminophen &amp; ibuprofen dosing",d:"Adult and child OTC doses.",k:"acetaminophen tylenol ibuprofen advil motrin dose child pediatric adult max mg/kg",b:
+      T([["Acetaminophen","Dose","Max"],["&lt;12 y","10–15 mg/kg/dose q4–6h PRN","75 mg/kg/day (some refs 60–75), never &gt;4 g"],["≥12 y / adult","325–650 mg q4–6h PRN (up to 1 g/dose in many refs)","4 g/day from <b>all</b> sources"]])+
+      T([["Ibuprofen","Dose","Max"],["&lt;2 y","5 mg/kg/dose q6–8h PRN (ask a clinician under 6 months)","40 mg/kg/day"],["2–12 y","5–10 mg/kg/dose q6–8h PRN","40 mg/kg/day"],["&gt;12 y / adult (OTC)","200 mg q4h PRN or 400 mg q6–8h PRN","1200 mg/day OTC (2400 mg/day under Rx)"]])+
+      L(["Self-care limits: fever ≤3 days, pain ≤5 days → then see a clinician.","Ibuprofen: with food; avoid in 3rd trimester, active ulcer, dehydration/kidney disease."])},
+
+    /* ===== PharmaCare ===== */
+    {g:"PharmaCare",n:"PharmaCare plans",d:"Who each plan covers.",k:"pharmacare plan fair pharmacare plan i b c d f g p w z x s np m assurance",b:
+      T([["Plan","Covers"],["<b>I — Fair PharmaCare</b>","Most BC residents; help based on family net income"],["B — Long-term care","Permanent residents of licensed residential care (100%)"],["C — Income assistance","People on provincial income/social assistance"],["D — Cystic fibrosis","Registered CF clinic patients (enzymes etc.)"],["F — At Home Program","Children with complex needs cared for at home"],["G — Psychiatric medications","Low-income patients who need psychiatric meds"],["P — Palliative care","End-of-life care at home/hospice"],["W — First Nations Health Benefits","Status First Nations people in BC"],["Z — Assurance","100% for everyone: mifepristone-misoprostol, opioid agonist treatment (OAT), Paxlovid, MAiD drugs"],["X — HIV/AIDS","Antiretrovirals via BC Centre for Excellence in HIV/AIDS"],["S — Smoking cessation","NRT and cessation Rx drugs"],["NP — National Pharmacare","Contraceptives, diabetes medications, menopausal hormone therapy"],["M — Medication management","Pharmacy clinical services and vaccinations"]])+
+      '<p><a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/plans" target="_blank" rel="noopener">PharmaCare plans (gov.bc.ca)</a> · <a href="https://quizlet.com/_8g41d0?x=1jqt&amp;i=2vaklk" target="_blank" rel="noopener">PharmaCare quizlet</a></p>'},
+    {g:"PharmaCare",n:"Deductible &amp; family maximum",d:"The three zones of Fair PharmaCare.",k:"deductible family maximum fair pharmacare zone 70% 75% 1939 income calendar year",b:
+      T([["Zone","Where the family is","Patient pays","PharmaCare pays"],["X","Deductible <b>not yet met</b>","100% (the PharmaCare-recognized part counts toward the deductible)","0%"],["Y","Deductible met, maximum not met","30% of recognized cost + anything above it","<b>70%</b> (75% if a family member was <b>born 1939 or earlier</b>)"],["Z","Family maximum reached","Only costs above what PharmaCare recognizes","100% of recognized cost"]])+
+      L(["Everything <b>resets every January 1</b> (calendar year).","Deductible and maximum come from family <b>net income</b> (income-band tables; \"enhanced\" bands if anyone was born 1939 or earlier).","Only the PharmaCare-recognized amount counts toward deductible/maximum — not extra you pay for a non-reference or brand drug.","At the maximum, for a fully covered drug the pharmacy can’t charge more than PharmaCare’s dispensing fee → patient pays $0."])+
+      '<p><a href="https://www2.gov.bc.ca/gov/content/health/health-drug-coverage/pharmacare-for-bc-residents/who-we-cover/fair-pharmacare-plan" target="_blank" rel="noopener">Fair PharmaCare (income bands)</a></p>'},
+    {g:"PharmaCare",n:"LCA &amp; Reference Drug Program",d:"Why PharmaCare pays less than the price.",k:"lca low cost alternative rdp reference drug program generic interchangeable brand partial full benefit",b:
+      '<p>Both programs cut provincial spending by fully covering only the <b>cheapest equivalent</b> (usually a generic, or the \"reference\" drug).</p>'+
+      T([["","Low Cost Alternative (LCA)","Reference Drug Program (RDP)"],["Groups","Brand + generics of the <b>same drug</b> (interchangeable)","<b>Different drugs in the same class</b>, judged equally safe/effective"],["Interchangeable means","Same ingredient and amount, similar PK, same formulation, same route","—"],["PharmaCare pays up to","The <b>LCA price</b> (generic usually full benefit; pricier brand = partial)","Reference drug: fully (LCA rules). Non-reference: up to the <b>RDP price</b> (a daily cost, set by the cheapest reference drug)"],["Classes","Any multi-source drug","8: ACEIs (-pril), ARBs (-sartan), dihydropyridine CCBs (-dipine), statins, H2RAs (-tidine), <b>nitrates</b>, NSAIDs, PPIs (-prazole)"]])+
+      L(["RDP price is shown per day (or per 30 days) at the bottom of each class on the RDP spreadsheet.","<b>Special Authority</b> (e.g. interaction, intolerance, failure of reference drugs) lets a non-reference drug be treated like a reference drug (LCA rules).","The difference a patient pays for a non-reference drug does <b>not</b> count toward the deductible."])+
+      '<p><a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/pharmacies/low-cost-alternative-lca-and-reference-drug-program-rdp-data-files" target="_blank" rel="noopener">LCA &amp; RDP spreadsheets</a> · <a href="https://www2.gov.bc.ca/gov/content/health/health-drug-coverage/pharmacare-for-bc-residents/what-we-cover/general-coverage-policies" target="_blank" rel="noopener">General coverage policies</a></p>'},
+    {g:"PharmaCare",n:"Which price? (spreadsheet columns)",d:"Full/Partial, RDP, SA → which price to use.",k:"lca spreadsheet column full partial benefit p* rdp ref sa special authority max price lca price din",b:
+      T([["Column says","Means","Price to use"],["<b>F</b> (full benefit)","Fully covered, under Maximum Pricing Policy","Max Price (if LCA price also listed → the <b>lower</b>)"],["<b>P</b> (partial)","Coverage capped by LCA or RDP","LCA Price (or RDP price if non-reference RDP)"],["<b>P*</b>","Non-reference RDP drug — full benefit <b>only with Special Authority</b>","With SA: LCA/Max rules · Without SA: RDP price"],["RDP = <b>REF</b>","Reference drug of its class","LCA rules"],["RDP = <b>RDP</b>","Non-reference drug in an RDP class","RDP price × days"],["RDP blank","Not in the RDP",""],["SA = <b>Y</b>","Limited coverage — pays <b>$0</b> unless SA approved on PharmaNet before filling","If approved: LCA rules"]])+
+      '<p>For an RDP drug PharmaCare pays the <b>lowest</b> of Max Price, LCA Price and RDP price.</p>'+
+      T([["Other terms",""],["DIN / NPN","Health Canada product number (drug / natural product)"],["Chemical name · Drug name · MAN","Generic name · brand/product name · manufacturer code"],["Plan B only = Y","Benefit only for Plan B (long-term care) patients"],["PROV = Y","Provisional listing — may be removed"],["Pan-Canadian = Y","Price set by the pan-Canadian generic pricing initiative"],["Tiered Pricing = Y","Price follows the tiered generic pricing framework"],["Max Price","Most PharmaCare reimburses for the drug"],["LCA Price","Most PharmaCare reimburses for a partial benefit in an LCA group"]])+
+      '<p><a href="https://www2.gov.bc.ca/assets/gov/health/health-drug-coverage/pharmacare/lca-rdp-datadict.pdf" target="_blank" rel="noopener">LCA/RDP data dictionary (PDF)</a></p>'},
+    {g:"PharmaCare",n:"Calculating what the patient pays",d:"Three steps, every time.",k:"calculate cost price patient pays actual rx cost aac professional fee dispensing fee max pharmacare benefit",b:
+      T([["Step","Formula"],["1 · Actual Rx cost","quantity × AAC (actual acquisition cost) + <b>pharmacy’s</b> professional fee"],["2 · PharmaCare-recognized cost (\"Max PC benefit\")","quantity × recognized unit price (Max / LCA) <b>or</b> days × RDP daily price — <b>+ PharmaCare’s max dispensing fee</b>"],["3 · Apply the zone","X: patient pays all of step 1; step 2 counts toward deductible · Y: PharmaCare pays 70% (75%) of step 2; patient pays step 1 − that; 30% of step 2 counts toward maximum · Z: PharmaCare pays 100% of step 2; patient pays step 1 − step 2"]])+
+      TIP("PharmaCare’s maximum dispensing fee is <b>$11.00</b> per claim (Policy 8.2). If a question gives a different fee, use the question’s.")+
+      L(["Quick example (Zone Y, non-reference statin, 30 days): step 2 = (30 × daily RDP price) + fee cap; PharmaCare pays 0.7 × step 2; patient pays the rest.","Full worked practice questions will go in Practice."])},
+
+    /* ===== Law & scope ===== */
+    {g:"Law &amp; scope",n:"Drug schedules in BC",d:"What each schedule means and how to look one up.",k:"drug schedule bc schedule i ia ii iii iv unscheduled drug schedules regulation dsr narcotic controlled n/c category codeine exempted cpp triplicate duplicate",b:
+      T([["Schedule","Meaning"],["I","Prescription required"],["IA","Controlled Prescription Program — must be written on the special duplicate pad (prevents forgery/misuse)"],["II","Behind the counter: no public access, pharmacist sells without Rx"],["III","In the pharmacy’s professional products area (OTC, visible, near the dispensary)"],["IV","May be prescribed by a pharmacist"],["Unscheduled","Can be sold anywhere"]])+
+      '<p><b>How to find it</b></p>'+
+      L(["Brand name? Get the generic name from CPS.","Look it up in the <b>Drug Schedules Regulation</b>. Not listed = unscheduled.","<b>Combination product → the most restrictive ingredient wins.</b>","Narcotic/controlled category: CPBC <b>Prescription Regulation Table</b> (also covers Rx requirements, refills, records). None → N/A.","Codeine exemption: ≤8 mg codeine per solid dose (or ≤20 mg/30 mL liquid) <b>plus</b> 2 other non-narcotic ingredients at therapeutic doses → Schedule II exempted product."])+
+      TIP("<b>From October 1, 2026</b>, Health Canada’s new Controlled Substances Regulations replace the old narcotic/controlled drug regulations. Pharmacists can accept verbal orders for controlled substances, transfer them (within 2 years), extend/renew them for continuity of care (up to 30 days or the original amount) and adapt them when a strength is unavailable or information is missing. Therapeutic substitution of controlled substances is still not allowed in BC.")+
+      '<p><a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/9_98" target="_blank" rel="noopener">Drug Schedules Regulation</a> · <a href="https://library.bcpharmacists.org/6_Resources/6-4_Drug_Distribution/5014-Prescription_Regulation_Table.pdf" target="_blank" rel="noopener">Prescription Regulation Table</a> · <a href="https://www.bcpharmacists.org/drug-distribution" target="_blank" rel="noopener">CPBC drug distribution</a></p>'},
+    {g:"Law &amp; scope",n:"Medication reviews",d:"Types, fees and who qualifies.",k:"medication review mr-s mr-pc mr-f standard pharmacist consultation follow up eligibility fee bpmh",b:
+      T([["Service","What","Fee"],["MR-S (Standard)","Review of all Rx, OTC and natural products","$60"],["MR-PC (Pharmacist Consultation)","Review where a DTP is found and worked through","$70"],["MR-F (Follow-up)","Checking effect/safety of changes","$15"]])+
+      '<p>Why: better communication, safer and more effective medication use, better outcomes.</p>'+
+      '<p><b>Patient must:</b></p>'+
+      L(["Be a BC resident with a PHN","<b>Not</b> be on Plan B (they have their own reviews)","Have <b>≥5 different qualifying medications</b> on PharmaNet in the last 6 months — Rx drugs, compounds, insulin (counts once). Not OTCs, vitamins, vaccines or supplies (e.g. test strips)","Have a clinical need: prescriber request, several or chronic diseases, OTC/NHP use, multiple prescribers, recent hospital discharge, drug needing lab monitoring, or a DTP","Be within limits: MR-S <b>or</b> MR-PC once every 6 months; MR-F up to 4 per 12 months","Sign the acknowledgement on the Best Possible Medication History form"])+
+      '<p>Daily cap for one patient (reviews + clinical services + injections): $78. <a href="https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/pharmacare-publications/pharmacare-policy-manual-2012/pharmacyfees-subsidies-providerpayment/medication-review-services" target="_blank" rel="noopener">Policy 8.9</a></p>'},
+    {g:"Law &amp; scope",n:"Scope of practice — who can prescribe what",d:"Pharmacists vs other prescribers.",k:"scope of practice prescriber pharmacist physician dentist veterinarian podiatrist optometrist midwife nurse practitioner naturopath",b:
+      T([["Professional","Can prescribe"],["<b>Pharmacist</b>","Adapt prescriptions (renew, change, substitute); emergency supplies; administer injections/vaccines (certified); <b>minor ailments &amp; contraception</b> (since June 2023); Schedule IV drugs"],["Physician, dentist, veterinarian, podiatrist","Narcotic, controlled and prescription drugs (within their practice)"],["Optometrist","Topical eye drugs — not narcotics/controlled"],["Midwife","For the pregnant patient/newborn during pregnancy, labour, delivery, postpartum only; listed Schedule I/IA drugs for listed indications (e.g. antibiotics for breast infection, anticoagulants for VTE prevention)"],["Nurse practitioner","Most drugs, with limits (not e.g. general anesthetics, anabolic steroids except testosterone, coca leaves, opium). Extra certification for some (e.g. HIV ART, controlled drugs, OAT)"],["Naturopathic physician","Some Schedule I drugs with limits; <b>no</b> narcotics/controlled; excluded list (e.g. narrow-TI antibiotics, some antivirals, botulinum toxin, certain anticonvulsants, parenteral iron)"]])+
+      '<p><a href="https://www.bcpharmacists.org" target="_blank" rel="noopener">CPBC</a> · <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/281_2008" target="_blank" rel="noopener">Midwives Regulation</a></p>'},
+    {g:"Law &amp; scope",n:"Minor ailments &amp; contraception (MACS)",d:"The 21 minor ailments BC pharmacists can prescribe for.",k:"macs minor ailments contraception pharmacist prescribing 21 ppmac medsask",b:
+      T([["The 21","",""],["Acne","Allergic rhinitis","Conjunctivitis (allergic, bacterial, viral)"],["Dermatitis (allergic, atopic, contact, diaper, seborrheic)","Dysmenorrhea","Dyspepsia"],["Fungal infections (onychomycosis, tinea corporis/cruris/pedis)","GERD","Headache"],["Hemorrhoids","Herpes labialis (cold sores)","Impetigo"],["Musculoskeletal pain","Nicotine dependence","Oral ulcers (canker/aphthous)"],["Oropharyngeal candidiasis","Shingles","Threadworms/pinworms"],["UTI (uncomplicated)","Urticaria incl. insect bites","Vaginal candidiasis"]])+
+      L(["Plus <b>contraception</b> (hormonal, incl. emergency contraception) — Schedule I drugs.","PharmaCare pays a MACS assessment fee (listed as $20).","Algorithms and checklists: medSask (free via BCPhA sign-in for CPBC-registered students)."])+
+      '<p><a href="https://www.gov.bc.ca/minorailments" target="_blank" rel="noopener">MACS (gov.bc.ca)</a> · <a href="https://www.bcpharmacists.org/ppmac" target="_blank" rel="noopener">CPBC PPMAC standards</a> · <a href="https://www.bcpharmacy.ca/medsask" target="_blank" rel="noopener">medSask</a></p>'},
+    {g:"Law &amp; scope",n:"Renew, change, substitute (adapting)",d:"PANDA II checklist + current rules.",k:"adapt adaptation renew renewal change dose formulation regimen therapeutic substitution panda ppp-58 fee emergency supply",b:
+      '<p><b>PANDA II</b> — check before any adaptation:</p>'+
+      T([["","Ask","Means"],["<b>P</b>rescription","Do I have a valid, current, authentic original?","Not expired; appropriate"],["<b>A</b>ppropriate info","Do I know enough about this patient?","Patient/rep, local profile + PharmaNet, prescriber notes, literature"],["<b>N</b>otify","Have I told the prescriber?","Original prescriber ASAP (aim within 24 h); also the usual clinician if different"],["<b>D</b>ocument","Did I record why?","Rationale (NESA, point form)"],["<b>A</b>ppropriate adaptation","Is it in the patient’s best interest?","Evidence, guidelines, indications. <b>Never for yourself or family</b>"],["<b>I</b>ndividual competence","Do I understand the condition and drug?","Could I defend it? Would another pharmacist do the same?"],["<b>I</b>nformed consent","Does the patient agree?","Explain why, what, benefits/risks; let them ask questions"]])+
+      T([["","Renew","Change","Therapeutic substitution"],["What","Same drug, same directions","Same drug, different dose, formulation or regimen — or adding missing info","Different drug, same therapeutic class, similar effect"],["Why","Continuity of care; stable, chronic condition","Better outcomes, availability, patient-specific dose (age, weight, kidney/liver), easier to take","Shortage, recall, coverage, patient benefit"],["Clinical service fee","$10","$10","$17.20"]])+
+      '<p><b>Rules (CPBC PPP-58):</b></p>'+
+      L(["Can renew, change or substitute <b>almost any</b> prescription — except cancer chemotherapy, veterinary prescriptions, or ones the prescriber marked \"do not adapt\".","Prescription must be ≤<b>2 years</b> old (benzodiazepines/targeted substances: 1 year).","Renewal: condition stable and no significant change for ~3–6 months; can’t extend past the prescription’s expiry.","Transferred and previously adapted prescriptions <b>can</b> be adapted (you adapt the original prescriber’s order).","Narcotics/controlled/targeted: may renew for the prescribed duration or 30 days (whichever is greater) and change dose/formulation within the authorized quantity. <b>Therapeutic substitution of controlled substances is not allowed.</b> From Oct 1, 2026 this authority comes from the new federal Controlled Substances Regulations (previously a section 56 exemption).","Max 2 clinical-service fees per drug per person per 6 months; no fee for emergency fills or refills of an adapted Rx.","\"Do not adapt\": pre-printed only → may ignore; pre-printed <b>and</b> signed/initialled → can’t; handwritten → can’t."])+
+      '<p><a href="https://www.bcpharmacists.org/adapting-prescription" target="_blank" rel="noopener">CPBC: Adapting a prescription</a></p>'},
+
+    /* ===== Rx checking ===== */
+    {g:"Rx checking",n:"PQRS-D3-E",d:"Check the label against the prescription.",k:"pqrs d3e pqrs-d3-e prescription checking patient quantity refills sig doctor drug din expiry verification",b:
+      T([["","Check that…"],["<b>P</b>atient","Right person: full name (and address/DOB) matches"],["<b>Q</b>uantity","Amount dispensed matches the mitte (or duration × dose)"],["<b>R</b>efills","Number of refills and interval match"],["<b>S</b>ig","Directions on the label say exactly what the prescriber wrote"],["<b>D</b>octor","Right prescriber (name, ID)"],["<b>D</b>rug","Right drug, strength and form (watch look-alike/sound-alike)"],["<b>D</b>IN","DIN on the label matches the product in the bottle"],["<b>E</b>xpiry","Product not expired; Rx still valid"]])},
+    {g:"Rx checking",n:"Beyond-use dates &amp; blister packs",d:"Compounded product BUDs and checking blister packs.",k:"beyond use date bud expiry compounded nonaqueous aqueous oral topical blister pack compliance packaging",b:
+      T([["Compounded preparation","Default BUD (USP &lt;795&gt;, 2023)","Storage"],["Aqueous, <b>not preserved</b> (water activity ≥0.6)","14 days","Refrigerator"],["Aqueous, <b>preserved</b>","35 days","Room temp or fridge"],["Nonaqueous <b>oral liquid</b>","90 days","Room temp or fridge"],["Other nonaqueous (ointments, suppositories, etc.)","180 days","Room temp or fridge"],["Solid (capsules, tablets, powders)","180 days","Room temp or fridge"]])+
+      '<p>Use these only when there is no stability data for the formula. The BUD can never be later than the earliest expiry of any ingredient.</p>'+      '<p><b>Blister packs</b></p>'+
+      L(["Count how many pills should be in each column and write totals down; then check every slot.","Watch strengths that look alike (e.g. amlodipine strengths, rivaroxaban 10 vs 15 mg).","Watch sound-alikes (rosuvastatin/atorvastatin).","Alternate-day drugs: label each card with the right week so two \"on\" days don’t line up."])},
+    {g:"Rx checking",n:"Prescription legal requirements",d:"The 12 things every Rx record needs.",k:"prescription legal requirements valid rx components patient name address date prescriber signature",b:
+      T([["#","Must have",""],["1","Patient’s full name",""],["2","Patient’s address","Good practice: phone and PHN too"],["3","Date — prescribed <b>and</b> dispensed",""],["4","Prescription number","Assigned by the pharmacy system"],["5","Drug/ingredients: name and strength","Compounds: record the full formula"],["6","Mitte (quantity)","Or duration of therapy"],["7","Sig","\"As directed\" isn’t enough — needs frequency/interval or max daily dose"],["8","Refills (if any)","Number <b>and</b> interval"],["9","Prescriber’s name and signature",""],["10","Prescriber’s address",""],["11","Prescriber’s ID number",""],["12","Pharmacist’s initials","For verbal orders and for dispensing"]])},
+
+    /* ===== Case work-up ===== */
+    {g:"Case work-up",n:"Case work-up — the order",d:"From case to care plan.",k:"care plan workup work-up nesa goals of therapy alternatives plan a plan b esa recommendation monitoring subjective objective",b:
+      T([["Step","Do"],["1 · Gather","Subjective (what the patient says) and objective (vitals, labs, meds, allergies) findings"],["2 · DTPs","List them by <b>NESA</b> (Toolkit → DTPs); rank them"],["3 · Goals","Patient-specific, measurable where you can"],["4 · Alternatives","Plan A vs Plan B (and non-drug). Compare by <b>E</b>ffectiveness, <b>S</b>afety, <b>A</b>dherence/cost"],["5 · Recommend","Drug, dose, route, frequency, duration + non-drug"],["6 · Monitor","≥2 effectiveness + ≥1 safety parameters: what, expected change, who, when, and what to do if not met"]])},
+    {g:"Case work-up",n:"DTPs (NESA)",d:"Categories, examples and fill-in sentences.",k:"dtp drug therapy problem nesa necessary effective safety adherence actual potential template unnecessary additional ineffective dose too low too high adverse reaction non-adherence",b:
+      T([["","Category","Examples"],["<b>N</b>ecessary","Unnecessary drug therapy","No indication, duplicate therapy, recreational/addictive, non-drug is better, treating an avoidable ADR"],["","Needs additional therapy","Untreated condition, prevention/prophylaxis, synergy needed"],["<b>E</b>ffective","Ineffective drug","Wrong dosage form, refractory condition, not effective for it, better drug available"],["","Dose too low","Low dose, interval too long, duration too short, poor storage/administration, interaction ↓ levels"],["<b>S</b>afety","Adverse drug reaction","Unsafe for this patient, allergy, interaction, titrated too fast, undesirable effect, contraindication"],["","Dose too high","High dose, interval too short, duration too long, interaction ↑ levels"],["<b>A</b>dherence","Non-adherence","Not available, can’t afford, can’t swallow/use, doesn’t understand, prefers not to, forgets"]])+
+      '<p><b>Actual</b> = happening now → \"[Initials] is experiencing [event] secondary to [cause].\"<br><b>Potential</b> = will happen if we do nothing → \"[Initials] is at risk of experiencing [event] secondary to [cause].\"</p>'+
+      '<p><b>Fill-in sentences</b> (swap in the condition, symptoms and drugs):</p>'+
+      '<span class="tpl"><b>Needs additional</b> — __ is at risk of ongoing [symptoms] of [condition] secondary to being prescribed incomplete drug therapy (recommended: __).</span>'+
+      '<span class="tpl"><b>Unnecessary</b> — __ is at risk of experiencing side effects of __ ([effects]) secondary to being prescribed an unnecessary drug therapy.</span>'+
+      '<span class="tpl"><b>Ineffective drug</b> — __ is at risk of unmanaged [condition] ([symptoms]) secondary to being prescribed __, a less effective option (recommended: __).</span>'+
+      '<span class="tpl"><b>Dose too low</b> — __ is at risk of ongoing [symptoms] secondary to too low a dose of __ (should be __, not __).</span>'+
+      '<span class="tpl"><b>Dose too high / too long</b> — __ is at risk of dose-related side effects ([effects]) secondary to too high a dose / too long a duration of __ (recommended: __; prescribed: __).</span>'+
+      '<span class="tpl"><b>ADR / allergy</b> — __ is at risk of an anaphylactic reaction (throat/chest tightness, tongue swelling, hives, severe itch) secondary to __, contraindicated with an immediate hypersensitivity to __ because of cross-reactivity.</span>'+
+      '<span class="tpl"><b>Non-adherence</b> — __ is at risk of ongoing [symptoms] of [condition] secondary to [reason].</span>'+
+      TIP("Label each one: [Potential/Actual] [N/E/S/A] DTP: [subcategory]. Each condition card lists the symptoms and common DTPs to plug in.")},
+    {g:"Case work-up",n:"Monitoring plan format",d:"What a complete monitoring line looks like.",k:"monitoring plan parameter endpoint expected change frequency who action effectiveness safety",b:
+      T([["Parameter","Expected change","Who","When","If not met"],["Effect: symptom (named)","Better / resolved","Patient","e.g. 2–3 days","Return / refer / change therapy"],["Effect: lab or function","Target value / back to activity","Lab / patient","e.g. monthly","Adjust dose"],["Effect: complications","Absent","Patient","Throughout","Seek care"],["Adherence","Taking as directed","Patient / pharmacist","Each refill","Address the barrier"],["Safety: ADR (named)","Absent","Patient","Any time","Stop / switch / reduce"],["Safety: allergy","Absent","Patient","Any time","Stop; urgent care if severe"]])}
+  ];
+
+  CONDITIONS.forEach(function(c){var k=c.n.replace(/&amp;/g,"&");if(NOTES[k])c.notes=NOTES[k];});
+  var SYSNAME={Tested:"Tested on the Part 1 case"};
 
   var PLANS = [
     {n:"Patient interview",li:["Introduce, confirm, state the plan and the time","Open question first — do not interrupt the story","Work a structured history; say the mnemonic silently","Screen red flags explicitly — the marks are for asking","Summarize back and state the next step"]},
@@ -425,8 +975,8 @@ h2.sec:first-child{margin-top:0}
   ];
 
   /* ---- plumbing ---- */
-  var PAGES=["home","conditions","refs","practice","about"];
-  var TITLES={home:"Navigator",conditions:"Conditions",refs:"References",practice:"Practice",about:"About"};
+  var PAGES=["home","conditions","toolkit","refs","practice","about"];
+  var TITLES={home:"Navigator",conditions:"Conditions",toolkit:"Toolkit",refs:"References",practice:"Practice",about:"About"};
   var shell=document.getElementById("shell"),back=document.getElementById("back"),
       title=document.getElementById("title"),foot=document.getElementById("foot"),
       yrBtn=document.getElementById("yr");
@@ -459,18 +1009,22 @@ h2.sec:first-child{margin-top:0}
   /* ---- shorthand & plain-language names, matched as whole words ---- */
   var ALIAS={
     "Community-acquired pneumonia":["CAP","pneumonia"],
-    "Urinary tract infection":["UTI","cystitis","pyelonephritis","pyelo"],
+    "Urinary tract infection":["UTI","cystitis","pyelonephritis","pyelo","bladder infection","prostatitis"],
     "Clostridioides difficile":["CDI","c diff","c. diff","cdiff","CDAD"],
     "Cellulitis & skin infection":["SSTI","skin infection","abscess"],
     "Immunization & schedules":["vaccine","vaccines","vaccination","immunisation","shots"],
     "Osteoarthritis":["OA"],
     "Rheumatoid arthritis":["RA","DMARD"],
-    "Low back & neck pain":["LBP","back pain","neck pain"],
+    "Low back pain":["LBP","back pain","sciatica","lumbago"],
     "Sports injury & sprains":["sprain","strain"],
     "Atopic dermatitis":["AD","eczema"],
     "Tinea & onychomycosis":["athlete's foot","ringworm","fungal nail","jock itch","tinea pedis"],
     "Head lice & scabies":["lice","pediculosis"],
-    "Pharyngitis":["strep throat","GAS","sore throat","strep"],
+    "Group A strep pharyngitis":["GAS","strep throat","sore throat","strep","pharyngitis","centor","GAS pharyngitis"],
+    "Acute sinusitis":["sinusitis","rhinosinusitis","ABRS","sinus infection"],
+    "Impacted cerumen":["earwax","ear wax","cerumen"],
+    "Dry eye":["DED","dry eyes","artificial tears"],
+    "Glaucoma":["IOP","open-angle glaucoma","angle-closure glaucoma"],
     "Allergic rhinitis":["AR","hay fever","allergies"],
     "Acute otitis media":["AOM","ear infection"],
     "Otitis externa":["OE","swimmer's ear"],
@@ -480,9 +1034,9 @@ h2.sec:first-child{margin-top:0}
     "Venous thromboembolism":["VTE","DVT","PE","blood clot","pulmonary embolism"],
     "VTE prophylaxis":["VTE ppx","ppx","thromboprophylaxis"],
     "Warfarin & INR":["INR","VKA","coumadin"],
-    "Iron deficiency anaemia":["IDA","iron","anemia","anaemia","iron deficiency anemia"],
-    "B12 & folate deficiency":["B12","folate","anemia","anaemia","pernicious anemia"],
-    "CKD anaemia":["CKD","ESA","anemia","anaemia","anemia of CKD","renal anemia"],
+    "Iron deficiency anemia":["IDA","iron","anemia","anaemia","iron deficiency anaemia","ferritin"],
+    "B12 & folate deficiency":["B12","folate","anemia","anaemia","pernicious anemia","megaloblastic","macrocytic"],
+    "CKD anemia":["CKD","ESA","anemia","anaemia","CKD anaemia","anemia of CKD","renal anemia","epoetin","darbepoetin"],
     "Asthma exacerbation":["asthma attack","asthma flare"],
     "COPD":["AECOPD","emphysema","chronic bronchitis"],
     "Smoking cessation":["smoking","NRT","quit smoking","nicotine","varenicline"],
@@ -495,14 +1049,14 @@ h2.sec:first-child{margin-top:0}
     "Thyroid":["hypothyroidism","hyperthyroidism","TSH","levothyroxine"],
     "Opioid conversion & tapering":["MME","OME","opioid rotation","equianalgesic"],
     "Poisoning & overdose":["OD","tox","toxicology","overdose"],
-    "Herpes simplex & zoster":["HSV","VZV","HZ","shingles","cold sore","herpes"],
+    "Herpesvirus infections":["HSV","VZV","HZ","shingles","cold sore","cold sores","herpes","chickenpox","varicella","zoster","herpes simplex","herpes zoster","herpes labialis"],
     "QT prolongation":["QTc","torsades","long QT"]
   };
   var ABBR={"Community-acquired pneumonia":"CAP","Urinary tract infection":"UTI","Clostridioides difficile":"CDI",
-    "Osteoarthritis":"OA","Rheumatoid arthritis":"RA","Low back & neck pain":"LBP","Atopic dermatitis":"AD",
+    "Osteoarthritis":"OA","Rheumatoid arthritis":"RA","Low back pain":"LBP","Atopic dermatitis":"AD",
     "Allergic rhinitis":"AR","Acute otitis media":"AOM","Otitis externa":"OE","Venous thromboembolism":"VTE / DVT / PE",
-    "Iron deficiency anaemia":"IDA","CKD anaemia":"CKD","Bacterial vaginosis":"BV","Vulvovaginal candidiasis":"VVC",
-    "Herpes simplex & zoster":"HSV / VZV","QT prolongation":"QTc"};
+    "Iron deficiency anemia":"IDA","CKD anemia":"CKD","Group A strep pharyngitis":"GAS","Acute sinusitis":"ABRS","Bacterial vaginosis":"BV","Vulvovaginal candidiasis":"VVC",
+    "Herpesvirus infections":"HSV / VZV","QT prolongation":"QTc"};
   function aliasesOf(c){return (ALIAS[plain(c.n)]||[]).map(function(a){return a.toLowerCase();});}
   function aliasHit(c,term){return aliasesOf(c).indexOf(term)>-1;}
 
@@ -518,6 +1072,7 @@ h2.sec:first-child{margin-top:0}
     return '<div class="cond" data-c="'+s+'">'+
       '<div class="cond-h"><h3>'+c.n+'</h3><span class="sys">'+(ABBR[plain(c.n)]?esc(ABBR[plain(c.n)])+' · ':'')+c.sys+'</span></div>'+
       '<p class="lbl">Work out</p><ul><li>'+c.ask.join("</li><li>")+'</li></ul>'+
+      (c.notes?'<p class="lbl">Notes</p><div class="nts">'+c.notes.map(function(x){return '<details><summary>'+x.h+'</summary><div class="ntb">'+x.b+'</div></details>';}).join("")+'</div>':'')+
       '<p class="lbl">Open</p><div class="opens">'+opens+'</div>'+
       '<div class="mark" data-m="'+esc(plain(c.n))+'"><span>For me</span>'+
         '<button data-v="solid" aria-pressed="'+(mk==="solid")+'">Solid</button>'+
@@ -552,15 +1107,18 @@ h2.sec:first-child{margin-top:0}
     term=(term||"").trim().toLowerCase();
     if(!term){resEl.hidden=true;menuEl.hidden=false;hintEl.hidden=false;return;}
     menuEl.hidden=true;hintEl.hidden=true;resEl.hidden=false;
-    var wordRe=new RegExp("(^|[^a-z0-9])"+term.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+    var termUS=term.replace(/aem/g,"em").replace(/paed/g,"ped").replace(/oedem/g,"edem");
+    function mkRe(t){return new RegExp("(^|[^a-z0-9])"+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));}
+    var wordRe=mkRe(term),wordRe2=mkRe(termUS);
     var scored=[];
     CONDITIONS.forEach(function(c){
       var name=plain(c.n).toLowerCase(), al=aliasesOf(c);
       var hay=(name+" "+al.join(" ")+" "+c.sys+" "+plain(c.ask.join(" "))+" "+c.go.map(function(i){return REF[i]?plain(REF[i].n):"";}).join(" ")).toLowerCase();
+      if(c.notes&&term.length>=4){if(c._nt===undefined)c._nt=plain(c.notes.map(function(x){return x.h+" "+x.b;}).join(" ")).toLowerCase();hay+=" "+c._nt;}
       var score=0;
       if(aliasHit(c,term)||name===term)score=3;
-      else if(wordRe.test(name)||al.some(function(a){return wordRe.test(a);}))score=2;
-      else if(term.length>=3&&wordRe.test(hay))score=1;
+      else if(wordRe.test(name)||wordRe2.test(name)||al.some(function(a){return wordRe.test(a);}))score=2;
+      else if(term.length>=3&&(wordRe.test(hay)||wordRe2.test(hay)))score=1;
       if(score)scored.push({c:c,s:score});
     });
     scored.sort(function(a,b){return b.s-a.s;});
@@ -570,8 +1128,16 @@ h2.sec:first-child{margin-top:0}
     var rs=REFS.filter(function(r){
       return (plain(r.n)+" "+plain(r.d)+" "+(r.k||"")+" "+plain(r.g)).toLowerCase().indexOf(term)>-1;
     });
+    var ts=TOOLKIT.filter(function(t){
+      var nm=(plain(t.n)+" "+plain(t.d)+" "+t.k).toLowerCase();
+      if(wordRe.test(nm)||wordRe2.test(nm))return true;
+      if(term.length<4)return false;
+      if(t._bt===undefined)t._bt=plain(t.b).toLowerCase();
+      return wordRe.test(t._bt)||wordRe2.test(t._bt);
+    });
     var h="";
     if(cs.length)h+='<h2 class="sec">Conditions</h2>'+cs.slice(0,6).map(condHTML).join("");
+    if(ts.length)h+='<h2 class="sec">Toolkit</h2><div class="nts">'+ts.slice(0,8).map(tkHTML).join("")+'</div>';
     if(rs.length)h+='<h2 class="sec">References</h2><ul class="links">'+rs.slice(0,10).map(refRow).join("")+'</ul>';
     if(/timer|station|practice|rehears/.test(term))h+='<h2 class="sec">Elsewhere</h2><ul class="links"><li><a class="link" href="#practice"><span><span class="n">Practice</span><span class="d">Rehearsal timer and station shapes.</span></span><span class="go">open ›</span></a></li></ul>';
     resEl.innerHTML=h||'<p class="empty">Nothing matches that. Try a condition name, a drug class, or a resource.</p>';
@@ -597,7 +1163,7 @@ h2.sec:first-child{margin-top:0}
   });
   function drawConds(){
     document.getElementById("condlede").innerHTML = year==="PY1"
-      ? "Every condition in scope, as questions rather than answers. The links go to the sources that are accountable for the answers."
+      ? "The six Part 1 case topics are at the top, with study notes. Every card has questions to work out and the sources to confirm in — notes are student summaries, so check doses in CPS or Lexidrug."
       : "<strong>"+year+" has no conditions yet.</strong> PY1 is the only year with content. The references and practice pages still work for every year.";
     if(year!=="PY1"){condList.innerHTML="";drawCFilter();return;}
     var bySys={},order=[];
@@ -608,9 +1174,22 @@ h2.sec:first-child{margin-top:0}
       if(!bySys[c.sys]){bySys[c.sys]=[];order.push(c.sys);}bySys[c.sys].push(c);
     });
     condList.innerHTML=order.length?order.map(function(s){
-      return '<h2 class="sec">'+s+'</h2>'+bySys[s].map(condHTML).join("");
+      return '<h2 class="sec">'+(SYSNAME[s]||s)+'</h2>'+bySys[s].map(condHTML).join("");
     }).join(""):'<p class="empty">'+(cf==="shaky"?"Nothing marked shaky. Tap Shaky on any condition to add it here.":cf==="solid"?"Nothing marked solid yet.":"Everything is marked.")+'</p>';
   }
+
+  /* ---- toolkit ---- */
+  function tkHTML(t){return '<details><summary><span><span class="n">'+t.n+'</span><span class="d">'+t.d+'</span></span></summary><div class="ntb">'+t.b+'</div></details>';}
+  var tkList=document.getElementById("tklist"),tchips=document.getElementById("tchips"),tgrp="";
+  function drawToolkit(){
+    var groups=[];TOOLKIT.forEach(function(t){if(groups.indexOf(t.g)<0)groups.push(t.g);});
+    tchips.innerHTML='<button data-g="" aria-pressed="'+(tgrp==="")+'">All</button>'+
+      groups.map(function(g){return '<button data-g="'+esc(plain(g))+'" aria-pressed="'+(tgrp===plain(g))+'">'+g+'</button>';}).join("");
+    tkList.innerHTML=groups.filter(function(g){return !tgrp||plain(g)===tgrp;}).map(function(g){
+      return '<h2 class="sec">'+g+'</h2><div class="nts">'+TOOLKIT.filter(function(t){return t.g===g;}).map(tkHTML).join("")+'</div>';
+    }).join("");
+  }
+  tchips.addEventListener("click",function(e){var b=e.target.closest("[data-g]");if(!b)return;tgrp=b.getAttribute("data-g");drawToolkit();});
 
   /* ---- references ---- */
   var refList=document.getElementById("reflist"),chipsEl=document.getElementById("chips"),grp="";
@@ -693,9 +1272,10 @@ h2.sec:first-child{margin-top:0}
     if(e.key==="/"){e.preventDefault();go("home");qEl.focus();qEl.select();}
   });
 
-  document.getElementById("csub").textContent=CONDITIONS.length+" conditions, as questions";
+  document.getElementById("csub").textContent=CONDITIONS.length+" conditions · the 6 tested topics first";
+  document.getElementById("tsub").textContent="Sigs, PharmaCare, law, Rx checking, DTPs";
   document.getElementById("rsub").textContent=REFS.filter(function(r){return r.u;}).length+" links, grouped by topic";
-  drawConds();drawRefs();paint();drawResults("");
+  drawConds();drawToolkit();drawRefs();paint();drawResults("");
   go((location.hash||"#home").slice(1),false);
 })();
 </script>
