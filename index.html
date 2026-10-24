@@ -270,9 +270,19 @@ h2.sec:first-child{margin-top:0}
 .erow .n{display:block;font-weight:600;font-size:.9375rem;color:var(--ink)}.erow .d{display:block;font-size:.8125rem;color:var(--ink-3)}
 .eact{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.eact .btn:disabled{opacity:.35;cursor:default}
 .addown{margin:12px 0 4px;padding:12px 14px;border:1px dashed var(--rule-2);border-radius:8px}
-.thanks{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 12px}
-.thanks li{font-size:.9375rem;color:var(--ink)}
-@media (max-width:520px){.thanks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.about{max-width:30rem;margin:0 auto;text-align:center;padding:8px 0 4px}
+.ab-title{display:inline-flex;align-items:center;gap:8px;margin:4px 0 0;font-size:1.75rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.ab-beta{position:relative;overflow:hidden;font-family:var(--ui);font-size:.625rem;font-weight:700;letter-spacing:.08em;color:#fff;padding:3px 8px 2px;border-radius:99px;
+  background:linear-gradient(180deg,var(--hl-a),var(--hl-b));border:1px solid var(--hl-edge);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.18);text-shadow:0 -1px 0 rgba(0,0,0,.25)}
+.ab-beta::after{content:"";position:absolute;left:1px;right:1px;top:1px;height:45%;border-radius:99px 99px 6px 6px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.08))}
+.ab-by{margin:2px 0 20px;font-size:1rem;color:var(--ink-2)}.ab-by strong{color:var(--ink)}
+.ab-notes{list-style:none;margin:0 0 22px;padding:12px 16px;text-align:left;border:1px solid var(--rule);border-radius:10px;background:var(--screen);display:grid;gap:5px}
+.ab-notes li{position:relative;padding-left:14px;font-size:.8125rem;line-height:1.5;color:var(--ink-2)}
+.ab-notes li::before{content:"";position:absolute;left:1px;top:.72em;width:7px;height:1px;background:var(--ink-3)}
+.ab-h{margin:0 0 8px}
+.ab-thanks{list-style:none;margin:0 0 44px;padding:0;display:grid;gap:4px}.ab-thanks li{font-size:.9375rem;color:var(--ink)}
+.ab-mail{margin:0 0 14px;font-size:.875rem;line-height:1.6;color:var(--ink-2)}.ab-mail .lbl{margin:0}
+.ab-fine{margin:0;font-size:.75rem;line-height:1.5;color:var(--ink-3)}
 .yseg-l{display:flex;align-items:baseline;gap:8px;margin:0 0 6px}.yseg-l .lbl{margin:0}.yseg-l span{font-size:.75rem;color:var(--ink-3)}
 .yseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 14px}
 .yseg button{font:inherit;font-size:1.0625rem;font-weight:700;letter-spacing:.02em;padding:11px 8px;border-radius:10px;border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-2);cursor:pointer}
@@ -420,22 +430,23 @@ h2.sec:first-child{margin-top:0}
 
     <!-- ABOUT -->
     <div class="page" id="p-about" hidden>
-      <div class="notice"><strong>Student-made.</strong> Not affiliated with, endorsed by, or reviewed by UBC or the Faculty of Pharmaceutical Sciences.</div>
+      <div class="about">
+        <h2 class="ab-title">ICEberg <span class="ab-beta">BETA</span></h2>
+        <p class="ab-by">Made by <strong>Mike Min</strong></p>
 
-      <div class="prose">
-        <p><strong style="font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;color:var(--accent);border:1px solid currentColor;border-radius:3px;padding:1px 6px;margin-right:6px">BETA</strong>Still being built — more on the way, and things may change.</p>
-        <p>A student-made map for the open-book ICE: links to published resources, plus short study notes on the tested conditions and the first-year essentials (Toolkit).</p>
-        <ul style="margin:0 0 14px;padding-left:18px;line-height:1.7">
-          <li>The notes are student summaries, not clinical advice. They can contain errors — confirm every dose and rule in CPS, Lexidrug or the official source.</li>
-          <li>Notes were drafted with the help of AI tools and are being checked by students.</li>
-          <li>Check your exam rules for which resources are permitted.</li>
-          <li>Rules, fees and coverage change — notes follow the current BC rules as of September 2026.</li>
-          <li>Linked sites belong to their publishers; their content, accuracy and access are theirs. Use at your own discretion.</li>
+        <ul class="ab-notes">
+          <li>Not clinical advice. Student summaries may contain errors.</li>
+          <li>Always confirm with the original source.</li>
+          <li>Check your exam rules for permitted resources.</li>
+          <li>Rules and coverage reflect BC as of September 2026.</li>
+          <li>No accounts or tracking. Your progress stays in your browser.</li>
         </ul>
-        <p>Made by <strong>Mike Min</strong>.</p>
-        <p class="lbl" style="margin-top:18px">Special thanks</p>
-        <ul class="thanks"><li>Lance Go</li><li>Iris Han</li><li>Hanseong Kim</li><li>Taylor Ko</li></ul>
-        <p>Feedback, an error, or a broken link: <a href="mailto:mikemin@student.ubc.ca">mikemin@student.ubc.ca</a></p>
+
+        <p class="lbl ab-h">Special thanks</p>
+        <ul class="ab-thanks"><li>Taylor Ko</li><li>Hanseong Kim</li><li>Lance Go</li><li>Iris Han</li></ul>
+
+        <p class="ab-mail"><span class="lbl">Feedback</span><br><a href="mailto:mikemin@student.ubc.ca">mikemin@student.ubc.ca</a></p>
+        <p class="ab-fine">Independent student project. Not affiliated with or endorsed by UBC or the Faculty of Pharmaceutical Sciences. Linked resources and trademarks belong to their owners; to request a change or removal, email above.</p>
       </div>
     </div>
   </div>
@@ -1116,6 +1127,7 @@ h2.sec:first-child{margin-top:0}
     shell.classList.toggle("wide",wide);
     foot.style.maxWidth=wide?"54rem":"34rem";
     yrBtn.hidden=(name!=="home"&&name!=="conditions"&&name!=="fdl");
+    var ft=document.getElementById("foot");if(ft)ft.hidden=(name==="about");
     if(name==="fdl"&&typeof drawFdl==="function")drawFdl();
     if(push!==false){var h="#"+name;if(location.hash!==h){try{history.pushState({},"",h);}catch(e){location.hash=name;}}}
     window.scrollTo(0,0);
@@ -1293,7 +1305,7 @@ h2.sec:first-child{margin-top:0}
   function drawConds(){
     document.getElementById("condlede").innerHTML = year==="PY1"
       ? "The six Part 1 case topics are at the top, with study notes. Every card has questions to work out and the sources to confirm in — notes are student summaries, so check doses in CPS or Lexidrug."
-      : "<strong>"+year+" has no conditions yet.</strong> PY1 is the only year with content. The references and practice pages still work for every year.";
+      : "<strong>"+year+" has no conditions yet.</strong> Switch to PY1 for conditions. The Drug list, references and practice pages work for every year.";
     if(year!=="PY1"){condList.innerHTML="";drawCFilter();return;}
     var bySys={},order=[];
     drawCFilter();
@@ -1510,24 +1522,29 @@ h2.sec:first-child{margin-top:0}
   var QKEY="nav.fdl.quiz",MKEY="nav.fdl.miss";
   function loadJ(k,d){try{var v=S.get(k,"");return v?JSON.parse(v):d;}catch(e){return d;}}
   function saveJ(k,v){S.set(k,JSON.stringify(v));}
-  var QS=loadJ(QKEY,null);
-  var QSET=loadJ("nav.fdl.set",{set:"drugs",types:["bg","gb","cl","fm"],mode:"mix",len:20,topic:"",miss:false});
+  var QS=loadJ(QKEY,null);if(!QS||!Array.isArray(QS.qs)||!QS.qs.length||!Array.isArray(QS.log))QS=null;
+  var QDEF={set:"drugs",types:["bg","gb","cl","fm"],mode:"mix",len:20,topic:"",miss:false};
+  var QSET=loadJ("nav.fdl.set",QDEF);if(!QSET||typeof QSET!=="object"||Array.isArray(QSET))QSET=JSON.parse(JSON.stringify(QDEF));
+  Object.keys(QDEF).forEach(function(k){if(QSET[k]===undefined||(Array.isArray(QDEF[k])&&!Array.isArray(QSET[k])))QSET[k]=JSON.parse(JSON.stringify(QDEF[k]));});
+  if([10,20,40].indexOf(QSET.len)<0)QSET.len=20;
   if(!QSET.lists)QSET.lists=["311","312"];if(QSET.mixTerms===undefined)QSET.mixTerms=false;
   function in211(d){return d.y===1||/^(Respiratory|Cardiovascular)$/.test(d.t);}
   function inQuiz(d){return inYear(d)&&!d.nr&&(year!=="PY3"||QSET.lists.indexOf(listOf(d))>-1)&&(year!=="PY2"||QSET.p2!=="211"||in211(d));}
   if(!QSET.focus)QSET.focus=QSET.miss?"miss":"all";
-  var SKEY="nav.fdl.stat",HKEY="nav.fdl.hist",STAT=loadJ(SKEY,{});
+  function isObj(v){return !!v&&typeof v==="object"&&!Array.isArray(v);}
+  var SKEY="nav.fdl.stat",HKEY="nav.fdl.hist",STAT=loadJ(SKEY,{});if(!isObj(STAT))STAT={};
   function mastered(id){var z=STAT[id];return !!(z&&z[2]>=3);}
   function recordStat(id,ok){var z=STAT[id]||[0,0,0,0];z[0]++;if(ok){z[1]++;z[2]++;}else z[2]=0;z[3]=Date.now();STAT[id]=z;saveJ(SKEY,STAT);return z;}
-  function hist(){return loadJ(HKEY,[]);}
+  function hist(){var h=loadJ(HKEY,[]);return Array.isArray(h)?h:[];}
   function kindKey(){return QSET.set==="drugs"||QSET.set==="mock"?QSET.set+"|"+year:QSET.set;}
   function scopeItems(){return QSET.set==="drugs"||QSET.set==="mock"?FD.filter(inQuiz).map(function(d){return {id:d.id,d:d};}):itemsFor(QSET.set);}
   function scopeName(){var n=SETS.filter(function(x){return x[0]===QSET.set;})[0][1];if(QSET.set!=="drugs"&&QSET.set!=="mock")return n;return n+" · "+(year==="PY3"?QSET.lists.map(listName).join(" + "):year==="PY2"?(QSET.p2==="211"?"PHRM 211 scope":"PY1 + PY2"):"PY1");}
   function weakScore(id,m){var z=STAT[id];return (m[id]?3:0)+(z?2*(1-z[1]/z[0])+(z[2]===0?1:0):1)+Math.random()*0.6;}
-  function misses(){return loadJ(MKEY,{});}
+  function misses(){var m=loadJ(MKEY,{});return isObj(m)?m:{};}
   function markMiss(id,wrong){var m=misses();if(wrong)m[id]=(m[id]||0)+1;else if(m[id]){m[id]--;if(m[id]<=0)delete m[id];}saveJ(MKEY,m);}
 
   var SETS=[["drugs","Drugs"],["latin","Latin abbreviations"],["med","Medical abbreviations"],["med2","Medical abbreviations (in red)"],["parts","Word parts"],["terms","Medical terms"],["ismp","ISMP error-prone"],["calc","Pharmaceutical calculations"],["mock","Mock exam (50 questions, 50 min)"]];
+  if(!SETS.some(function(x){return x[0]===QSET.set;}))QSET.set="drugs";
   if(!QSET.styles)QSET.styles="exam";if(!QSET.p2)QSET.p2="211";
   var TYPES=[["bg","Brand → generic"],["gb","Generic → brand"],["cl","Therapeutic class"],["fm","Forms & strengths"],["ic","Indications & contraindications"]];
   function curTypes(){var a=availTypes(),t=QSET.types.filter(function(x){return a.indexOf(x)>-1;});return t.length?t:a;}
@@ -2095,8 +2112,8 @@ h2.sec:first-child{margin-top:0}
         :x.t==="mock"?[{k:"mock",lab:"Mock exam (50 min)",n:50}]:[{k:"mix",lab:"Review check",n:x.t==="final"?40:30}];});
     return {days:days,drugs:ds.length,words:o.words?wordItems().length:0,news:N};
   }
-  function planDone(sig){var a=loadJ(PDKEY,{});return a[sig]||{};}
-  function setDone(sig,key,pct){var a=loadJ(PDKEY,{});a[sig]=a[sig]||{};if(!(a[sig][key]>=pct))a[sig][key]=pct;saveJ(PDKEY,a);}
+  function planDone(sig){var a=loadJ(PDKEY,{});return (a&&typeof a==="object"&&a[sig])||{};}
+  function setDone(sig,key,pct){var a=loadJ(PDKEY,{});if(!a||typeof a!=="object"||Array.isArray(a))a={};a[sig]=a[sig]||{};if(!(a[sig][key]>=pct))a[sig][key]=pct;saveJ(PDKEY,a);}
   function dayDone(x,dn){return x.checks.length&&x.checks.every(function(c){return (dn[x.key+":"+c.k]||0)>=PASS;});}
   var planDay=null;
   function startCheck(plan,sig,x,c){
