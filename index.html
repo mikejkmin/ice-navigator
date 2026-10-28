@@ -280,7 +280,37 @@ h2.sec:first-child{margin-top:0}
 .f1-st{list-style:none;margin:0 0 12px;padding:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
 .f1-st li{display:flex;justify-content:space-between;gap:10px;padding:7px 12px;font-size:.875rem;color:var(--ink);background:var(--screen)}.f1-st li+li{border-top:1px solid var(--rule)}
 .f1-st li.me{background:var(--accent-soft);font-weight:600}.f1-final li b{display:inline-block;min-width:1.4em;color:var(--ink-3)}
-.f1-lbh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.f1-lbh .sec{flex:1}
+.f1-lbpy{margin:2px 0 10px}.f1-lbh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.f1-lbh .sec{flex:1}
+/* FDL 100 leaderboard: early Game Center (wood + green felt) */
+.gc{margin:18px 0 8px;border-radius:14px;overflow:hidden;border:1px solid #2f1c0c;box-shadow:0 3px 10px rgba(0,0,0,.28),0 1px 0 rgba(255,255,255,.4)}
+.gc-top{padding:10px 12px 11px;background:linear-gradient(180deg,#a8723f 0%,#8a5a30 8%,#6e4423 55%,#5a3519 100%);border-bottom:1px solid #2f1c0c;box-shadow:inset 0 1px 0 rgba(255,220,170,.45),inset 0 -1px 0 rgba(0,0,0,.25)}
+.gc-title{text-align:center;color:#fff;font:700 1.25rem/1.2 "Marker Felt","Chalkboard SE",ui-rounded,system-ui,sans-serif;letter-spacing:.01em;text-shadow:0 -1px 0 rgba(0,0,0,.55),0 1px 1px rgba(0,0,0,.25);margin-bottom:9px}
+.gc-tabs{display:flex;gap:0;padding:2px;border-radius:9px;background:linear-gradient(#3b2210,#4a2c15);box-shadow:inset 0 1px 3px rgba(0,0,0,.6),0 1px 0 rgba(255,220,170,.25)}
+.gc-tabs button{flex:1;appearance:none;border:0;margin:0;padding:7px 0 6px;border-radius:7px;background:transparent;color:#e8cfae;font:700 .9375rem/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;text-shadow:0 -1px 0 rgba(0,0,0,.6);cursor:pointer}
+.gc-tabs button[aria-pressed=true]{color:#fff;background:linear-gradient(180deg,#d39a5e 0%,#b07440 50%,#9a6232 51%,#8a5528 100%);box-shadow:inset 0 1px 0 rgba(255,235,200,.55),0 1px 2px rgba(0,0,0,.45)}
+.gc-tabs button:focus-visible,.gc-sort button:focus-visible{outline:2px solid #ffe28a;outline-offset:1px}
+.gc-felt{position:relative;padding:12px 12px 14px;background:radial-gradient(120% 90% at 50% 0%,#46b25e 0%,#2f8f45 45%,#24763a 100%);color:#fff}
+.gc-felt:before{content:"";position:absolute;inset:5px;border:1px dashed rgba(255,255,255,.28);border-radius:9px;pointer-events:none}
+.gc-sort{position:relative;display:flex;align-items:center;gap:6px;margin:0 2px 10px}
+.gc-yr{flex:1;font:600 .75rem/1 var(--mono);letter-spacing:.06em;color:rgba(255,255,255,.75);text-shadow:0 1px 0 rgba(0,0,0,.3)}
+.gc-sort button{appearance:none;border:1px solid rgba(255,255,255,.55);background:transparent;color:#fff;border-radius:999px;padding:4px 11px;font:600 .8125rem/1.2 system-ui,-apple-system,sans-serif;text-shadow:0 1px 0 rgba(0,0,0,.3);cursor:pointer}
+.gc-sort button[aria-pressed=true]{background:#fff;color:#24763a;text-shadow:none;border-color:#fff}
+.gc-lb{position:relative;width:100%;border-collapse:separate;border-spacing:0;font-size:.875rem;border-radius:8px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.15)}
+.gc-lb th{background:linear-gradient(180deg,#8a5a30,#6a4020);color:#f6e2c4;font:700 .6875rem/1 system-ui,-apple-system,sans-serif;letter-spacing:.07em;text-transform:uppercase;text-align:left;padding:8px 8px 7px;text-shadow:0 -1px 0 rgba(0,0,0,.5);border-bottom:1px solid #2f1c0c;white-space:nowrap}
+.gc-lb td{padding:9px 8px;border-bottom:1px solid rgba(0,0,0,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);text-shadow:0 1px 0 rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
+.gc-lb tbody tr:last-child td{border-bottom:0}
+.gc-lb .n{text-align:right;width:3.5rem;white-space:nowrap}.gc-lb th.n:last-child,.gc-lb td.n:last-child{width:5.5rem}
+.gc-lb th.gc-rk,.gc-lb td.gc-rk{width:3.25rem;text-align:center}
+.gc-nm{font-weight:600;max-width:0;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-medal{display:inline-flex;align-items:center;justify-content:center;min-width:1.6rem;height:1.6rem;padding:0 4px;border-radius:999px;font-weight:700;font-size:.8125rem}
+.gc-gold td{background:rgba(255,214,64,.2)}.gc-silver td{background:rgba(225,232,238,.17)}.gc-bronze td{background:rgba(214,140,80,.2)}
+.gc-gold .gc-medal{background:linear-gradient(#fff3a8,#f2c62f 55%,#c99412);color:#5a3d00;text-shadow:0 1px 0 rgba(255,255,255,.5);box-shadow:0 1px 2px rgba(0,0,0,.45),inset 0 1px 0 #fff}
+.gc-silver .gc-medal{background:linear-gradient(#ffffff,#d4dbe1 55%,#9aa4ad);color:#39424a;text-shadow:0 1px 0 rgba(255,255,255,.6);box-shadow:0 1px 2px rgba(0,0,0,.45),inset 0 1px 0 #fff}
+.gc-bronze .gc-medal{background:linear-gradient(#ffd3a8,#d48a4c 55%,#9c5a26);color:#45230a;text-shadow:0 1px 0 rgba(255,255,255,.4);box-shadow:0 1px 2px rgba(0,0,0,.45),inset 0 1px 0 #ffe7d0}
+.gc-me td{background:rgba(255,255,255,.16)}
+.gc-you{display:inline-block;font:700 .625rem/1 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:2px 5px;border-radius:4px;background:rgba(255,255,255,.9);color:#24763a;text-shadow:none;vertical-align:1px}
+.gc-empty{position:relative;margin:14px 0 6px;text-align:center;font:600 1rem/1.45 "Marker Felt","Chalkboard SE",ui-rounded,system-ui,sans-serif;color:rgba(255,255,255,.88);text-shadow:0 1px 0 rgba(0,0,0,.3)}
+@media (max-width:440px){.gc-wr{display:none}.gc-felt{padding:10px 8px 12px}.gc-felt:before{inset:4px}.gc-lb{font-size:.8125rem}.gc-lb td,.gc-lb th{padding-left:5px;padding-right:5px}.gc-lb th{font-size:.625rem;letter-spacing:.05em}.gc-lb th.gc-rk,.gc-lb td.gc-rk{width:2.4rem}.gc-lb .n{width:2.5rem}.gc-lb th.n:last-child,.gc-lb td.n:last-child{width:4rem}.gc-medal{min-width:1.45rem;height:1.45rem;font-size:.75rem}}
 .f1-lb td,.f1-lb th{text-align:left}.f1-lb tr.f1-meRow td{background:var(--accent-soft);font-weight:600}
 .f1-msg{margin:12px 0 0;padding:8px 12px;border-radius:8px;background:var(--accent-soft);color:var(--ink);font-size:.875rem}
 .pinhead{display:flex;align-items:center;justify-content:space-between;gap:10px}.pinhead .sec{flex:1}
@@ -2216,7 +2246,7 @@ h2.sec:first-child{margin-top:0}
   /* Paste the web-app config from Firebase here. These values are not secret; the database rules protect the data. */
   var FB_CONFIG={apiKey:"AIzaSyBqVyiAqYhha9jcbgsNhjdREsY5mmF-cMs",authDomain:"iceberg-fdl100.firebaseapp.com",databaseURL:"https://iceberg-fdl100-default-rtdb.firebaseio.com",projectId:"iceberg-fdl100",appId:"1:279146046306:web:700255712f12ca2043823b"};
   var FBV="10.12.5",QT=20000,REVEAL=3500,MAXP=8;
-  var F100={api:null,boot:null,name:null,view:"home",panel:"",room:null,code:"",unsub:null,ch:null,chCode:"",play:null,lb:"w",lbRows:null,stats:null,mych:null,msg:"",busy:false,hostAdv:-1,tick:null};
+  var F100={api:null,boot:null,name:null,view:"home",panel:"",room:null,code:"",unsub:null,ch:null,chCode:"",play:null,lb:"w",lbRows:null,stats:null,py:"",lbPy:"",pyPick:"",nameDraft:null,boards:{},mych:null,msg:"",busy:false,hostAdv:-1,tick:null};
   var f100El=document.getElementById("f100body");
   var SCOPES=[["p1t1","PY1 · Term 1"],["p1t2","PY1 · Term 2"],["p2","PY2 · PHRM 211"],["p3","PY3"]];
   var CODECH="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -2259,23 +2289,27 @@ h2.sec:first-child{margin-top:0}
     if(BADW.some(function(w){return badRe(w).test(flat)||sub.indexOf(w)>-1;}))return "Please pick a different name.";
     return "";
   }
-  function setName(n){
+  /* one leaderboard per class (PY1, PY2, PY3); your games count toward the class you pick */
+  var PYS=["1","2","3"];
+  function defPy(){return year==="PY3"?"3":year==="PY2"?"2":"1";}
+  function SP(){return YP("b/"+F100.py+"/"+F100.api.uid);}
+  function setProfile(n,py){
     var A=F100.api,low=n.toLowerCase(),w={};
-    if(F100.name&&F100.name.toLowerCase()===low&&F100.name===n)return Promise.resolve();
+    if(F100.name===n&&F100.py===py&&F100.pyStored)return Promise.resolve();
     if(F100.name&&F100.name.toLowerCase()!==low)w["names/"+F100.name.toLowerCase()]=null;
-    w["names/"+low]=A.uid;w["users/"+A.uid+"/name"]=n;
-    if(F100.stats)w[YP("p/"+A.uid+"/name")]=n;
-    return A.update("",w).then(function(){F100.name=n;return ensureStats();});
+    w["names/"+low]=A.uid;w["users/"+A.uid+"/name"]=n;w["users/"+A.uid+"/py"]=py;
+    Object.keys(F100.boards).forEach(function(k){w[YP("b/"+k+"/"+A.uid+"/name")]=n;});
+    return A.update("",w).then(function(){F100.name=n;F100.py=py;F100.pyStored=true;F100.lbPy=py;return ensureStats();});
   }
   function ensureStats(){
-    var A=F100.api,nm=F100.name;
-    return A.tx(YP("p/"+A.uid),function(cur){if(cur){cur.name=nm;return cur;}return {name:nm,w:0,l:0,g:0,c:0,a:0,m:0};}).then(function(){return A.get(YP("p/"+A.uid));}).then(function(s){F100.stats=s;});
+    var A=F100.api,nm=F100.name,py=F100.py;
+    return A.tx(SP(),function(cur){if(cur){cur.name=nm;return cur;}return {name:nm,w:0,l:0,g:0,c:0,a:0,m:0};}).then(function(){return A.get(SP());}).then(function(s){F100.stats=s;F100.boards[py]=true;});
   }
   function bumpStats(d){
     var A=F100.api,nm=F100.name;
-    return A.tx(YP("p/"+A.uid),function(cur){cur=cur||{name:nm,w:0,l:0,g:0,c:0,a:0,m:0};cur.name=nm;
+    return A.tx(SP(),function(cur){cur=cur||{name:nm,w:0,l:0,g:0,c:0,a:0,m:0};cur.name=nm;
       ["w","l","g","c","a"].forEach(function(k){cur[k]=(cur[k]||0)+(d[k]||0);});if(d.m!=null)cur.m=d.m;return cur;})
-      .then(function(){return A.get(YP("p/"+A.uid));}).then(function(s){F100.stats=s;});
+      .then(function(){return A.get(SP());}).then(function(s){F100.stats=s;});
   }
   function masteredCount(){var n=0;Object.keys(STAT).forEach(function(k){var z=STAT[k];if(z&&z[2]>=3)n++;});return Math.min(n,10000);}
 
@@ -2310,7 +2344,10 @@ h2.sec:first-child{margin-top:0}
     if(!f100El)return;
     if(!fbConfigured()){f100El.innerHTML=f100Head()+'<div class="notice" style="margin-top:12px">FDL 100 isn’t switched on yet. Check back soon.</div>';return;}
     if(!F100.api){f100El.innerHTML=f100Head()+'<p class="hintline">Connecting…</p>';
-      fbBoot().then(function(A){F100.api=A;return A.get("users/"+A.uid+"/name");}).then(function(n){F100.name=n||null;if(F100.name)return ensureStats();})
+      fbBoot().then(function(A){F100.api=A;return Promise.all([A.get("users/"+A.uid)].concat(PYS.map(function(k){return A.get(YP("b/"+k+"/"+A.uid)).catch(function(){return null;});})));})
+        .then(function(v){var u=v[0]||{};F100.name=u.name||null;F100.pyStored=!!u.py;F100.py=u.py||defPy();F100.lbPy=F100.py;
+          PYS.forEach(function(k,i){if(v[i+1])F100.boards[k]=true;});
+          if(F100.name&&!u.py)return setProfile(F100.name,F100.py);if(F100.name)return ensureStats();})
         .then(function(){f100Route();if(F100.name){syncMine();}})
         .catch(function(){f100El.innerHTML=f100Head()+'<div class="notice" style="margin-top:12px">Couldn’t connect to FDL 100. Check your internet connection and try again.</div><div class="btnrow" style="justify-content:flex-start"><button class="btn" data-a="retry">Try again</button></div>';});
       return;}
@@ -2330,20 +2367,27 @@ h2.sec:first-child{margin-top:0}
     else if(v==="ch")h+=chView();
     else h+=homeView();
     if(F100.msg)h+='<p class="f1-msg">'+esc(F100.msg)+'</p>';
+    var ni=document.getElementById("f1name"),foc=ni&&document.activeElement===ni,pos=foc?ni.selectionStart:0;
+    if(ni&&v==="name")F100.nameDraft=ni.value;
     f100El.innerHTML=h;
-    if(v==="home"&&!F100.lbRows)loadBoard();
+    if(foc&&v==="name"){var n2=document.getElementById("f1name");if(n2){n2.focus();try{n2.setSelectionRange(pos,pos);}catch(e){}}}
+    if((v==="home"||v==="name")&&!F100.lbRows)loadBoard();
     var inp=f100El.querySelector("[data-enter]");if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();f1Act(inp.getAttribute("data-enter"));}});
   }
   function nameView(){
     return '<p class="lede">Battle classmates on the drug list. Wins, losses and how much you’ve mastered count toward this year’s leaderboard.</p>'+
       '<div class="qcard"><p class="lbl">Pick a username</p><p class="hintline" style="margin:0 0 10px">Shown on the leaderboard. No real names or emails needed. 3 to 16 letters, numbers, _ or -.</p>'+
-      '<div class="frow"><input id="f1name" class="finput" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Username" value="'+esc(F100.name||"")+'" data-enter="savename"><button class="btn primary" data-a="savename">'+(F100.name?'Save':'Continue')+'</button></div>'+
-      (F100.name?'<div class="btnrow" style="justify-content:flex-start"><button class="btn" data-a="home">Cancel</button></div>':'')+
-      '<p class="hintline">Your account is tied to this browser. Clearing your browser data starts you fresh.</p></div>';
+      '<input id="f1name" class="finput" style="width:100%;max-width:22rem;box-sizing:border-box" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Username" value="'+esc(F100.nameDraft!=null?F100.nameDraft:(F100.name||""))+'" data-enter="savename">'+
+      '<p class="lbl" style="margin-top:14px">Your class</p><div class="chips" data-set="py">'+PYS.map(function(k){return '<button data-v="'+k+'" aria-pressed="'+((F100.pyPick||F100.py)===k)+'">PY'+k+'</button>';}).join("")+'</div>'+
+      '<p class="hintline" style="margin:6px 0 12px">Your wins count toward this class’s leaderboard.</p>'+
+      '<div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="savename">'+(F100.name?'Save':'Continue')+'</button></div>'+
+      (F100.name?'<div class="btnrow" style="justify-content:flex-start;margin-top:0"><button class="btn" data-a="home">Cancel</button></div>':'')+
+      '<p class="hintline">Your account is tied to this browser. Clearing your browser data starts you fresh.</p></div>'+
+      gcBoard();
   }
   function homeView(){
     var s=F100.stats||{w:0,l:0,g:0,c:0,a:0,m:0},wr=(s.w+s.l)?Math.round(100*s.w/(s.w+s.l))+'%':'—',acc=s.a?Math.round(100*s.c/s.a)+'%':'—';
-    var h='<div class="f1-me"><div><span class="f1-nm">'+esc(F100.name)+'</span> <button class="linkbtn" data-a="rename">Change name</button></div></div>'+
+    var h='<div class="f1-me"><div><span class="f1-nm">'+esc(F100.name)+'</span> <span class="macs">PY'+esc(F100.py)+'</span> <button class="linkbtn" data-a="rename">Edit</button></div></div>'+
       '<div class="tiles"><div class="tile"><span class="k">Wins</span><span class="v">'+s.w+'</span><span class="s">'+s.l+' losses</span></div>'+
       '<div class="tile"><span class="k">Win rate</span><span class="v">'+wr+'</span><span class="s">'+s.g+' games</span></div>'+
       '<div class="tile"><span class="k">Accuracy</span><span class="v">'+acc+'</span><span class="s">'+s.a+' answers</span></div>'+
@@ -2357,32 +2401,41 @@ h2.sec:first-child{margin-top:0}
         '<p class="lbl">Content</p><div class="chips" data-set="mix"><button data-v="1" aria-pressed="'+S.mix+'">Drugs + abbreviations &amp; terms</button><button data-v="0" aria-pressed="'+!S.mix+'">Drugs only</button></div>'+
         '<p class="hintline">'+(p==="room"?'Everyone in the room answers the same question at the same time. 20 seconds each, faster correct answers score more. Up to '+MAXP+' players.':'You play first, then share the link. Anyone who opens it plays the same questions, and you each get a win or loss.')+'</p>'+
         '<div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="'+(p==="room"?'mkroom':'mkch')+'"'+(F100.busy?' disabled':'')+'>'+(F100.busy?'Creating…':p==="room"?'Create room':'Create challenge')+'</button></div></div>';}
-    h+='<div class="f1-lbh"><h2 class="sec">Leaderboard</h2><div class="chips" data-set="lb"><button data-v="w" aria-pressed="'+(F100.lb==="w")+'">Wins</button><button data-v="m" aria-pressed="'+(F100.lb==="m")+'">Mastered</button></div></div>';
-    h+=boardHTML();
+    h+=gcBoard();
     if(F100.mych&&F100.mych.length)h+='<h2 class="sec">Your challenges</h2><ul class="links">'+F100.mych.map(function(c){return '<li><button class="link f1-chrow" data-a="opench" data-c="'+esc(c.code)+'"><span><span class="n">'+esc(c.code)+'</span><span class="d">'+new Date(c.t).toLocaleDateString(undefined,{month:"short",day:"numeric"})+'</span></span><span class="go">Results ›</span></button></li>';}).join("")+'</ul>';
-    h+='<p class="hintline" style="margin-top:14px">Stats reset each school year. Usernames and scores are visible to other players; nothing else is shared.</p>';
+    h+='<p class="hintline" style="margin-top:14px">Each class has its own leaderboard. Stats reset each school year. Usernames and scores are visible to other players; nothing else is shared.</p>';
     return h;
   }
+  /* leaderboard: wood header with class tabs, green felt table, gold/silver/bronze for the top 3 */
+  function gcBoard(){
+    var cp=F100.lbPy||F100.py;
+    return '<div class="gc"><div class="gc-top"><div class="gc-title">Leaderboard</div>'+
+      '<div class="gc-tabs" data-set="lbpy" role="tablist">'+PYS.map(function(k){return '<button data-v="'+k+'" role="tab" aria-pressed="'+(cp===k)+'">PY'+k+'</button>';}).join("")+'</div></div>'+
+      '<div class="gc-felt"><div class="gc-sort" data-set="lb"><span class="gc-yr">'+ykLabel()+'</span><button data-v="w" aria-pressed="'+(F100.lb==="w")+'">Wins</button><button data-v="m" aria-pressed="'+(F100.lb==="m")+'">Mastered</button></div>'+boardHTML()+'</div></div>';
+  }
   function boardHTML(){
-    var R=F100.lbRows;if(!R)return '<p class="hintline">Loading…</p>';
+    var R=F100.lbRows;if(!R)return '<p class="gc-empty">Loading…</p>';
     var key=F100.lb,rows=R.slice().filter(function(r){return key==="w"?(r.w||0)+(r.l||0)>0:(r.m||0)>0;});
     rows.sort(function(a,b){if(key==="m")return (b.m||0)-(a.m||0)||(b.w||0)-(a.w||0);var ra=(a.w||0)/Math.max(1,(a.w||0)+(a.l||0)),rb=(b.w||0)/Math.max(1,(b.w||0)+(b.l||0));return (b.w||0)-(a.w||0)||rb-ra||String(a.name).localeCompare(String(b.name));});
-    if(!rows.length)return '<p class="empty">No one on the board yet. Play a game to be first.</p>';
-    var me=F100.api.uid;
-    return '<div class="tw"><table class="tbl f1-lb"><thead><tr><th>#</th><th>Player</th><th>W</th><th>L</th><th>Win %</th><th>Mastered</th></tr></thead><tbody>'+rows.slice(0,50).map(function(r,i){
-      var wr=(r.w||0)+(r.l||0)?Math.round(100*(r.w||0)/((r.w||0)+(r.l||0)))+'%':'—';
-      return '<tr'+(r.uid===me?' class="f1-meRow"':'')+'><td>'+(i+1)+'</td><td>'+esc(r.name||"?")+(r.uid===me?' <span class="dim">(you)</span>':'')+'</td><td>'+(r.w||0)+'</td><td>'+(r.l||0)+'</td><td>'+wr+'</td><td>'+(r.m||0)+'</td></tr>';}).join("")+'</tbody></table></div>';
+    if(!rows.length)return '<p class="gc-empty">No one on the PY'+esc(F100.lbPy||F100.py)+' board yet.<br>Play a game to be first.</p>';
+    var me=F100.api.uid,MED=["gold","silver","bronze"];
+    return '<table class="gc-lb"><thead><tr><th class="gc-rk">Rank</th><th>Player</th><th class="n">W</th><th class="n">L</th><th class="n gc-wr">Win %</th><th class="n">Mastered</th></tr></thead><tbody>'+rows.slice(0,50).map(function(r,i){
+      var wr=(r.w||0)+(r.l||0)?Math.round(100*(r.w||0)/((r.w||0)+(r.l||0)))+'%':'—',m=MED[i]||"";
+      return '<tr class="'+(m?'gc-'+m:'')+(r.uid===me?' gc-me':'')+'"><td class="gc-rk"><span class="gc-medal">'+(i+1)+'</span></td><td class="gc-nm">'+esc(r.name||"?")+(r.uid===me?' <span class="gc-you">you</span>':'')+'</td><td class="n">'+(r.w||0)+'</td><td class="n">'+(r.l||0)+'</td><td class="n gc-wr">'+wr+'</td><td class="n">'+(r.m||0)+'</td></tr>';}).join("")+'</tbody></table>';
   }
-  function loadBoard(){F100.lbRows=F100.lbRows||null;F100.api.top(YP("p"),F100.lb,100).then(function(r){F100.lbRows=r;if(F100.view==="home")render();}).catch(function(){F100.lbRows=[];if(F100.view==="home")render();});}
+  function loadBoard(){var tok=F100.lbTok=(F100.lbTok||0)+1,py=F100.lbPy||F100.py;
+    F100.api.top(YP("b/"+py),F100.lb,100).then(function(r){if(tok!==F100.lbTok)return;F100.lbRows=r;if(F100.view==="home"||F100.view==="name")render();})
+      .catch(function(){if(tok!==F100.lbTok)return;F100.lbRows=[];if(F100.view==="home"||F100.view==="name")render();});}
 
   /* ---- actions ---- */
   function flash(m){F100.msg=m;render();setTimeout(function(){if(F100.msg===m){F100.msg="";render();}},4000);}
   function f1Act(a,el){
     var A=F100.api;
     if(a==="retry"){F100.boot=null;return drawF100();}
-    if(a==="savename"){var n=(document.getElementById("f1name").value||"").trim(),pr=nameProblem(n);if(pr)return flash(pr);
-      return setName(n).then(function(){F100.view="home";F100.msg="";F100.lbRows=null;render();syncMine();}).catch(function(){flash("That username is taken. Try another.");});}
-    if(a==="rename"){F100.view="name";return render();}
+    if(a==="savename"){var n=(document.getElementById("f1name").value||"").trim(),pr=nameProblem(n);F100.nameDraft=n;if(pr)return flash(pr);
+      var taken=F100.name&&F100.name.toLowerCase()===n.toLowerCase()?false:null;
+      return setProfile(n,F100.pyPick||F100.py).then(function(){F100.view="home";F100.msg="";F100.nameDraft=null;F100.pyPick="";F100.lbRows=null;render();syncMine();}).catch(function(){flash(taken===false?"Couldn’t save. Try again.":"That username is taken. Try another.");});}
+    if(a==="rename"){F100.view="name";F100.nameDraft=null;F100.pyPick="";return render();}
     if(a==="home"){leaveRoom();F100.view="home";F100.lbRows=null;F100.play=null;F100.ch=null;render();processMyChallenges();return;}
     if(a.indexOf("p-")===0){var p=a.slice(2);F100.panel=F100.panel===p?"":p;render();if(p==="join"&&F100.panel){var c=document.getElementById("f1code");if(c)c.focus();}return;}
     if(a==="mkroom"||a==="mkch"){var S=F100SET,qs=genQs(S.sc,S.n,S.mix);if(qs.length<5)return flash("Couldn’t build questions for that list.");
@@ -2402,8 +2455,10 @@ h2.sec:first-child{margin-top:0}
   }
   if(f100El){
     f100El.addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled){e.preventDefault();f1Act(b.getAttribute("data-a"),b);return;}
-      var c=e.target.closest("[data-set] [data-v]");if(!c)return;var k=c.parentNode.getAttribute("data-set"),v=c.getAttribute("data-v");
-      if(k==="lb"){F100.lb=v;F100.lbRows=null;render();return;}
+      var c=e.target.closest("[data-set] [data-v]");if(!c)return;e.preventDefault();var k=c.parentNode.getAttribute("data-set"),v=c.getAttribute("data-v");
+      if(k==="lb"){if(F100.lb===v)return;F100.lb=v;F100.lbRows=null;render();return;}
+      if(k==="lbpy"){if((F100.lbPy||F100.py)===v)return;F100.lbPy=v;F100.lbRows=null;render();return;}
+      if(k==="py"){var ni=document.getElementById("f1name");if(ni)F100.nameDraft=ni.value;F100.pyPick=v;render();return;}
       if(k==="n")F100SET.n=+v;else if(k==="mix")F100SET.mix=v==="1";else F100SET[k]=v;render();});
     document.addEventListener("keydown",function(e){
       if(cur!=="fdl100"||(F100.view!=="room"&&F100.view!=="ch"))return;var t=e.target;if(t&&t.tagName==="INPUT")return;
