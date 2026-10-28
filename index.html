@@ -2433,8 +2433,8 @@ h2.sec:first-child{margin-top:0}
     var A=F100.api;
     if(a==="retry"){F100.boot=null;return drawF100();}
     if(a==="savename"){var n=(document.getElementById("f1name").value||"").trim(),pr=nameProblem(n);F100.nameDraft=n;if(pr)return flash(pr);
-      var taken=F100.name&&F100.name.toLowerCase()===n.toLowerCase()?false:null;
-      return setProfile(n,F100.pyPick||F100.py).then(function(){F100.view="home";F100.msg="";F100.nameDraft=null;F100.pyPick="";F100.lbRows=null;render();syncMine();}).catch(function(){flash(taken===false?"Couldn’t save. Try again.":"That username is taken. Try another.");});}
+      return setProfile(n,F100.pyPick||F100.py).then(function(){F100.view="home";F100.msg="";F100.nameDraft=null;F100.pyPick="";F100.lbRows=null;render();syncMine();})
+        .catch(function(){return A.get("names/"+n.toLowerCase()).catch(function(){return null;}).then(function(o){flash(o&&o!==A.uid?"That username is taken. Try another.":"Couldn’t save right now. Try again in a moment.");});});}
     if(a==="rename"){F100.view="name";F100.nameDraft=null;F100.pyPick="";return render();}
     if(a==="home"){leaveRoom();F100.view="home";F100.lbRows=null;F100.play=null;F100.ch=null;render();processMyChallenges();return;}
     if(a.indexOf("p-")===0){var p=a.slice(2);F100.panel=F100.panel===p?"":p;render();if(p==="join"&&F100.panel){var c=document.getElementById("f1code");if(c)c.focus();}return;}
