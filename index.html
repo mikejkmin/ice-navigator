@@ -1529,7 +1529,7 @@ h2.sec:first-child{margin-top:0}
     var a=py1Deck("t1"),b=py1Deck("t2"),c=py1Deck("all"),p2=ANKI.py2.split("\n").filter(function(l){return l&&l[0]!=="#";}).length;
     var row=function(id,title,desc,n){return '<li><button class="link ankidl" data-dl="'+id+'" style="width:100%;border:0;font:inherit;text-align:left;cursor:pointer"><span><span class="n">'+title+'</span><span class="d">'+desc+'</span></span><span class="go">'+n+' cards ↓</span></button></li>';};
     var mods=treeOf(FD.filter(function(d){return inYear(d)&&!d.nr;}));
-    fdlEl.innerHTML='<p class="lede">Anki decks for spaced repetition — use these for daily reviews, and the Quiz tab for quick practice. Made by Mike Min.</p>'+
+    fdlEl.innerHTML='<p class="lede">Anki decks for spaced repetition — use these for daily reviews, and the Quiz tab for quick practice.</p>'+
       '<h2 class="sec">Make your own deck</h2><div class="frow"><select id="amod" class="fselect" aria-label="Module"><option value="">Everything for '+year+'</option>'+mods.map(function(m){return '<option value="'+esc(m.k)+'">'+esc(m.k)+'</option>';}).join("")+'</select><select id="acls" class="fselect" aria-label="Class"><option value="">All classes</option></select></div>'+
       '<div class="chips" id="awords" style="margin:8px 0"><button data-v="0" aria-pressed="true">Drugs only</button><button data-v="1" aria-pressed="false">Add all abbreviations &amp; terms</button></div>'+
       '<div class="btnrow" style="justify-content:flex-start;margin-top:4px"><button class="btn primary" id="adl">Download deck</button><button class="btn" id="aprint">Print blank grid</button></div>'+
