@@ -4,7 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="ICEberg — student-made study map for the UBC PharmD open-book ICE. Not affiliated with UBC.">
-<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* ICE page */
+.ice-top{position:sticky;top:0;z-index:5;background:var(--screen);padding:2px 0 10px;margin:-2px 0 8px;border-bottom:1px solid var(--rule)}
+.ice-q{width:100%;box-sizing:border-box;font:inherit;font-size:1rem;padding:10px 14px;border:1px solid var(--rule-2);border-radius:10px;background:var(--screen);color:var(--ink)}
+.ice-q:focus{border-color:var(--accent);outline:none}
+.ice-tabs{display:flex;margin-top:10px;padding:2px;border:1px solid var(--rule-2);border-radius:9px;background:var(--screen-2)}
+.ice-tabs button{flex:1;appearance:none;border:0;background:transparent;font:inherit;font-size:.875rem;font-weight:600;color:var(--ink-2);padding:8px 6px;border-radius:7px;cursor:pointer}
+.ice-tabs button[aria-pressed="true"]{background:linear-gradient(180deg,var(--hl-a),var(--hl-b));color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.ice-h{font-size:1.25rem;font-weight:700;margin:22px 0 6px;color:var(--ink)}
+.ice-lede{margin-bottom:12px}
+.otc-src{margin:10px 0 0;padding-top:8px;border-top:1px dashed var(--rule-2);font-size:.8125rem;color:var(--ink-2)}
+.otc-src.warn{color:var(--warn)}
+
+.ice-tabs button small{display:block;font-size:.6875rem;font-weight:500;opacity:.75;margin-top:1px}
+.ice-sub{display:flex;gap:6px;margin:4px 0 12px}
+.ice-sub button{appearance:none;font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer;padding:6px 14px;border-radius:99px;border:1px solid var(--rule-2);background:var(--screen);color:var(--ink-2)}
+.ice-sub button[aria-pressed="true"]{background:var(--fill);border-color:var(--hl-edge);color:#fff}
+.ice-sec{border:1px solid var(--rule);border-radius:10px;background:var(--screen);margin:0 0 10px;padding:0 12px}
+.ice-sec>summary{list-style:none;cursor:pointer;padding:12px 0;display:flex;flex-direction:column;gap:2px}
+.ice-sec>summary::-webkit-details-marker{display:none}
+
+.ice-sn{font-weight:700;font-size:1rem;color:var(--ink)}
+.ice-sd{font-size:.8125rem;color:var(--ink-3)}
+.ice-sec[open]>summary{border-bottom:1px solid var(--rule);margin-bottom:10px}
+</style>
 <title>ICEberg</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -407,11 +431,9 @@ h2.sec:first-child{margin-top:0}
       </div>
       <div id="results" hidden style="padding:0 14px 14px"></div>
       <ul class="menu" id="menu">
-        <li><button class="row" data-go="conditions"><span class="label">Conditions<span class="sub" id="csub"></span></span><span class="chev">›</span></button></li>
+        <li><button class="row" data-go="ice"><span class="label">ICE<span class="sub" id="isub">Cases (open book) · stations (closed book)</span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="fdl"><span class="label">FDL<span class="sub">Drug list, abbreviations, terminology · browse and quiz</span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="fdl100"><span class="label">FDL 100<span class="sub">Battle classmates on the drug list · leaderboard</span></span><span class="chev">›</span></button></li>
-        <li><button class="row" data-go="refs"><span class="label">Resource Links<span class="sub" id="rsub"></span></span><span class="chev">›</span></button></li>
-        <li><button class="row" data-go="toolkit"><span class="label">Misc<span class="sub" id="tsub"></span></span><span class="chev">›</span></button></li>
         <li><button class="row" data-go="about"><span class="label">About<span class="sub">Who made it, feedback</span></span><span class="chev">›</span></button></li>
       </ul>
     </div>
@@ -419,12 +441,6 @@ h2.sec:first-child{margin-top:0}
     <!-- FDL 100 -->
     <div class="page" id="p-fdl100" hidden>
       <div id="f100body"></div>
-    </div>
-
-    <!-- CONDITIONS -->
-    <div class="page" id="p-conditions" hidden>
-      <p class="lede" id="condlede"></p>
-      <div id="condlist"></div>
     </div>
 
     <!-- DRUG LIST -->
@@ -435,18 +451,37 @@ h2.sec:first-child{margin-top:0}
       <div id="fdlbody"></div>
     </div>
 
-    <!-- TOOLKIT -->
-    <div class="page" id="p-toolkit" hidden>
-      <p class="lede">The non-condition essentials — sigs, math units, PharmaCare, law and scope, Rx checking, DTPs. Tap a topic to open it. Always confirm against the source.</p>
-      <div class="chips" id="tchips"></div>
-      <div id="tklist"></div>
-    </div>
-
-    <!-- REFERENCES -->
-    <div class="page" id="p-refs" hidden>
-      <p class="lede"><span class="cwlbadge" style="margin-left:0">CWL</span> links sign you in with your UBC login on the way. If one ever fails, use its <strong>Backup</strong> link — the resource's own page on the UBC Library site, with the Access button one click away.</p>
-      <div class="chips" id="chips"></div>
-      <div id="reflist"></div>
+    <!-- ICE: cases (open book) and stations (closed book) -->
+    <div class="page" id="p-ice" hidden>
+      <div class="ice-top">
+        <input id="iq" class="ice-q" type="search" placeholder="Search conditions, sources, stations…" autocomplete="off" aria-label="Search ICE">
+        <div class="ice-tabs" role="tablist" id="itabs"><button data-it="cases" role="tab">Cases<small>open book</small></button><button data-it="stations" role="tab">Stations<small>closed book</small></button></div>
+      </div>
+      <div id="ires" hidden></div>
+      <div id="ibody">
+        <div id="ice-cases">
+          <div class="ice-sub" id="csub2"><button data-ct="conds">Conditions</button><button data-ct="sources">Sources</button></div>
+          <div id="ct-conds">
+            <p class="lede ice-lede">Key points for each condition, then straight to the sources. Start with how the case works and NESA.</p>
+            <div id="icase"></div>
+            <h2 class="ice-h">Conditions</h2>
+            <p class="lede" id="condlede"></p>
+            <div id="condlist"></div>
+          </div>
+          <div id="ct-sources" hidden>
+            <p class="lede ice-lede">The links you can use during the open book case. Bookmark the ones you rely on.</p>
+            <p class="lede"><span class="cwlbadge" style="margin-left:0">CWL</span> links sign you in with your UBC login. If one fails, use its <strong>Backup</strong> link.</p>
+            <div class="chips" id="chips"></div>
+            <div id="reflist"></div>
+          </div>
+        </div>
+        <div id="ice-stations" hidden>
+          <div class="ice-sub" id="ssub"><button data-stt="non">Non-interactive</button><button data-stt="int">Interactive</button></div>
+          <div id="st-non"></div>
+          <div id="st-int" hidden></div>
+        </div>
+      </div>
+      <div hidden><div class="chips" id="tchips"></div><div id="tklist"></div><div class="chips" id="schips"></div><div id="stations"></div></div>
     </div>
 
     <!-- ABOUT -->
@@ -460,7 +495,7 @@ h2.sec:first-child{margin-top:0}
           <li>Always confirm with the original source.</li>
           <li>Check your exam rules for permitted resources.</li>
           <li>Rules and coverage reflect BC as of September 2026.</li>
-          <li>No accounts or tracking. Your progress stays in your browser.</li>
+          <li>No sign-up. Anonymous stats help us improve the site, and your progress stays in your browser.</li>
         </ul>
 
         <p class="lbl ab-h">Special thanks</p>
@@ -612,7 +647,7 @@ h2.sec:first-child{margin-top:0}
   function FIX(s){return '<span class="fix"><b>Corrected:</b> '+s+'</span>';}
   function TIP(s){return '<span class="fix tipnote">'+s+'</span>';}
   function MON(eff,saf){return T([["Check","Expect","When"]].concat(eff.map(function(r){return ["<b>Effect</b> · "+r[0],r[1],r[2]||""];})).concat(saf.map(function(r){return ["<b>Safety</b> · "+r[0],r[1],r[2]||"Any time"];})));}
-  function DTPX(s){return '<p>Fill the generic DTP sentences (Misc → DTPs) with these:</p>'+L(s);}
+  function DTPX(s){return '<p>Fill the generic DTP sentences (ICE → Open book cases → DTPs) with these:</p>'+L(s);}
 
   var NOTES = {};
 
@@ -1094,7 +1129,7 @@ h2.sec:first-child{margin-top:0}
 
     /* ===== Case work-up ===== */
     {g:"Case work-up",n:"Case work-up — the order",d:"From case to care plan.",k:"care plan workup work-up nesa goals of therapy alternatives plan a plan b esa recommendation monitoring subjective objective",b:
-      T([["Step","Do"],["1 · Gather","Subjective (what the patient says) and objective (vitals, labs, meds, allergies) findings"],["2 · DTPs","List them by <b>NESA</b> (Misc → DTPs); rank them"],["3 · Goals","Patient-specific, measurable where you can"],["4 · Alternatives","Plan A vs Plan B (and non-drug). Compare by <b>E</b>ffectiveness, <b>S</b>afety, <b>A</b>dherence/cost"],["5 · Recommend","Drug, dose, route, frequency, duration + non-drug"],["6 · Monitor","≥2 effectiveness + ≥1 safety parameters: what, expected change, who, when, and what to do if not met"]])},
+      T([["Step","Do"],["1 · Gather","Subjective (what the patient says) and objective (vitals, labs, meds, allergies) findings"],["2 · DTPs","List them by <b>NESA</b> (see DTPs (NESA) above); rank them"],["3 · Goals","Patient-specific, measurable where you can"],["4 · Alternatives","Plan A vs Plan B (and non-drug). Compare by <b>E</b>ffectiveness, <b>S</b>afety, <b>A</b>dherence/cost"],["5 · Recommend","Drug, dose, route, frequency, duration + non-drug"],["6 · Monitor","≥2 effectiveness + ≥1 safety parameters: what, expected change, who, when, and what to do if not met"]])},
     {g:"Case work-up",n:"DTPs (NESA)",d:"Categories, examples and fill-in sentences.",k:"dtp drug therapy problem nesa necessary effective safety adherence actual potential template unnecessary additional ineffective dose too low too high adverse reaction non-adherence",b:
       T([["","Category","Examples"],["<b>N</b>ecessary","Unnecessary drug therapy","No indication, duplicate therapy, recreational/addictive, non-drug is better, treating an avoidable ADR"],["","Needs additional therapy","Untreated condition, prevention/prophylaxis, synergy needed"],["<b>E</b>ffective","Ineffective drug","Wrong dosage form, refractory condition, not effective for it, better drug available"],["","Dose too low","Low dose, interval too long, duration too short, poor storage/administration, interaction ↓ levels"],["<b>S</b>afety","Adverse drug reaction","Unsafe for this patient, allergy, interaction, titrated too fast, undesirable effect, contraindication"],["","Dose too high","High dose, interval too short, duration too long, interaction ↑ levels"],["<b>A</b>dherence","Non-adherence","Not available, can’t afford, can’t swallow/use, doesn’t understand, prefers not to, forgets"]])+
       '<p><b>Actual</b> = happening now → \"[Initials] is experiencing [event] secondary to [cause].\"<br><b>Potential</b> = will happen if we do nothing → \"[Initials] is at risk of experiencing [event] secondary to [cause].\"</p>'+
@@ -1112,13 +1147,27 @@ h2.sec:first-child{margin-top:0}
   ];
 
   CONDITIONS.forEach(function(c){var k=c.n.replace(/&amp;/g,"&");if(NOTES[k])c.notes=NOTES[k];});
+
+  /* ---- closed book counselling: OTC quick reference (student-compiled from CPS; not reviewed by the Faculty) ---- */
+  var OTC=[{"id": "nesa", "n": "NESA check for any box or recommendation", "d": "Need, Effectiveness, Safety, Adherence, plus common box traps", "k": "otc box product review nesa need effectiveness safety adherence pba recommendation chart traps", "ch": "", "b": "<ul><li><b>Need</b>: does the active ingredient match the condition and symptoms?</li><li><b>Effectiveness</b>: first-line choice, right strength, dose, duration?</li><li><b>Safety</b>: age, pregnancy or breastfeeding, other conditions, interactions, allergies, red flags that mean refer</li><li><b>Adherence</b>: frequency, dosage form, technique, cost, patient preference</li><li>Common box traps<ul><li>Combination product with ingredients the patient does not need (for example a cough suppressant with no cough)</li><li>Duplicate acetaminophen across two products</li><li>Product meant for an older age group</li><li>Steroid on a fungal rash</li><li>Nasal decongestant spray used longer than 3 to 5 days</li></ul></li></ul>"}, {"id": "cough", "n": "Cough and cold", "d": "Cold vs influenza, cough products, who to refer", "k": "cough cold flu influenza dextromethorphan dm guaifenesin honey clofedanol codeine decongestant pseudoephedrine phenylephrine", "ch": "Acute Cough; Common Cold and Influenza", "b": "<ul><li>Telling them apart<ul><li><b>Cold</b>: gradual onset, runny or stuffy nose, sore throat, low or no fever</li><li><b>Influenza</b>: sudden onset, high fever, body aches, exhaustion</li><li><b>Cough</b>: productive (mucus) versus dry</li></ul></li><li>Products<ul><li><b>Dextromethorphan (the \"DM\" in Robitussin DM)</b>: dry cough only; avoid in productive cough; serotonin interactions (monoamine oxidase inhibitors, selective serotonin reuptake inhibitors)</li><li><b>Guaifenesin</b>: expectorant, weak evidence</li><li><b>Honey</b>: pasteurized only, never under 1 year</li><li><b>Clofedanol</b>: cough suppressant usable from age 2</li><li>Antihistamines no longer recommended for acute cough; diphenhydramine causes drowsiness and confusion</li><li><b>Codeine</b>: avoid under 18</li><li><b>Pseudoephedrine, phenylephrine (oral decongestants)</b>: watch high blood pressure and heart disease</li><li>Saline spray; acetaminophen or ibuprofen for fever and aches</li></ul></li><li>Watch for<ul><li>No cough and cold products under 6</li><li>No acetylsalicylic acid (Aspirin) in children or teenagers (Reye syndrome)</li><li>One combination product at a time</li><li><b>Refer</b>: trouble breathing, asthma or chronic obstructive pulmonary disease, fever over 24 hours, symptoms past 7 to 10 days, cough over 3 weeks, whooping cough pattern (fits, vomiting), drug cause such as angiotensin-converting enzyme inhibitor</li></ul></li></ul>"}, {"id": "smoking", "n": "Smoking cessation and nicotine replacement", "d": "Sizing dependence, patch vs short-acting forms, cautions", "k": "smoking cessation nicotine replacement nrt patch gum lozenge inhaler mouth spray varenicline bupropion cytisine tobacco", "ch": "Tobacco Use Disorder (Smoking and Nicotine Cessation)", "b": "<ul><li><b>Sizing dependence</b>: time to first cigarette, cigarettes per day<ul><li><b>Within 30 minutes of waking</b>: stronger gum or lozenge dose</li><li><b>More than 10 per day</b>: higher-dose patch (check the patch conversion table, CPS Table 4)</li><li><b>Fewer than 10 per day</b>: counselling alone may be enough</li></ul></li><li>Products<ul><li><b>Patch</b>: steady background dose</li><li><b>Gum, lozenge, inhaler, mouth spray</b>: short-acting for cravings</li><li>Patch plus a short-acting form works better than one alone</li><li><b>Prescription</b>: varenicline (most effective single therapy), bupropion, cytisine</li></ul></li><li>Watch for<ul><li><b>Gum</b>: chew and park (swallowed nicotine causes nausea, hiccups)</li><li><b>Vivid dreams or insomnia from patch</b>: remove at bedtime</li><li>Rotate patch sites</li><li><b>Over 30 mg per day, or more than one patch</b>: supervision</li><li><b>Caution or refer</b>: under 18, pregnancy, recent heart attack or arrhythmia, severe angina</li><li><b>Nicotine pouches</b>: second-line only</li></ul></li></ul>"}, {"id": "eye", "n": "Eye conditions", "d": "Viral vs bacterial vs allergic conjunctivitis, stye vs chalazion vs blepharitis", "k": "eye conjunctivitis pink eye red eye stye hordeolum chalazion blepharitis naphazoline olopatadine ketotifen polymyxin gramicidin", "ch": "Conjunctivitis; Eyelid Conditions (Stye, Chalazion, Blepharitis)", "b": "<ul><li>Conjunctivitis (CPS Table 2)<ul><li><b>Viral</b>: minimal itch, lots of watery discharge, recent cold, one eye then the other; needs medical assessment; supportive care (cold compress, artificial tears); contagious up to 2 weeks</li><li><b>Bacterial</b>: minimal itch, thick yellow or green discharge, lids stuck shut in the morning<ul><li><b>Mild adult case</b>: polymyxin B with gramicidin drops, continue 2 days after clearing</li><li><b>Refer if no improvement in 48 hours; children</b>: refer</li></ul></li><li><b>Allergic</b>: severe itch (hallmark), both eyes, watery, other allergy symptoms<ul><li><b>Order</b>: artificial tears or saline, then naphazoline with pheniramine, then olopatadine or ketotifen</li><li><b>Decongestant drops</b>: rebound redness after about 10 days; contraindicated in narrow-angle glaucoma</li><li>Refer if no response in 72 hours</li></ul></li></ul></li><li>Eyelid<ul><li><b>Stye</b>: sudden, painful, red lump at the lid edge; warm compress 10 to 15 minutes, 3 to 4 times a day; no over-the-counter antibiotic; drains in about 48 hours</li><li><b>Chalazion</b>: painless lump growing over weeks; warm compress plus gentle massage; not an infection; refer if not shrinking in a few days</li><li><b>Blepharitis</b>: chronic, both lids, crusty scaly margins, burning, itching; daily lid hygiene (warm compress, diluted baby shampoo scrub, lid wipes, or hypochlorous acid 0.01%); artificial tears; tea tree oil cleansers for Demodex; worse in the evening suggests dry eye</li></ul></li><li><b>Refer any eye complaint with</b>: pain, vision change, light sensitivity, contact lens wearer with red eye, trauma or chemical exposure, newborn, swelling spreading around the eye</li></ul>"}, {"id": "skin", "n": "Skin: dermatitis, bacterial and fungal", "d": "Irritant vs allergic, impetigo to cellulitis, which fungal rash is which", "k": "skin rash contact dermatitis irritant allergic impetigo folliculitis boil furuncle cellulitis fungal athlete's foot tinea ringworm jock itch yeast pityriasis versicolor hydrocortisone clotrimazole miconazole terbinafine tolnaftate", "ch": "Contact Dermatitis; Bacterial Skin Infections; Fungal Skin Infections", "b": "<ul><li>Contact dermatitis<ul><li><b>Irritant</b>: burning, stinging, dry and cracked, only where contact happened (frequent hand washing)</li><li><b>Allergic</b>: intense itch, grouped blisters, 1 to 3 days after exposure, can spread (nickel, fragrance, bacitracin)</li><li><b>Products</b>: avoid the trigger; moisturizer within 3 to 5 minutes of bathing; hydrocortisone 0.5 to 1% (drug of choice for face and skin folds); loratadine or desloratadine for itch; cool compresses</li><li><b>Refer</b>: over 30% of body or distant spread, severe swelling of face, eyes or genitals, no response in a few days, signs of infection</li></ul></li><li>Bacterial<ul><li><b>Impetigo</b>: honey-coloured crusts, face or limbs, children, contagious; fusidic acid (Fucidin) or mupirocin (check British Columbia non-prescription availability); soak crusts first</li><li><b>Folliculitis</b>: small pustules at hair follicles; warm compress, keep dry</li><li><b>Boil (furuncle)</b>: larger, deeper, painful; warm compress; refer if large or recurring</li><li><b>Cellulitis</b>: red, hot, swollen, poorly defined, painful, fever; always refer</li><li><b>Bacitracin and polymyxin (Polysporin)</b>: weak evidence; bacitracin can cause allergic contact dermatitis</li></ul></li><li>Fungal<ul><li><b>Athlete's foot</b>: scaling and cracking between toes</li><li><b>Ringworm of the body</b>: ring, raised scaly edge, clear centre</li><li><b>Jock itch</b>: half-moon groin rash that spares the scrotum</li><li><b>Skin-fold yeast</b>: beefy red, satellite spots outside the border, involves the scrotum</li><li><b>Pityriasis versicolor</b>: light or dark patches on chest, back, upper arms, often no symptoms, recurs</li><li><b>Scalp or nails</b>: refer (oral treatment)</li><li><b>Products</b>: clotrimazole, miconazole, terbinafine (once daily for 1 week for body and groin), tolnaftate (does NOT work on yeast); powders for moist areas; pityriasis versicolor: ketoconazole 2%, selenium sulfide shampoo</li><li><b>Watch</b>: improvement in 2 to 3 days but finish the course; no improvement in 2 weeks, refer; diabetes or weak immune system, refer</li></ul></li><li>Quick distinguishers<ul><li><b>Honey crust</b>: bacterial</li><li><b>Ring with clear centre</b>: fungal</li><li><b>Satellite spots</b>: yeast</li><li><b>Blisters after a new product</b>: allergic contact dermatitis</li><li><b>Burning and cracking</b>: irritant contact dermatitis</li></ul></li></ul>"}, {"id": "vaginal", "n": "Vaginal symptoms", "d": "Yeast vs bacterial vaginosis vs trichomoniasis vs atrophy", "k": "vaginal yeast candidiasis vvc bacterial vaginosis bv trichomoniasis atrophy clotrimazole miconazole fluconazole replens hygiene", "ch": "Vaginal Symptoms, Hygiene and Infections; Vaginal Hygiene", "b": "<ul><li>Telling them apart (CPS Table 1)<ul><li><b>Yeast</b>: severe itch, cottage cheese discharge, no smell, pH under 4.5</li><li><b>Bacterial vaginosis</b>: fishy smell, thin grey discharge, pH 5 to 6, needs prescription</li><li><b>Trichomoniasis</b>: frothy discharge, pH 6 or higher, sexually transmitted, refer</li><li><b>Atrophy</b>: dryness and painful sex after menopause; moisturizer such as Replens every 3 days</li></ul></li><li><b>Yeast products</b>: clotrimazole or miconazole vaginal cream or ovule (1, 3 or 6 day); fluconazole 150 mg by mouth once (equally effective). Pregnancy: vaginal azoles fine, oral fluconazole not</li><li><b>Refer</b>: first episode, pregnant, diabetes or weak immune system, recurrence within 2 months, sexually transmitted infection risk, severe symptoms (fissures, swelling, bleeding), prepubertal child, any unusual smell</li><li><b>Hygiene</b>: mild soap and water outside only; no douching or deodorant sprays; cotton, loose clothing</li></ul>"}, {"id": "iron", "n": "Iron supplements", "d": "Elemental iron per tablet, how to take, side effects", "k": "iron supplement ferrous fumarate palafer ferrous sulfate ferrous gluconate feramax proferrin accrufer elemental iron anemia constipation", "ch": "Iron Supplements", "b": "<ul><li>Elemental iron per tablet (CPS Table 1)<ul><li>Ferrous fumarate (Palafer) 100 mg</li><li>Ferrous sulfate 60 mg</li><li>Ferrous gluconate 35 mg</li><li>Polysaccharide-iron complex (FeraMAX) 150 mg</li><li>Heme iron (Proferrin) 11 mg</li><li>Ferric maltol (Accrufer) 30 mg</li></ul></li><li>Best on an empty stomach (with food if nauseated); avoid milk, tea, coffee, antacids; separate from some antibiotics; vitamin C helps</li><li><b>Constipation</b>: fibre and water, stool softener, every-other-day dosing, or a different form</li><li>Takes 3 to 6 months with blood test follow-up</li><li><b>Refer</b>: heavy periods or unusual bleeding, shortness of breath, severe tiredness</li></ul>"}, {"id": "rhinitis", "n": "Allergic rhinitis", "d": "Allergy vs cold, antihistamine vs nasal steroid", "k": "allergic rhinitis hay fever allergy antihistamine cetirizine loratadine desloratadine fexofenadine bilastine rupatadine intranasal corticosteroid fluticasone mometasone budesonide triamcinolone", "ch": "Allergic Rhinitis (both chapters)", "b": "<ul><li><b>Versus cold</b>: itching, sneezing, clear runny nose, itchy eyes, no fever, seasonal or trigger-linked</li><li><b>Mild or intermittent</b>: second-generation antihistamine (cetirizine, loratadine, desloratadine, fexofenadine, bilastine, rupatadine)</li><li><b>Moderate to severe or persistent</b>: intranasal corticosteroid (fluticasone, mometasone, budesonide, triamcinolone); best for congestion; use regularly, full effect takes days</li><li>Avoid first-generation antihistamines (diphenhydramine, chlorpheniramine): sedation</li><li><b>Decongestant spray</b>: 3 to 5 days maximum (rebound); saline rinses</li><li>Watch<ul><li>Cetirizine is mildly sedating</li><li><b>Pregnancy</b>: avoid bilastine and rupatadine; avoid oral decongestants in the first trimester</li><li><b>Children</b>: intranasal corticosteroids from age 2 depending on product (budesonide or mometasone preferred)</li><li>Aim the spray away from the nasal septum</li><li><b>Drug causes</b>: angiotensin-converting enzyme inhibitors, nonsteroidal anti-inflammatory drugs</li></ul></li></ul>"}, {"id": "analgesics", "n": "Analgesics and antipyretics", "d": "Acetaminophen and NSAID limits and cautions", "k": "analgesic antipyretic pain fever acetaminophen tylenol ibuprofen advil naproxen aleve nsaid aspirin asa", "ch": "NONE", "b": "<ul><li><b>Acetaminophen</b>: max 4 g per day (lower with liver disease or heavy alcohol use); hidden in combination products</li><li><b>Ibuprofen, naproxen</b>: ulcer or bleeding risk, kidney problems, high blood pressure, heart disease; avoid in late pregnancy; take at least 30 minutes after low-dose acetylsalicylic acid</li><li>No acetylsalicylic acid in children or teenagers</li></ul>"}, {"id": "msk", "n": "Osteoarthritis and low back pain", "d": "OA vs rheumatoid arthritis, what to try first, red flags", "k": "osteoarthritis oa low back pain lbp sciatica diclofenac voltaren capsaicin glucosamine nsaid rheumatoid", "ch": "Osteoarthritis; Low Back Pain", "b": "<ul><li><b>Osteoarthritis</b>: pain with use, stiffness under 30 minutes, hands, knees, hips, often one-sided. Compare rheumatoid arthritis: stiffness over 60 minutes and symmetric swollen joints<ul><li>Exercise first; topical diclofenac (Voltaren, up to 2 weeks for full effect); acetaminophen; oral nonsteroidal anti-inflammatory drug after a heart, stomach and kidney check; capsaicin (burns first, up to 4 weeks); glucosamine weak evidence</li><li><b>Refer</b>: hot swollen joint, recent trauma, locking, rapidly worsening pain, signs of infection</li></ul></li><li>Low back pain<ul><li>Stay active, no bed rest, heat; a nonsteroidal anti-inflammatory drug is the only medication guidelines endorse (acetaminophen no longer recommended); try 2 to 4 weeks</li><li><b>Refer (red flags)</b>: fever, weight loss, numbness or weakness, groin or buttock numbness, bladder or bowel changes, cancer history, trauma, pain over 12 weeks, pain down the leg (sciatica)</li></ul></li></ul>"}, {"id": "parasites", "n": "Lice and scabies", "d": "How to treat, when to repeat, who else to treat", "k": "lice head lice nits scabies permethrin dimeticone isopropyl myristate nit comb", "ch": "Lice; Scabies", "b": "<ul><li><b>Lice</b>: itch, nits stuck to the hair base; permethrin, dimeticone or isopropyl myristate, applied twice 7 to 10 days apart; nit comb; hot wash or bag items for 2 weeks; treat the household the same day; can return to school the next morning</li><li><b>Scabies</b>: intense night itch; burrows in finger webs, wrists, armpits, genitals; permethrin 5% from the jawline down including under nails (include the head under age 2); repeat in 7 to 14 days; treat all close contacts together; wash items used in the last 3 days; itch can last weeks after treatment (normal)</li><li>Refer either if 2 treatments fail, skin is infected, or (scabies) crusts or a weak immune system</li></ul>"}];
+  function cpsFoot(ch){
+    if(ch==="NONE")return '<p class="otc-src warn"><b>No CPS chapter.</b> General knowledge, not verified. Check Lexidrug or the product monograph.</p>';
+    if(!ch)return "";
+    var c=REF.cps;return '<p class="otc-src">CPS chapter: <b>'+esc(ch).replace(/; /g,'</b>; <b>')+'</b>. <a href="'+esc(href(c))+'" target="_blank" rel="noopener noreferrer">Open CPS ↗</a>'+(c.alt?' · <a href="'+esc(c.alt)+'" target="_blank" rel="noopener noreferrer">Backup ↗</a>':'')+'<br><span class="dim">Search the chapter name in CPS. Licensed through UBC Library, so it opens with your CWL.</span></p>';
+  }
+  OTC.forEach(function(o){TOOLKIT.push({g:"OTC counselling",n:o.n,d:o.d,k:o.k,b:o.b+cpsFoot(o.ch),otc:1});});
+  /* ICE additions: case method, DIR, med rec and counselling key points (student-written pointers, not from CPS text) */
+  var ICEADD=[{"g": "Case work-up", "id": "icecase", "n": "How the ICE case part works", "d": "Last year's PY1 format, what they ask, and what a full answer has", "k": "ice case format part 1 part 2 open book closed book canvas quiz dtp", "b": "<ul><li>Format last year (PY1, may change; check with your year reps)<ul><li><b>Part 1, open book, about 35 minutes</b>: one patient case with about three conditions; find and rank every drug therapy problem (DTP) and enter them in the online quiz</li><li><b>Part 2, closed book, about 30 minutes</b>: written questions on the same case; you keep only the case and your own handwritten notes from Part 1</li><li><b>On the desk</b>: laptop and charger, pens, highlighters, paper notes or textbooks. Phone away</li><li>If a website will not load, the exam keeps going, so have a backup source for each condition</li></ul></li><li>What they ask, per condition<ul><li>Subjective and objective findings that fit the diagnosis (say which is which)</li><li>Risk factors, and any score or severity class that applies</li><li>Goals of therapy</li><li>Your top recommendation and one alternative</li><li>Rationale using Effectiveness, Safety and Adherence</li><li>Monitoring, and non-drug advice</li></ul></li><li>What a full answer has<ul><li><b>Recommendation</b>: generic name, dose, route, how often, how long. One number, not a range. Max daily dose for \"as needed\" drugs. Say clearly if you start, stop, increase, decrease or continue</li><li><b>Rationale</b>: about two points each for Effectiveness, Safety and Adherence, tied to this patient</li><li><b>Monitoring</b>: two effectiveness endpoints and one safety endpoint, each with the change you expect and when</li><li><b>Goals</b>: specific to this patient and measurable where possible (symptoms, lab targets, quality of life)</li></ul></li><li>Time savers<ul><li>Write your answer headings on the notes sheet first</li><li>Read the case once all the way, then again with a highlighter</li><li>Enter each DTP as soon as you spot it; you can edit later</li><li>Run an interaction check before and after you pick your drugs</li></ul></li></ul>"}, {"g": "Case work-up", "id": "icenesa", "n": "NESA framework", "d": "The 7 DTP categories, questions to ask, how to rank and write a DTP", "k": "nesa dtp drug therapy problem categories necessary effective safe adherence prioritize statement", "b": "<ul><li>Necessary<ul><li><b>1. Unnecessary drug therapy</b>: is there a drug with no reason to be there?</li><li><b>2. Needs additional drug therapy</b>: is a condition untreated or missing prevention?</li></ul></li><li>Effective<ul><li><b>3. Ineffective drug</b>: is it the right drug, and is it working?</li><li><b>4. Dose too low</b>: is the dose, frequency or duration enough? Any interaction lowering the effect?</li></ul></li><li>Safe<ul><li><b>5. Adverse drug reaction</b>: side effects, allergies, contraindications, interactions</li><li><b>6. Dose too high</b>: too much, too often, too long, or duplicated?</li></ul></li><li>Adherence<ul><li><b>7. Non-adherence</b>: cost, dosing schedule, dosage form, beliefs, ability to use it</li></ul></li><li>An unmet need that no drug can fix is not a DTP</li><li>Ranking DTPs<ul><li><b>First</b>: how much harm could come to the patient, and how soon</li><li><b>Then</b>: actual before potential, what the patient cares about, what can be fixed now, and who needs to be involved</li></ul></li><li><b>Writing a DTP</b>: patient (initials, age, sex) + the problem + the drug involved + how they are linked + actual or potential (with its category)</li></ul>"}, {"g": "Drug information request", "id": "dir", "n": "Drug information request (DIR)", "d": "Answer a drug question from a patient or provider in 7 minutes", "k": "dir drug information request question lexi interact natmed bugs drugs renal dosing", "b": "<ul><li><b>Get the full question first</b>: who is asking, about which patient, what exactly they need, and how soon</li><li><b>Collect background</b>: age, kidney and liver function, allergies, other medications, pregnancy or breastfeeding</li><li><b>Pick the right source</b>: Lexidrug for dosing and interactions, Bugs &amp; Drugs for antibiotics and renal dosing, NatMed Pro for natural products, CPS for general monographs</li><li><b>Answer clearly</b>: a direct answer, the reason, what to do, and what to watch for</li><li>Say where the answer came from, and offer follow-up</li></ul>"}, {"g": "Medication reconciliation", "id": "medrec", "n": "Medication reconciliation", "d": "Build the best possible medication history and spot discrepancies", "k": "med rec medication reconciliation bpmh best possible medication history admission discrepancy pharmanet", "b": "<ul><li><b>Use at least two sources</b>: patient or family interview, PharmaNet profile, vials or blister packs, the community pharmacy, previous records</li><li><b>For each medication record</b>: name, strength, dose, route, frequency, and what the patient actually takes</li><li>Ask about non-prescription products, natural products, inhalers, eye drops, creams, injections and recently stopped drugs</li><li>Compare against the admission orders and label each difference: intended (on purpose and documented) or unintended (needs follow-up)</li><li>Document clearly and flag what needs the prescriber's attention</li></ul>"}, {"g": "Rx counselling", "id": "t3", "n": "Acetaminophen with codeine (Tylenol No. 3)", "d": "Prescription pain reliever: dosing, drowsiness, constipation", "k": "tylenol 3 t3 codeine acetaminophen opioid narcotic counselling", "b": "<ul><li><b>What it is</b>: acetaminophen 300 mg with codeine 30 mg (and caffeine) per tablet; for pain</li><li><b>How to take</b>: usually 1 to 2 tablets every 4 to 6 hours as needed; no more than 12 tablets a day; count every other acetaminophen product toward the daily limit</li><li><b>Common side effects</b>: drowsiness, dizziness, constipation, nausea<ul><li><b>Constipation</b>: fluids, fibre, and ask about a laxative if it lasts</li></ul></li><li><b>Safety</b>: no alcohol or other sedating drugs; do not drive until you know how it affects you; can be habit-forming; keep out of reach of children</li><li>Not for children under 12, and caution in breastfeeding (some people turn codeine into morphine very quickly)</li></ul>"}, {"g": "Rx counselling", "id": "azithro", "n": "Azithromycin", "d": "Antibiotic: the 5-day course, stomach upset, finishing the course", "k": "azithromycin zithromax z-pak antibiotic macrolide counselling", "b": "<ul><li><b>What it is</b>: a macrolide antibiotic for bacterial infections; it does not treat colds or flu</li><li><b>How to take</b>: commonly 500 mg on day 1, then 250 mg once a day on days 2 to 5 (follow the prescription); tablets with or without food; take it until it is finished even if you feel better</li><li><b>Common side effects</b>: nausea, stomach upset, diarrhea</li><li><b>Call your doctor if</b>: severe or bloody diarrhea, rash or swelling, fast or irregular heartbeat</li><li>Do not take antacids with aluminum or magnesium at the same time</li></ul>"}, {"g": "Rx counselling", "id": "naproxen", "n": "Naproxen EC", "d": "Anti-inflammatory: swallow whole, take with food, stomach and kidney cautions", "k": "naproxen ec enteric coated naprosyn nsaid anti-inflammatory counselling", "b": "<ul><li><b>What it is</b>: an NSAID for pain and inflammation; the enteric coating protects the stomach but delays the start of the effect</li><li><b>How to take</b>: swallow whole, do not crush or chew; take with food and a full glass of water; usual adult dose 375 to 500 mg twice a day as prescribed</li><li>Do not combine with other NSAIDs (ibuprofen, acetylsalicylic acid for pain, other naproxen products)</li><li><b>Common side effects</b>: stomach upset, heartburn</li><li><b>Call your doctor if</b>: black or bloody stools, vomiting blood, swelling, much less urine, chest pain or shortness of breath</li><li>Use with care in high blood pressure, heart or kidney disease, stomach ulcers, and late pregnancy</li></ul>"}, {"g": "Rx counselling", "id": "vigamox", "n": "Moxifloxacin eye drops (Vigamox)", "d": "Antibiotic eye drops: how to put them in, how long", "k": "moxifloxacin vigamox eye drops conjunctivitis antibiotic ophthalmic counselling", "b": "<ul><li><b>What it is</b>: an antibiotic eye drop for bacterial conjunctivitis</li><li><b>How to use</b>: usually 1 drop in the affected eye 3 times a day for 7 days, as prescribed</li><li><b>Technique</b>: wash hands; tilt head back; pull down the lower lid; put 1 drop in the pocket without touching the tip; close the eye and press the inner corner for 1 to 2 minutes; wait 5 minutes between different eye drops</li><li>No contact lenses while the eye is infected</li><li>Mild stinging is common; see a doctor if it is not better in a few days, or if there is pain or vision change</li></ul>"}, {"g": "Rx counselling", "id": "rx5", "n": "Counselling drug 5 (to add)", "d": "Waiting on the course list", "k": "counselling", "b": "<ul><li>To add once the course list is confirmed</li></ul>"}, {"g": "Rx counselling", "id": "rx6", "n": "Counselling drug 6 (to add)", "d": "Waiting on the course list", "k": "counselling", "b": "<ul><li>To add once the course list is confirmed</li></ul>"}, {"g": "Respiratory", "id": "asthma", "n": "Asthma inhalers", "d": "Reliever vs controller, technique, when to get help", "k": "asthma inhaler salbutamol ventolin reliever controller inhaled corticosteroid ics budesonide formoterol spacer mdi technique counselling", "b": "<ul><li><b>Reliever (for example salbutamol)</b>: opens airways within minutes; carry it always; needing it more than usual means asthma is not controlled</li><li>Controller (inhaled corticosteroid, alone or with a long-acting bronchodilator): use every day even when well; full effect takes days to weeks; rinse mouth and spit after each use</li><li><b>Metered-dose inhaler technique</b>: shake, breathe out, seal lips, press once while breathing in slowly, hold breath about 10 seconds; a spacer helps most people</li><li><b>Get help now if</b>: the reliever is not helping, trouble speaking, or lips turning blue</li><li>Bring every device to visits so technique can be checked</li></ul>"}, {"g": "Respiratory", "id": "copd", "n": "COPD inhalers", "d": "Long-acting bronchodilators, technique, flare-up signs", "k": "copd chronic obstructive pulmonary disease inhaler lama laba tiotropium spiriva technique counselling", "b": "<ul><li>Long-acting bronchodilators (taken once or twice daily) are the base of treatment; use them every day</li><li>Technique depends on the device (spray inhaler vs dry powder); dry powder inhalers need a fast, deep breath in</li><li>Quitting smoking is the most helpful step at any stage</li><li><b>Signs of a flare-up</b>: more breathlessness, more sputum, or a change in sputum colour; follow the action plan and call the care team</li><li>Vaccines (influenza, pneumococcal and others) are part of care</li></ul>"}, {"g": "Cardiovascular", "id": "nitro", "n": "Nitroglycerin spray or tablets", "d": "For chest pain: how to use, when to call 911", "k": "nitroglycerin nitro spray sublingual angina chest pain counselling", "b": "<ul><li><b>For chest pain from angina</b>: sit down first, then 1 spray or 1 tablet under the tongue</li><li>If the pain is not better or is worse 5 minutes after the first dose, call 911; you may take another dose every 5 minutes (up to 3) while waiting</li><li>Can cause headache, flushing and dizziness</li><li>Do not use with erectile dysfunction drugs (sildenafil, tadalafil, vardenafil)</li><li>Keep tablets in the original glass bottle; check the expiry date</li></ul>"}, {"g": "Cardiovascular", "id": "statin", "n": "Statins", "d": "Cholesterol medicines: when to take, muscle symptoms", "k": "statin atorvastatin rosuvastatin simvastatin cholesterol dyslipidemia counselling", "b": "<ul><li>Lowers cholesterol and the risk of heart attack and stroke; works only while you keep taking it</li><li>Take once a day at the same time (some, like simvastatin, are best in the evening)</li><li>Report unexplained muscle pain, weakness or dark urine</li><li>Avoid large amounts of grapefruit juice with some statins (for example simvastatin, atorvastatin)</li><li>Not for use in pregnancy</li></ul>"}, {"g": "Cardiovascular", "id": "bp", "n": "Blood pressure medicines", "d": "General counselling for antihypertensives", "k": "hypertension blood pressure ace inhibitor ramipril perindopril arb amlodipine hydrochlorothiazide antihypertensive counselling", "b": "<ul><li>Take every day even if you feel well; high blood pressure usually has no symptoms</li><li>Dizziness when standing up is common at first; get up slowly</li><li><b>ACE inhibitors (ramipril, perindopril)</b>: dry cough is common; get help right away for swelling of the face, lips or tongue</li><li><b>Diuretics (hydrochlorothiazide)</b>: more urination, so take in the morning</li><li>Check home blood pressure if you can, and bring readings to visits</li></ul>"}];
+  function cpsLook(t){var c=REF.cps;return '<p class="otc-src">Learn more in CPS: search <b>'+esc(t)+'</b> (monograph and patient information). <a href="'+esc(href(c))+'" target="_blank" rel="noopener noreferrer">Open CPS ↗</a>'+(c.alt?' · <a href="'+esc(c.alt)+'" target="_blank" rel="noopener noreferrer">Backup ↗</a>':'')+'</p>';}
+  var ICELOOK={t3:"acetaminophen and codeine",azithro:"azithromycin",naproxen:"naproxen",vigamox:"moxifloxacin ophthalmic",asthma:"Asthma",copd:"Chronic Obstructive Pulmonary Disease",nitro:"nitroglycerin",statin:"Dyslipidemia",bp:"Hypertension"};
+  ICEADD.forEach(function(o){TOOLKIT.push({g:o.g,n:o.n,d:o.d,k:o.k,b:o.b+(ICELOOK[o.id]?cpsLook(ICELOOK[o.id]):""),iid:o.id,todo:/to add/.test(o.n)});});
   var SYSNAME={Tested:"Tested on the Part 1 case"};
 
 
   /* ---- plumbing ---- */
-  var PAGES=["home","conditions","fdl","fdl100","toolkit","refs","about"];
+  var PAGES=["home","ice","fdl","fdl100","about"];
   var f100Pending="";
-  var TITLES={home:"ICEberg",conditions:"Conditions",fdl:"FDL",fdl100:"FDL 100",toolkit:"Misc",refs:"Resource Links",about:"About"};
+  var TITLES={home:"ICEberg",fdl:"FDL",fdl100:"FDL 100",ice:"ICE",about:"About"};
   var shell=document.getElementById("shell"),back=document.getElementById("back"),
       title=document.getElementById("title"),foot=document.getElementById("foot"),
       yrBtn=document.getElementById("yr");
@@ -1130,10 +1179,14 @@ h2.sec:first-child{margin-top:0}
   function plain(s){var d=document.createElement("div");d.innerHTML=s;return d.textContent||"";}
   function slug(s){return plain(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
 
+  var UPG=0;
   function go(name,push){
-    if(/^fdl100\/[A-Za-z0-9]{5}$/.test(name||"")){f100Pending=name.slice(7).toUpperCase();name="fdl100";}
+    var fm=/^fdl100\/(r\/)?([A-Za-z0-9]{5})$/.exec(name||"");if(fm){f100Pending=(fm[1]?"r:":"")+fm[2].toUpperCase();name="fdl100";}
+    /* old links still work: conditions and links open the open-book tab, Misc opens stations */
+    var OLDP={conditions:["cases","conds"],refs:["cases","sources"],toolkit:["stations","non"]};if(OLDP[name]){iceTab=OLDP[name][0];if(iceTab==="cases")caseSub=OLDP[name][1];else stSub=OLDP[name][1];name="ice";if(typeof drawIceTabs==="function")drawIceTabs();}
     if(PAGES.indexOf(name)<0)name="home";
     PAGES.forEach(function(p){var el=document.getElementById("p-"+p);if(el)el.hidden=(p!==name);});
+    if(cur!==name||!UPG){UPG=1;U("pg",name);}
     cur=name;
     title.textContent=TITLES[name];
     title.classList.toggle("brand",name==="home");
@@ -1294,7 +1347,7 @@ h2.sec:first-child{margin-top:0}
     var f=toks.map(function(t){if(t.length<3)return t;var best=t,bd=t.length>=7?3:2;SVOC.forEach(function(w){var d=slev(t,w,bd);if(d<bd||(d===bd&&best===t&&d<=(t.length>=7?2:1))){bd=d;best=w;}});if(best!==t)fixed=true;return best;});
     return fixed?f.join(" "):"";
   }
-  var SGRP=[["cond","Conditions",3],["drug","FDL drugs",6],["abbr","Abbreviations",8],["term","Medical terms & word parts",6],["misc","Misc",5],["ref","Resource Links",6]];
+  var SGRP=[["cond","Conditions",3],["drug","FDL drugs",6],["abbr","Abbreviations",8],["term","Medical terms & word parts",6],["misc","Station topics",5],["ref","Sources",6]];
   var sOpen={},sLast="",sTimer=0;
   var qEl=document.getElementById("q"),resEl=document.getElementById("results"),
       menuEl=document.getElementById("menu"),hintEl=document.getElementById("hint");
@@ -1334,6 +1387,7 @@ h2.sec:first-child{margin-top:0}
     if(!h){var dm=didYouMean(R.toks);
       h='<p class="empty">Nothing matches “'+esc(raw)+'”.'+(dm?' Did you mean <button class="linkbtn" data-sq="'+esc(dm)+'">'+esc(dm)+'</button>?':' Try a condition, a generic or brand name, an abbreviation, or a resource.')+'</p>';}
     resEl.innerHTML=h;
+    USR={q:raw,n:R.r.length,partial:!!R.partial};clearTimeout(UST);UST=setTimeout(uSearch,1800);
   }
   resEl.addEventListener("click",function(e){
     var b=e.target.closest("[data-smore],[data-sf],[data-sq]");if(!b)return;
@@ -1354,6 +1408,67 @@ h2.sec:first-child{margin-top:0}
     condList.innerHTML=order.map(function(s){return '<h2 class="sec">'+(SYSNAME[s]||s)+'</h2>'+bySys[s].map(condHTML).join("");}).join("");
   }
 
+
+  /* ---- ICE page: Cases (open book) and Stations (closed book), one search ---- */
+  var iceTab=S.get("nav.ice.tab","cases");if(iceTab==="open")iceTab="cases";if(iceTab==="closed")iceTab="stations";if(iceTab!=="cases"&&iceTab!=="stations")iceTab="cases";
+  var caseSub=S.get("nav.ice.ct","conds"),stSub=S.get("nav.ice.stt","non");if(caseSub!=="conds"&&caseSub!=="sources")caseSub="conds";if(stSub!=="non"&&stSub!=="int")stSub="non";
+  function tkBy(g,names){return TOOLKIT.filter(function(t){return (g&&(Array.isArray(g)?g.indexOf(t.g)>-1:t.g===g))||(names&&names.indexOf(t.n)>-1);});}
+  var NONINT=[
+    {n:"Calculations",d:"PharmaCare (which plan, which price, what the patient pays) and dose math.",g:"PharmaCare",names:["Concentrations","Conversions &amp; formulas","Drams, ounces &amp; Roman numerals","Acetaminophen &amp; ibuprofen dosing"]},
+    {n:"Prescription checking",d:"Reading sigs, checking the prescription, label and blister pack.",g:"Rx checking",names:["Latin &amp; sig abbreviations"]},
+    {n:"Prescription adaptation, schedules & scope",d:"Renew, change, substitute; drug schedules; who can prescribe what.",g:"Law &amp; scope"},
+    {n:"Drug information request",d:"Answer a drug question with the right source.",g:"Drug information request"},
+    {n:"Medication reconciliation",d:"Best possible medication history and discrepancies.",g:"Medication reconciliation"},
+    {n:"Patient basics",d:"Normal ranges to know without looking.",names:["Vital signs"]}
+  ];
+  var INTER=[
+    {n:"Prescription counselling",tag:"PY1",d:"The drugs counselled last year. Practise the full counsel: what it is, how to take it, side effects, when to get help.",g:"Rx counselling"},
+    {n:"OTC counselling",tag:"PY2 · PBA",d:"Telling similar conditions apart, common products and when to refer.",g:"OTC counselling",note:1},
+    {n:"Respiratory",tag:"PY2",d:"Inhalers and when to get help.",g:"Respiratory"},
+    {n:"Cardiovascular",tag:"PY2",d:"Common heart and blood pressure medicines.",g:"Cardiovascular"}
+  ];
+  function secHTML(x,open){var L=tkBy(x.g,x.names);
+    return '<details class="ice-sec"'+(open?' open':'')+'><summary><span class="ice-sn">'+esc(x.n)+(x.tag?' <span class="macs">'+esc(x.tag)+'</span>':'')+'</span><span class="ice-sd">'+esc(x.d)+' · '+L.length+' topic'+(L.length===1?'':'s')+'</span></summary>'+
+      (x.note?'<p class="notice" style="margin:8px 0 10px">Student-compiled pointers. Not affiliated with or reviewed by the Faculty. Confirm in the CPS chapter linked in each topic.</p>':'')+
+      '<div class="nts">'+L.map(function(t){return t.todo?'<details><summary><span><span class="n dim">'+t.n+'</span><span class="d">'+t.d+'</span></span></summary><div class="ntb">'+t.b+'</div></details>':tkHTML(t);}).join("")+'</div></details>';}
+  function drawStations(){
+    var a=document.getElementById("st-non"),b=document.getElementById("st-int");if(!a)return;
+    a.innerHTML='<p class="lede ice-lede">Written stations, about 7 minutes each, pen and paper. Know these cold.</p>'+NONINT.map(function(x){return secHTML(x,false);}).join("");
+    var cr=["healthlink","inhaler"].map(function(id){return REF[id];}).filter(Boolean).concat([REF.cps,REF.medsask].filter(Boolean));
+    b.innerHTML='<p class="lede ice-lede">Counselling a patient, about 7 minutes. These are the subjects that come up, each with key points and a CPS pointer to learn more.</p>'+
+      '<h2 class="sec">Practise with</h2><ul class="links">'+cr.map(refRow).join("")+'</ul>'+
+      INTER.map(function(x){return secHTML(x,false);}).join("");
+  }
+  function drawIceCase(){var el=document.getElementById("icase");if(!el)return;
+    el.innerHTML='<div class="nts">'+tkBy("Case work-up").sort(function(a,b){return (b.iid?1:0)-(a.iid?1:0);}).map(tkHTML).join("")+'</div>';}
+  function drawIceTabs(){
+    var tb=document.getElementById("itabs");if(!tb)return;
+    tb.querySelectorAll("[data-it]").forEach(function(b){var on=b.getAttribute("data-it")===iceTab;b.setAttribute("aria-pressed",on);b.setAttribute("aria-selected",on);});
+    document.getElementById("ice-cases").hidden=iceTab!=="cases";document.getElementById("ice-stations").hidden=iceTab!=="stations";
+    document.querySelectorAll("#csub2 [data-ct]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-ct")===caseSub);});
+    document.querySelectorAll("#ssub [data-stt]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-stt")===stSub);});
+    document.getElementById("ct-conds").hidden=caseSub!=="conds";document.getElementById("ct-sources").hidden=caseSub!=="sources";
+    document.getElementById("st-non").hidden=stSub!=="non";document.getElementById("st-int").hidden=stSub!=="int";
+  }
+  document.getElementById("itabs").addEventListener("click",function(e){var b=e.target.closest("[data-it]");if(!b)return;iceTab=b.getAttribute("data-it");S.set("nav.ice.tab",iceTab);U("tab","ice-"+iceTab);drawIceTabs();});
+  document.getElementById("csub2").addEventListener("click",function(e){var b=e.target.closest("[data-ct]");if(!b)return;caseSub=b.getAttribute("data-ct");S.set("nav.ice.ct",caseSub);U("tab","cases-"+caseSub);drawIceTabs();});
+  document.getElementById("ssub").addEventListener("click",function(e){var b=e.target.closest("[data-stt]");if(!b)return;stSub=b.getAttribute("data-stt");S.set("nav.ice.stt",stSub);U("tab","stations-"+stSub);drawIceTabs();});
+  /* ICE search: conditions, sources and station topics */
+  var iqEl=document.getElementById("iq"),iresEl=document.getElementById("ires"),ibodyEl=document.getElementById("ibody"),iTimer=0;
+  function drawIceSearch(){
+    var raw=(iqEl.value||"").trim();
+    if(!raw){iresEl.hidden=true;ibodyEl.hidden=false;return;}
+    ibodyEl.hidden=true;iresEl.hidden=false;
+    var R=runSearch(raw),by={};R.r.forEach(function(x){var t=x.it.type;if(t==="cond"||t==="ref"||t==="misc")(by[t]=by[t]||[]).push(x);});
+    var G=[["cond","Conditions"],["misc","Station & case topics"],["ref","Sources"]].filter(function(g){return by[g[0]];}).sort(function(a,b){return by[b[0]][0].s-by[a[0]][0].s;});
+    var h=G.map(function(g){return '<h2 class="sec">'+g[1]+'</h2>'+groupHTML(g[0],by[g[0]].slice(0,g[0]==="cond"?4:8));}).join("");
+    if(!h){var dm=didYouMean(R.toks);h='<p class="empty">Nothing in ICE matches “'+esc(raw)+'”.'+(dm?' Did you mean <button class="linkbtn" data-iq="'+esc(dm)+'">'+esc(dm)+'</button>?':' Try the search on the home screen for drugs and abbreviations.')+'</p>';}
+    iresEl.innerHTML=h;
+    USR={q:raw,n:G.length,partial:!!R.partial};clearTimeout(UST);UST=setTimeout(uSearch,1800);
+  }
+  iqEl.addEventListener("input",function(){clearTimeout(iTimer);iTimer=setTimeout(drawIceSearch,70);});
+  iqEl.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();drawIceSearch();iqEl.blur();}else if(e.key==="Escape"&&iqEl.value){e.preventDefault();e.stopPropagation();iqEl.value="";drawIceSearch();}});
+  iresEl.addEventListener("click",function(e){var b=e.target.closest("[data-iq]");if(!b)return;iqEl.value=b.getAttribute("data-iq");drawIceSearch();});
   /* ---- toolkit ---- */
   function tkHTML(t){return '<details><summary><span><span class="n">'+t.n+'</span><span class="d">'+t.d+'</span></span></summary><div class="ntb">'+t.b+'</div></details>';}
   var tkList=document.getElementById("tklist"),tchips=document.getElementById("tchips"),tgrp="";
@@ -2079,7 +2194,7 @@ h2.sec:first-child{margin-top:0}
     return {n:rows.length,text:"#separator:tab\n#html:true\n#columns:Front\tBack\tTags\n#tags column:3\n#deck:"+deck+"\n"+rows.map(function(r){return r.join("\t");}).join("\n")+"\n"};
   }
   function dlAnki(ds,wordIds,deck){var a=ankiFor(ds,wordIds,deck);dl(fslug(deck)+".txt",a.text);}
-  function printGrid(ds,wordIds,title){
+  function printGrid(ds,wordIds,title){U("print",/Day \d/.test(title||"")?"plan-day":"module");
     var el=document.getElementById("printgrid");if(!el){el=document.createElement("div");el.id="printgrid";document.body.appendChild(el);}
     ds=ds.filter(function(d){return !d.nr;});var forms=ds.some(needsForms);
     var head='<tr><th>Generic</th><th>Brand</th><th>Class</th>'+(forms?'<th>Forms &amp; strengths</th>':'')+'</tr>';
@@ -2099,7 +2214,7 @@ h2.sec:first-child{margin-top:0}
   function actBtns(kind,key){return '<span class="acts"><button class="btn sm" data-act="quiz" data-'+kind+'="'+esc(key)+'">Quiz</button><button class="btn sm" data-act="anki" data-'+kind+'="'+esc(key)+'">Anki</button><button class="btn sm" data-act="print" data-'+kind+'="'+esc(key)+'">Print</button></span>';}
   function selDrugs(el){var m=el.getAttribute("data-mod"),c=el.getAttribute("data-cls");return FD.filter(function(d){return inYear(d)&&!d.nr&&(m?modKey(d)===m:clsKey(d)===c);});}
   function wireActs(root){root.querySelectorAll("[data-act]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();var ds=selDrugs(b),lab=b.getAttribute("data-mod")||b.getAttribute("data-cls"),act=b.getAttribute("data-act");
-    if(act==="quiz")quizDrugs(ds,lab);else if(act==="anki")dlAnki(ds,[],"FDL "+year+"::"+lab.replace(" · ","::").replace(" › ","::"));else printGrid(ds,[],lab);});});}
+    if(act==="quiz"){U("quiz",year+"-module");quizDrugs(ds,lab);}else if(act==="anki")U("anki","module"),dlAnki(ds,[],"FDL "+year+"::"+lab.replace(" · ","::").replace(" › ","::"));else printGrid(ds,[],lab);});});}
 
   /* ---- study plan ---- */
   var PKEY="nav.plan",PDKEY="nav.plan.done",PASS=80;
@@ -2345,7 +2460,9 @@ h2.sec:first-child{margin-top:0}
   }
   function f100Route(){
     if(!F100.name){F100.view="name";return render();}
-    if(f100Pending){var c=f100Pending;f100Pending="";if(/^[A-HJ-NP-Z2-9]{5}$/.test(c))return openChallenge(c);}
+    if(f100Pending){var c=f100Pending,isRoom=c.indexOf("r:")===0;f100Pending="";if(isRoom)c=c.slice(2);
+      try{history.replaceState({},"","#fdl100");}catch(e){}
+      if(/^[A-HJ-NP-Z2-9]{5}$/.test(c)){if(isRoom){F100.view="home";render();U("f100","joined-room");return joinRoom(c);}return openChallenge(c);}}
     render();
   }
   function f100Head(){return '<div class="f1-head"><h2 class="f1-title">FDL 100</h2><span class="f1-yr">'+ykLabel()+'</span></div>';}
@@ -2353,10 +2470,11 @@ h2.sec:first-child{margin-top:0}
   function render(){
     var v=F100.view,h=f100Head();
     if(v==="room")return renderRoom();
+    if(F100.msg&&v==="home")h+='<p class="f1-msg" style="margin-top:0">'+esc(F100.msg)+'</p>';
     if(v==="name")h+=nameView();
     else if(v==="ch")h+=chView();
     else h+=homeView();
-    if(F100.msg)h+='<p class="f1-msg">'+esc(F100.msg)+'</p>';
+    if(F100.msg&&v!=="home")h+='<p class="f1-msg">'+esc(F100.msg)+'</p>';
     var ni=document.getElementById("f1name"),foc=ni&&document.activeElement===ni,pos=foc?ni.selectionStart:0;
     if(ni&&v==="name")F100.nameDraft=ni.value;
     f100El.innerHTML=h;
@@ -2383,16 +2501,15 @@ h2.sec:first-child{margin-top:0}
       '<div class="tile"><span class="k">Accuracy</span><span class="v">'+acc+'</span><span class="s">'+s.a+' answers</span></div>'+
       '<div class="tile"><span class="k">Mastered</span><span class="v">'+s.m+'</span><span class="s">from your quizzes</span></div></div>';
     var p=F100.panel;
-    h+='<div class="f1-acts"><button class="btn'+(p==="room"?' primary':'')+'" data-a="p-room">Create a room</button><button class="btn'+(p==="join"?' primary':'')+'" data-a="p-join">Join a room</button><button class="btn'+(p==="ch"?' primary':'')+'" data-a="p-ch">Send a challenge</button></div>';
-    if(p==="join")h+='<div class="qcard f1-panel"><p class="lbl">Room code</p><div class="frow"><input id="f1code" class="finput f1-codein" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCDE" data-enter="join"><button class="btn primary" data-a="join"'+(F100.busy?' disabled':'')+'>Join</button></div></div>';
+    h+='<div class="f1-acts"><button class="btn'+(p==="room"?' primary':'')+'" data-a="p-room">Create a room</button><button class="btn'+(p==="ch"?' primary':'')+'" data-a="p-ch">Send a challenge</button></div>';
     if(p==="room"||p==="ch"){var S=F100SET;if(!S.sc)S.sc=defScope();
       h+='<div class="qcard f1-panel"><p class="lbl">Drug list</p><div class="chips" data-set="sc">'+SCOPES.map(function(o){return '<button data-v="'+o[0]+'" aria-pressed="'+(S.sc===o[0])+'">'+o[1]+'</button>';}).join("")+'</div>'+
         '<p class="lbl">Questions</p><div class="chips" data-set="n">'+[10,15,20].map(function(v){return '<button data-v="'+v+'" aria-pressed="'+(S.n===v)+'">'+v+'</button>';}).join("")+'</div>'+
         '<p class="lbl">Content</p><div class="chips" data-set="mix"><button data-v="1" aria-pressed="'+S.mix+'">Drugs + abbreviations &amp; terms</button><button data-v="0" aria-pressed="'+!S.mix+'">Drugs only</button></div>'+
-        '<p class="hintline">'+(p==="room"?'Everyone in the room answers the same question at the same time. 20 seconds each, faster correct answers score more. Up to '+MAXP+' players.':'You play first, then share the link. Anyone who opens it plays the same questions, and you each get a win or loss.')+'</p>'+
+        '<p class="hintline">'+(p==="room"?'You get a link to send to friends. Everyone in the room answers the same question at the same time. 20 seconds each, faster correct answers score more. Up to '+MAXP+' players.':'You play first, then share the link. Anyone who opens it plays the same questions, and you each get a win or loss.')+'</p>'+
         '<div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="'+(p==="room"?'mkroom':'mkch')+'"'+(F100.busy?' disabled':'')+'>'+(F100.busy?'Creating…':p==="room"?'Create room':'Create challenge')+'</button></div></div>';}
     h+=gcBoard();
-    if(F100.mych&&F100.mych.length)h+='<h2 class="sec">Your challenges</h2><ul class="links">'+F100.mych.map(function(c){return '<li><button class="link f1-chrow" data-a="opench" data-c="'+esc(c.code)+'"><span><span class="n">'+esc(c.code)+'</span><span class="d">'+new Date(c.t).toLocaleDateString(undefined,{month:"short",day:"numeric"})+'</span></span><span class="go">Results ›</span></button></li>';}).join("")+'</ul>';
+    if(F100.mych&&F100.mych.length)h+='<h2 class="sec">Your challenges</h2><ul class="links">'+F100.mych.map(function(c){return '<li><button class="link f1-chrow" data-a="opench" data-c="'+esc(c.code)+'"><span><span class="n">Challenge from '+new Date(c.t).toLocaleDateString(undefined,{month:"short",day:"numeric"})+'</span><span class="d">See who has played it</span></span><span class="go">Results ›</span></button></li>';}).join("")+'</ul>';
     h+='<p class="hintline" style="margin-top:14px">Each class has its own leaderboard. Stats reset each school year. Usernames and scores are visible to other players; nothing else is shared.</p>';
     return h;
   }
@@ -2423,7 +2540,7 @@ h2.sec:first-child{margin-top:0}
     var A=F100.api;
     if(a==="retry"){F100.boot=null;return drawF100();}
     if(a==="savename"){var n=(document.getElementById("f1name").value||"").trim(),pr=nameProblem(n);F100.nameDraft=n;if(pr)return flash(pr);
-      return setProfile(n,F100.pyPick||F100.py).then(function(){F100.view="home";F100.msg="";F100.nameDraft=null;F100.pyPick="";F100.lbRows=null;render();syncMine();})
+      return setProfile(n,F100.pyPick||F100.py).then(function(){F100.view="home";F100.msg="";F100.nameDraft=null;F100.pyPick="";F100.lbRows=null;if(f100Pending)f100Route();else render();syncMine();})
         .catch(function(){return A.get("names/"+n.toLowerCase()).catch(function(){return null;}).then(function(o){flash(o&&o!==A.uid?"That username is taken. Try another.":"Couldn’t save right now. Try again in a moment.");});});}
     if(a==="rename"){F100.view="name";F100.nameDraft=null;F100.pyPick="";return render();}
     if(a==="home"){leaveRoom();F100.view="home";F100.lbRows=null;F100.play=null;F100.ch=null;render();processMyChallenges();return;}
@@ -2431,17 +2548,17 @@ h2.sec:first-child{margin-top:0}
     if(a==="mkroom"||a==="mkch"){var S=F100SET,qs=genQs(S.sc,S.n,S.mix);if(qs.length<5)return flash("Couldn’t build questions for that list.");
       F100.busy=true;render();var kind=a==="mkroom"?"rooms":"ch";
       return freeCode(kind).then(function(code){
-        if(kind==="rooms")return A.set(YP("rooms/"+code),{host:A.uid,st:"lobby",sc:S.sc,n:qs.length,mix:S.mix,created:A.TS,qs:qs,qn:-1,ph:"q",qAt:0}).then(function(){return joinRoom(code);});
+        U("f100",kind==="rooms"?"room-created":"challenge-created");if(kind==="rooms")return A.set(YP("rooms/"+code),{host:A.uid,st:"lobby",sc:S.sc,n:qs.length,mix:S.mix,created:A.TS,qs:qs,qn:-1,ph:"q",qAt:0}).then(function(){return joinRoom(code);});
         var w={};w[YP("ch/"+code)]={by:A.uid,name:F100.name,sc:S.sc,n:qs.length,mix:S.mix,created:A.TS,qs:qs};w[YP("mych/"+A.uid+"/"+code)]={t:A.TS};
         return A.update("",w).then(function(){return openChallenge(code);});
       }).catch(function(){flash("Couldn’t create it. Try again.");}).then(function(){F100.busy=false;if(F100.view==="home")render();});}
-    if(a==="join"){var code=(document.getElementById("f1code").value||"").trim().toUpperCase();if(!/^[A-HJ-NP-Z2-9]{5}$/.test(code))return flash("Room codes are 5 letters or numbers.");return joinRoom(code);}
+    if(a==="join"){U("f100","joined-room");var code=(document.getElementById("f1code").value||"").trim().toUpperCase();if(!/^[A-HJ-NP-Z2-9]{5}$/.test(code))return flash("Room codes are 5 letters or numbers.");return joinRoom(code);}
     if(a==="start"){var r=F100.room;if(!r||r.host!==A.uid)return;return A.update(YP("rooms/"+F100.code),{st:"play",qn:0,ph:"q",qAt:A.TS});}
     if(a==="leave"){leaveRoom(true);F100.view="home";F100.lbRows=null;render();processMyChallenges();return;}
     if(a==="ans"){return f1Answer(+el.getAttribute("data-i"));}
-    if(a==="copy"){var link=location.href.split("#")[0]+"#fdl100/"+el.getAttribute("data-c");try{navigator.clipboard.writeText(link).then(function(){flash("Link copied.");},function(){flash(link);});}catch(e){flash(link);}return;}
+    if(a==="copy"||a==="invite"){var link=location.href.split("#")[0]+"#fdl100/"+(a==="invite"?"r/":"")+el.getAttribute("data-c");return shareLink(el,link,a==="invite"?"Join my FDL 100 game":"Try my FDL 100 challenge");}
     if(a==="opench")return openChallenge(el.getAttribute("data-c"));
-    if(a==="chstart"){F100.play={i:0,ans:[],t0:0,rv:false};nextSolo();return;}
+    if(a==="chstart"){U("f100","challenge-played");F100.play={i:0,ans:[],t0:0,rv:false};nextSolo();return;}
   }
   if(f100El){
     f100El.addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(b&&!b.disabled){e.preventDefault();f1Act(b.getAttribute("data-a"),b);return;}
@@ -2456,11 +2573,20 @@ h2.sec:first-child{margin-top:0}
       if(ki>-1){var b=f100El.querySelector('[data-a="ans"][data-i="'+ki+'"]');if(b&&!b.disabled){e.preventDefault();b.click();}}});
   }
 
+  /* share sheet on phones, copy to clipboard elsewhere; the button itself says what happened */
+  function shareLink(el,link,text){
+    function done(m){var o=el.getAttribute("data-label")||el.textContent;el.setAttribute("data-label",o);el.textContent=m;setTimeout(function(){if(el.isConnected)el.textContent=o;},2200);}
+    function copy(){var box=f100El.querySelector(".f1-linkbox");
+      try{navigator.clipboard.writeText(link).then(function(){done("Link copied ✓");},function(){showBox();});}catch(e){showBox();}
+      function showBox(){if(box){box.hidden=false;var i=box.querySelector("input");i.value=link;i.focus();i.select();}done("Copy the link below");}}
+    if(navigator.share&&/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){navigator.share({title:"FDL 100",text:text,url:link}).catch(function(e){if(e&&e.name!=="AbortError")copy();});return;}
+    copy();
+  }
   /* ---- live rooms ---- */
   function joinRoom(code){
     var A=F100.api;
     return A.get(YP("rooms/"+code)).then(function(r){
-      if(!r){F100.busy=false;return flash("No room with that code.");}
+      if(!r){F100.busy=false;return flash("That room has closed, or the link is wrong.");}
       var pl=r.pl||{},mine=pl[A.uid];
       if(!mine&&r.st!=="lobby")return flash("That game has already started.");
       if(!mine&&Object.keys(pl).filter(function(k){return pl[k].on;}).length>=MAXP)return flash("That room is full.");
@@ -2514,7 +2640,9 @@ h2.sec:first-child{margin-top:0}
     var ps=players(r),host=(r.pl||{})[r.host],sc=(SCOPES.filter(function(s){return s[0]===r.sc;})[0]||["",""])[1];
     if(r.st!=="done"&&host&&!host.on&&r.host!==A.uid){h+='<div class="notice">The host left, so this game has ended.</div><div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="leave">Back</button></div>';f100El.innerHTML=h;return;}
     if(r.st==="lobby"){
-      h+='<div class="qcard f1-lobby"><p class="lbl">Room code</p><div class="f1-code">'+esc(F100.code)+'</div><p class="hintline" style="margin:4px 0 12px">Friends join from FDL 100 → Join a room. '+esc(sc)+' · '+(r.qs||[]).length+' questions'+(r.mix?' · drugs + terms':' · drugs only')+'</p>'+
+      h+='<div class="qcard f1-lobby"><p class="lbl">Invite friends</p><div class="btnrow" style="justify-content:flex-start;margin-top:4px"><button class="btn primary" data-a="invite" data-c="'+esc(F100.code)+'">Share invite link</button></div>'+
+        '<div class="f1-linkbox" hidden><input class="finput" readonly aria-label="Invite link" style="width:100%;margin-top:8px;font-size:.8125rem"></div>'+
+        '<p class="hintline" style="margin:8px 0 12px">Send the link to friends. Opening it puts them straight in this room. '+esc(sc)+' · '+(r.qs||[]).length+' questions'+(r.mix?' · drugs + terms':' · drugs only')+'</p>'+
         '<p class="lbl">Players ('+ps.filter(function(p){return p.on;}).length+'/'+MAXP+')</p><ul class="f1-pl">'+ps.filter(function(p){return p.on;}).map(function(p){return '<li><span class="f1-dot"></span>'+esc(p.name)+(p.uid===r.host?' <span class="macs">Host</span>':'')+(p.uid===A.uid?' <span class="dim">(you)</span>':'')+'</li>';}).join("")+'</ul>'+
         '<div class="btnrow" style="justify-content:flex-start">'+(r.host===A.uid?'<button class="btn primary" data-a="start"'+(ps.filter(function(p){return p.on;}).length<2?' disabled':'')+'>Start game</button>':'<span class="hintline">Waiting for the host to start…</span>')+'<button class="btn" data-a="leave">Leave</button></div>'+
         (r.host===A.uid&&ps.filter(function(p){return p.on;}).length<2?'<p class="hintline">You need at least 2 players to start.</p>':'')+'</div>';
@@ -2549,18 +2677,18 @@ h2.sec:first-child{margin-top:0}
   function chView(){
     var A=F100.api,c=F100.ch,code=F100.chCode;
     if(c===null)return '<p class="hintline">Loading challenge…</p>';
-    if(c===false)return '<div class="notice">No challenge with code '+esc(code)+'. It may be from a previous school year.</div><div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="home">Back</button></div>';
+    if(c===false)return '<div class="notice">That challenge link doesn’t work anymore. It may be from a previous school year.</div><div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="home">Back</button></div>';
     var sc=(SCOPES.filter(function(s){return s[0]===c.sc;})[0]||["",""])[1],res=c.r||{},mine=res[A.uid],P=F100.play;
     if(P&&!P.done)return soloView();
-    if(!mine)return '<div class="qcard"><p class="lbl">Challenge '+esc(code)+'</p><p class="qp">'+(c.by===A.uid?'Your challenge is ready':esc(c.name)+' challenged you')+'</p><p class="hintline" style="margin:0 0 12px">'+esc(sc)+' · '+(c.qs||[]).length+' questions · 20 seconds each. Faster correct answers score more. You get one try.</p>'+
+    if(!mine)return '<div class="qcard"><p class="lbl">Challenge</p><p class="qp">'+(c.by===A.uid?'Your challenge is ready':esc(c.name)+' challenged you')+'</p><p class="hintline" style="margin:0 0 12px">'+esc(sc)+' · '+(c.qs||[]).length+' questions · 20 seconds each. Faster correct answers score more. You get one try.</p>'+
       '<div class="btnrow" style="justify-content:flex-start"><button class="btn primary" data-a="chstart">Start</button><button class="btn" data-a="home">Back</button></div></div>';
     var rows=Object.keys(res).map(function(k){return Object.assign({uid:k},res[k]);}).sort(function(a,b){return b.s-a.s||a.at-b.at;});
     var by=res[c.by];
     var verdict=c.by===A.uid?'Share the link so others can take your challenge.':!by?'Waiting on '+esc(c.name)+'’s score.':mine.s>by.s?'You beat '+esc(c.name)+'!':mine.s<by.s?esc(c.name)+' wins this one.':'It’s a tie.';
-    return '<div class="qcard"><p class="lbl">Challenge '+esc(code)+' · '+esc(sc)+'</p><p class="qp" style="margin-bottom:4px">'+verdict+'</p><p class="hintline" style="margin:0 0 12px">You: '+mine.k+' of '+(c.qs||[]).length+' correct · '+mine.s+' points</p>'+
+    return '<div class="qcard"><p class="lbl">Challenge · '+esc(sc)+'</p><p class="qp" style="margin-bottom:4px">'+verdict+'</p><p class="hintline" style="margin:0 0 12px">You: '+mine.k+' of '+(c.qs||[]).length+' correct · '+mine.s+' points</p>'+
       '<ol class="f1-st f1-final">'+rows.map(function(x,j){return '<li'+(x.uid===A.uid?' class="me"':'')+'><span><b>'+(j+1)+'</b> '+esc(x.name)+(x.uid===c.by?' <span class="dim">(creator)</span>':'')+'</span><span>'+x.s+'</span></li>';}).join("")+'</ol>'+
-      '<div class="btnrow" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn primary" data-a="copy" data-c="'+esc(code)+'">Copy challenge link</button><button class="btn" data-a="home">Back</button></div>'+
-      '<p class="hintline">Or share the code <b>'+esc(code)+'</b>.</p></div>';
+      '<div class="btnrow" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn primary" data-a="copy" data-c="'+esc(code)+'">Share challenge link</button><button class="btn" data-a="home">Back</button></div>'+
+      '<div class="f1-linkbox" hidden><input class="finput" readonly aria-label="Challenge link" style="width:100%;margin-top:8px;font-size:.8125rem"></div></div>';
   }
   function nextSolo(){var P=F100.play;P.rv=false;P.t0=F100.api.now();render();
     clearInterval(P.tm);P.tm=setInterval(function(){var left=Math.max(0,P.t0+QT-F100.api.now()),bar=document.getElementById("f1bar"),tx=document.getElementById("f1left");
@@ -2648,7 +2776,7 @@ h2.sec:first-child{margin-top:0}
       if(!n||!u){msg.textContent="Add both a name and a link.";return;}
       if(!/^https?:\/\//i.test(u))u="https://"+u;
       if(!/^https?:\/\/[^\s\/]+\.[^\s]+$/i.test(u)){msg.textContent="That doesn’t look like a web address.";return;}
-      var id="u:"+Date.now().toString(36);P.own.push({id:id,n:n,u:u});P.ids.push(id);savePins(P);drawRefs();});
+      var id="u:"+Date.now().toString(36);uCustomSite(u);P.own.push({id:id,n:n,u:u});P.ids.push(id);savePins(P);drawRefs();});
     var rs=document.getElementById("rreset");if(rs)rs.addEventListener("click",function(){if(!rresetArm){rresetArm=true;drawRefs();return;}rresetArm=false;S.set("nav.refs.pins","");drawRefs();});
   }
   chipsEl.addEventListener("click",function(e){var b=e.target.closest("[data-g]");if(!b)return;grp=b.getAttribute("data-g");drawRefs();});
@@ -2678,6 +2806,68 @@ h2.sec:first-child{margin-top:0}
   });
   paintTheme();
 
+  /* ---- anonymous usage counts ----
+     Only totals go to the database, as "+1 on this counter" for the month (u/YYYY-MM/category/key).
+     No IDs, names, full links or anything about who did it. Not sent when testing from your own computer. */
+  var UQ={},UN=0,UT=0,UMAX=400;
+  var UOK=(function(){try{
+    if(window.__UTEST)return true;
+    if(location.protocol==="file:"||/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))return false;
+    return !!(FB_CONFIG&&FB_CONFIG.databaseURL);}catch(e){return false;}})();
+  var UCATS=/^(pg|tab|quiz|plan|anki|print|cond|misc|link|q|nos|pin|unpin|cdom|yr|day|f100)$/;
+  function ukey(s){return String(s||"").toLowerCase().replace(/&amp;/g,"and").replace(/&/g,"and").replace(/[^a-z0-9_]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"x";}
+  function umonth(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
+  function U(cat,key){
+    if(!UOK||UN>=UMAX||!UCATS.test(cat))return;var k=ukey(key);if(!k)return;
+    UN++;var p=cat+"/"+k;UQ[p]=Math.min(50,(UQ[p]||0)+1);
+    if(!UT)UT=setTimeout(uflush,8000);
+  }
+  function uflush(){
+    UT=0;var ks=Object.keys(UQ);if(!ks.length)return;var body={};
+    ks.forEach(function(p){body[p]={".sv":{increment:UQ[p]}};});UQ={};
+    try{fetch(FB_CONFIG.databaseURL.replace(/\/$/,"")+"/u/"+umonth()+".json",{method:"PATCH",body:JSON.stringify(body),keepalive:true,headers:{"Content-Type":"application/json"}}).catch(function(){});}catch(e){}
+  }
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")uflush();});
+  window.addEventListener("pagehide",uflush);
+  /* once per browser per day: a visit, and which year they have picked */
+  (function(){var t=new Date(),d=t.getFullYear()+"-"+(t.getMonth()+1)+"-"+t.getDate();if(S.get("nav.u.day","")===d)return;S.set("nav.u.day",d);U("day",String(t.getDate()).padStart(2,"0"));U("yr",year);})();
+  /* custom links: only the website, once per browser per site; personal cloud storage is grouped */
+  var UPERSONAL=/(^|\.)(onedrive\.live\.com|1drv\.ms|sharepoint\.com|docs\.google\.com|drive\.google\.com|icloud\.com|dropbox\.com|box\.com|onenote\.com|onenote\.officeapps\.live\.com)$/;
+  function uCustomSite(u){var h="";try{h=new URL(u).hostname.toLowerCase().replace(/^www\./,"");}catch(e){return;}if(!h)return;
+    var k=UPERSONAL.test(h)?"personal-cloud-files":h.replace(/\./g,"_");
+    var seen=[];try{seen=JSON.parse(S.get("nav.u.sites","[]"))||[];}catch(e){}
+    if(seen.indexOf(k)>-1)return;seen.push(k);S.set("nav.u.sites",JSON.stringify(seen.slice(-200)));U("cdom",k);}
+  /* link clicks: which built-in resource (or its backup / sub-link); your own links only count as "custom" */
+  var UHREF=null;
+  function uLinkId(a){
+    if(!UHREF){UHREF={};REFS.forEach(function(r){if(r.u)UHREF[href(r)]=r.id;if(r.u)UHREF[r.u]=r.id;if(r.alt)UHREF[r.alt]=r.id+"-backup";(r.sub||[]).forEach(function(s){UHREF[s[1]]=r.id+"-"+ukey(s[0]);});});}
+    var h=a.getAttribute("href")||"";if(UHREF[h])return UHREF[h];
+    if(ownRefs().some(function(r){return r.u===h;}))return "custom";
+    try{return "other-"+new URL(h,location.href).hostname.replace(/^www\./,"").replace(/\./g,"_");}catch(e){return "other";}
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest&&e.target.closest('a[target="_blank"]');if(a){U("link",uLinkId(a));return;}
+    var b=e.target.closest&&e.target.closest("[data-ft],#qstart,[data-chk],#adl,#panki,#pprint,[data-pin],[data-unpin],#rreset,[data-sq]");if(!b)return;
+    if(b.hasAttribute("data-ft"))U("tab",b.getAttribute("data-ft"));
+    else if(b.id==="qstart")U("quiz",year+"-"+(QSET&&QSET.set||"x"));
+    else if(b.hasAttribute("data-chk"))U("plan","check");
+    else if(b.id==="adl")U("anki","anki-tab");
+    else if(b.id==="panki")U("anki","plan-day");
+    else if(b.id==="pprint")U("print","plan-day");
+    else if(b.hasAttribute("data-pin"))U("pin",b.getAttribute("data-pin"));
+    else if(b.hasAttribute("data-unpin")){var id=b.getAttribute("data-unpin");U("unpin",id.indexOf("u:")===0?"custom":id);}
+    else if(b.id==="rreset"&&b.textContent.indexOf("again")>-1)U("unpin","reset-to-default");
+    else if(b.hasAttribute("data-sq"))U("q","did-you-mean-tapped");
+  },true);
+  /* opening notes: which condition or Misc topic people read */
+  document.addEventListener("toggle",function(e){var d=e.target;if(!d||!d.open||d.tagName!=="DETAILS")return;
+    var c=d.closest(".cond");if(c){var h=c.querySelector("h3");if(h&&!c.hasAttribute("data-uc")){c.setAttribute("data-uc","1");U("cond",plain(h.innerHTML));}return;}
+    if(d.hasAttribute("data-id")||!d.closest("#tklist,#results,#st-non,#st-int,#icase,#ires"))return;var n=d.querySelector("summary .n");if(n&&!d.hasAttribute("data-um")){d.setAttribute("data-um","1");U("misc",plain(n.innerHTML));}
+  },true);
+  /* searches: counted once the person stops typing; ones with no full match are listed separately */
+  var USR={q:"",n:0,partial:false},UST=0,UDONE={};
+  function uSearch(){var q=nrmS(USR.q);if(q.length<2||UDONE[q])return;UDONE[q]=1;U("q",q);if(!USR.n||USR.partial)U("nos",q);}
+
   /* ---- wire ---- */
   document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-go"));});});
   back.addEventListener("click",function(){go("home");});
@@ -2689,10 +2879,7 @@ h2.sec:first-child{margin-top:0}
     if(e.key==="/"){e.preventDefault();go("home");qEl.focus();qEl.select();}
   });
 
-  document.getElementById("csub").textContent=CONDITIONS.length+" conditions · the 6 tested topics first";
-  document.getElementById("tsub").textContent="Sigs, PharmaCare, law, Rx checking, DTPs";
-  document.getElementById("rsub").textContent=REFS.filter(function(r){return r.u;}).length+" links, grouped by topic";
-  drawConds();drawToolkit();drawRefs();drawResults("");
+  drawConds();drawToolkit();drawRefs();drawIceCase();drawStations();drawIceTabs();drawResults("");
   go((location.hash||"#home").slice(1),false);
 })();
 </script>
