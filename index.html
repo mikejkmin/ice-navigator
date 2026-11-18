@@ -2520,17 +2520,15 @@ h2.sec:first-child{margin-top:0}
   var BADRE={};
   function badRe(w){return BADRE[w]||(BADRE[w]=new RegExp(w.split("").map(function(c){return /[aeiou]/.test(c)?"["+c+"0-9*]":c==="s"?"[s5$]":c==="t"?"[t7]":c;}).join("")));}
   function nameProblem(n){
-    if(!/^[A-Za-z0-9_-]{3,16}$/.test(n))return "Use 3 to 16 letters, numbers, _ or -.";
+    if(!/^[A-Za-z0-9_-]{1,16}$/.test(n))return "Use 1 to 16 letters, numbers, _ or -.";
     var low=n.toLowerCase(),flat=low.replace(/[_-]/g,""),sub=flat.replace(/0/g,"o").replace(/1/g,"i").replace(/3/g,"e").replace(/[4@]/g,"a").replace(/5/g,"s").replace(/7/g,"t");
     if(RESERVED.indexOf(low)>-1||RESERVED.indexOf(sub)>-1)return "That name is reserved. Try another.";
     if(BADW.some(function(w){return badRe(w).test(flat)||sub.indexOf(w)>-1;}))return "Please pick a different name.";
     return "";
   }
   function saveProfile(n){
-    var A=G.api,low=n.toLowerCase(),w={};
-    if(G.name&&G.name.toLowerCase()!==low)w["names/"+G.name.toLowerCase()]=null;
-    w["names/"+low]=A.uid;w["users/"+A.uid+"/name"]=n;
-    return A.update("",w).then(function(){G.name=n;});
+    var A=G.api; /* names don't have to be unique: there's no leaderboard */
+    return A.set("users/"+A.uid+"/name",n).then(function(){G.name=n;});
   }
 
   /* ================= helpers ================= */
@@ -2761,7 +2759,7 @@ h2.sec:first-child{margin-top:0}
   }
   function onlineLine(){return '<span><span class="ig-dot"></span><b>'+G.online+'</b> '+(G.online===1?"person":"people")+' here right now'+(G.inIg?' · '+G.inIg+' in igloos':'')+'</span>';}
   function nameView(){
-    return '<div class="qcard"><p class="lbl">Pick a username</p><p class="hintline" style="margin:0 0 10px">Shown to people by the fire. No real names or emails needed. 3 to 16 letters, numbers, _ or -.</p>'+
+    return '<div class="qcard"><p class="lbl">Pick a username</p><p class="hintline" style="margin:0 0 10px">Shown to people by the fire. No real names or emails needed. Up to 16 letters, numbers, _ or -.</p>'+
       '<input id="ig-uname" class="finput" style="width:100%;max-width:22rem;box-sizing:border-box" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Username" value="'+esc2(G.nameDraft!=null?G.nameDraft:G.name)+'" data-enter="savename">'+
       '<p class="ig-err" id="ig-nerr">'+esc2(G.nameMsg)+'</p>'+
       '<div class="btnrow" style="justify-content:flex-start;margin-top:6px"><button class="btn primary" data-a="savename">'+(G.name?"Save":"Continue")+'</button>'+(G.name?'<button class="btn" data-a="home">Cancel</button>':'')+'</div>'+
@@ -2921,12 +2919,10 @@ h2.sec:first-child{margin-top:0}
     var n=(($("ig-uname")||{}).value||"").trim(),er=$("ig-nerr"),p=nameProblem(n);
     if(p){er.textContent=p;return;}
     if(G.busy)return;G.busy=true;er.textContent="";
-    var A=G.api,low=n.toLowerCase();
-    A.get("names/"+low).then(function(owner){
-      if(owner&&owner!==A.uid){G.busy=false;er.textContent="That username is taken. Try another.";return;}
-      return saveProfile(n).then(function(){G.busy=false;G.nameDraft=null;
+    var A=G.api;
+    saveProfile(n).then(function(){G.busy=false;G.nameDraft=null;
         if(G.code){var ig=G.ig;if(ig&&ig.p&&ig.p[G.uid])A.update(igPath("p/"+G.uid),{n:n}).catch(function(){});}
-        afterProfile();});
+        afterProfile();
     }).catch(function(){G.busy=false;er.textContent="Couldn’t save right now. Try again in a moment.";});
   }
   function afterProfile(){
