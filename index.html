@@ -2601,6 +2601,7 @@ h2.sec:first-child{margin-top:0}
     clearTimeout(d._t);d._t=setTimeout(function(){b.classList.remove("on");d.classList.remove("ig-r-"+cls);d.classList.add("ig-idle");},1900);
   }
   function sendFx(kind,text){
+    try{U("igloo",kind==="roast"?"marshmallow-roasted":kind==="blow"?"marshmallow-burnt":kind==="eat"?"marshmallow-eaten":"react-"+kind);}catch(e){}
     var m=me_();if(m)react(m.seat,kind,text);
     if(G.code&&G.api&&G.ig)G.api.set(igPath("fx/"+G.uid),{k:kind,t:String(text||LABEL[kind]||"").slice(0,30),at:G.api.TS}).catch(function(){});
   }
@@ -2971,7 +2972,7 @@ h2.sec:first-child{margin-top:0}
     return (G.code&&G.code!==code?leaveQuiet():Promise.resolve()).then(function(){
       G.ch=pick(CHIDS);var me=myEntry(ig);G.ch=me.c;return A.set("ig/"+code+"/p/"+A.uid,me);
     }).then(function(){
-      subscribe(code);G.view="room";draw(true);try{U("igloo","joined");}catch(e){}
+      subscribe(code);G.view="room";draw(true);try{U("igloo",G.joinVia==="match"?"joined-match":"joined-invite");}catch(e){}G.joinVia="";
       return true;});
   }
   function subscribe(code){
@@ -3043,7 +3044,7 @@ h2.sec:first-child{margin-top:0}
       codes.forEach(function(c){var ig=all[c];if(ig&&!ig.p)A.remove("ig/"+c).catch(function(){});}); /* tidy empty ones */
       var ok=codes.filter(function(c){return usable(c,all[c]);});
       if(G.view!=="match")return;
-      if(ok.length){var c=pick(ok);return joinIgloo(c,all[c]).then(function(j){if(j)toast("You came in from the cold");});}
+      if(ok.length){var c=pick(ok);G.joinVia="match";return joinIgloo(c,all[c]).then(function(j){if(j)toast("You came in from the cold");});}
       return makeIgloo(true);
     }).catch(function(){toast("Couldn’t look for igloos right now.");G.view="home";draw(true);});
   }
@@ -3124,7 +3125,7 @@ h2.sec:first-child{margin-top:0}
   function startRound(){
     if(!amHost())return;var b=buildQs();if(b.qs.length<1){toast("That deck has no cards for this direction.");return;}
     var id="g"+Date.now().toString(36);
-    G.api.update(igPath(),{g:{id:id,qs:b.qs,i:0,rv:false,at:G.api.TS,dn:b.d.name.slice(0,60),dl:b.dir[0].slice(0,60)},a:null}).then(function(){try{U("igloo","round-"+G.set.mode);}catch(e){}})
+    G.api.update(igPath(),{g:{id:id,qs:b.qs,i:0,rv:false,at:G.api.TS,dn:b.d.name.slice(0,60),dl:b.dir[0].slice(0,60)},a:null}).then(function(){try{U("igloo","round-"+G.set.mode);U("igloo","deck-"+(decks()[G.set.deck]?G.set.deck:"own"));U("igloo","players-"+Math.min(6,memberIds(G.ig).length));}catch(e){}})
       .catch(function(){toast("Couldn’t start the round. Try again.");});
   }
   function answer(v){
